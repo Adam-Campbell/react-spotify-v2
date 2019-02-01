@@ -3,24 +3,32 @@ import { normalize, schema } from 'normalizr';
 import axios from 'axios';
 import { getUsersMarket } from './userActions';
 
-export const fetchArtistRequest = (artistId) => ({
+const fetchArtistRequest = (artistId) => ({
     type: actionTypes.FETCH_ARTIST_REQUEST,
     payload: {
         artistId
     }
 });
 
-export const fetchArtistSuccess = (artistId) => ({
+const fetchArtistSuccess = (artistId, timestamp) => ({
     type: actionTypes.FETCH_ARTIST_SUCCESS,
     payload: {
+        artistId,
+        timestamp
+    }
+});
+
+const fetchArtistFailed = (error, artistId) => ({
+    type: actionTypes.FETCH_ARTIST_FAILED,
+    payload: {
+        error, 
         artistId
     }
 });
 
-export const fetchArtistFailed = (error, artistId) => ({
-    type: actionTypes.FETCH_ARTIST_FAILED,
+const fetchArtistAbort = (artistId) => ({
+    type: actionTypes.FETCH_ARTIST_ABORT,
     payload: {
-        error, 
         artistId
     }
 });
@@ -147,6 +155,12 @@ export const fetchArtist = (artistId) => async (dispatch, getState) => {
     dispatch(fetchArtistRequest(artistId));
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
+    const artist = getState().artists.artistData[artistId];
+    // Abort the fetch if the full data for this artist is already in the store, and it was
+    // fetched within the last hour
+    if (artist && artist.fullProfileFetched && Date.now() - artist.lastFetchedAt <= 3600000) {
+        return dispatch(fetchArtistAbort(artistId));
+    }
     Promise.all([
         dispatch(fetchArtistsInfo(token, artistId)),
         dispatch(fetchArtistsTopTracks(token, artistId, market)),
@@ -154,7 +168,8 @@ export const fetchArtist = (artistId) => async (dispatch, getState) => {
         dispatch(fetchArtistsAlbums(token, artistId, market))
     ])
     .then(() => {
-        dispatch(fetchArtistSuccess(artistId));
+        const timestamp = Date.now();
+        dispatch(fetchArtistSuccess(artistId, timestamp));
     }, (err) => {
         dispatch(fetchArtistFailed(artistId, err));
     })

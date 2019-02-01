@@ -8,8 +8,11 @@ const fetchHighlightsRequest = () => ({
     type: actionTypes.FETCH_HIGHLIGHTS_REQUEST
 });
 
-const fetchHighlightsSuccess = () => ({
-    type: actionTypes.FETCH_HIGHLIGHTS_SUCCESS
+const fetchHighlightsSuccess = (timestamp) => ({
+    type: actionTypes.FETCH_HIGHLIGHTS_SUCCESS,
+    payload: {
+        timestamp
+    }
 });
 
 const fetchHighlightsFailed = (error) => ({
@@ -17,6 +20,10 @@ const fetchHighlightsFailed = (error) => ({
     payload: {
         error
     }
+});
+
+const fetchHighlightsAbort = () => ({
+    type: actionTypes.FETCH_HIGHLIGHTS_ABORT
 });
 
 const storeNewReleases = (albumObjects, albumIds, artistObjects) => ({
@@ -107,13 +114,18 @@ export const fetchHighlights = () => async (dispatch, getState) => {
     dispatch(fetchHighlightsRequest());
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
+    const highlights = getState().highlights;
+    if (highlights.fullHighlightsFetched && Date.now() - highlights.lastFetchedAt <= 3600000) {
+        return dispatch(fetchHighlightsAbort());
+    }
     Promise.all([
         dispatch(fetchNewReleases(token, market)),
         dispatch(fetchFeaturedPlaylists(token, market)),
         dispatch(fetchCategories(token, market))
     ])
     .then(() => {
-        dispatch(fetchHighlightsSuccess());
+        const timestamp = Date.now();
+        dispatch(fetchHighlightsSuccess(timestamp));
     }, (err) => {
         dispatch(fetchHighlightsFailed(err));
     })

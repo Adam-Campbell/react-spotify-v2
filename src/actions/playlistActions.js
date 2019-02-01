@@ -11,10 +11,11 @@ const fetchPlaylistRequest = (playlistId) => ({
     }
 });
 
-const fetchPlaylistSuccess = (playlistId) => ({
+const fetchPlaylistSuccess = (playlistId, timestamp) => ({
     type: actionTypes.FETCH_PLAYLIST_SUCCESS,
     payload: {
-        playlistId
+        playlistId,
+        timestamp
     }
 });
 
@@ -23,6 +24,13 @@ const fetchPlaylistFailed = (playlistId, error) => ({
     payload: {
         playlistId,
         error
+    }
+});
+
+const fetchPlaylistAbort = (playlistId) => ({
+    type: actionTypes.FETCH_PLAYLIST_ABORT,
+    payload: {
+        playlistId
     }
 });
 
@@ -77,11 +85,16 @@ export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
     dispatch(fetchPlaylistRequest(playlistId));
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
+    const playlist = getState().playlists.playlistData[playlistId];
+    if (playlist && playlist.fullPlaylistFetched && Date.now() - playlist.lastFetchedAt <= 3600000) {
+        return dispatch(fetchPlaylistAbort(playlistId));
+    }
     Promise.all([
         dispatch(fetchPlaylistInfo(token, playlistId, market))
     ])
     .then(() => {
-        dispatch(fetchPlaylistSuccess(playlistId));
+        const timestamp = Date.now();
+        dispatch(fetchPlaylistSuccess(playlistId, timestamp));
     }, (err) => {
         dispatch(fetchPlaylistFailed(playlistId, err));
     });

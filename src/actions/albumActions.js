@@ -11,10 +11,11 @@ const fetchAlbumRequest = (albumId) => ({
     } 
 });
 
-const fetchAlbumSuccess = (albumId) => ({
+const fetchAlbumSuccess = (albumId, timestamp) => ({
     type: actionTypes.FETCH_ALBUM_SUCCESS,
     payload: {
-        albumId
+        albumId,
+        timestamp
     }
 });
 
@@ -23,6 +24,13 @@ const fetchAlbumFailed = (albumId, error) => ({
     payload: {
         albumId, 
         error
+    }
+});
+
+const fetchAlbumAbort = (albumId) => ({
+    type: actionTypes.FETCH_ALBUM_ABORT,
+    payload: {
+        albumId
     }
 });
 
@@ -83,9 +91,14 @@ export const fetchAlbum = (albumId) => async (dispatch, getState) => {
     dispatch(fetchAlbumRequest(albumId));
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
+    const album = getState().albums.albumData[albumId];
+    if (album && album.fullAlbumFetched) {
+        return dispatch(fetchAlbumAbort(albumId));
+    }
     dispatch(fetchAlbumInfo(token, albumId, market))
     .then(() => {
-        dispatch(fetchAlbumSuccess(albumId));
+        const timestamp = Date.now();
+        dispatch(fetchAlbumSuccess(albumId, timestamp));
     }, (err) => {
         dispatch(fetchAlbumFailed(albumId, err));
     });

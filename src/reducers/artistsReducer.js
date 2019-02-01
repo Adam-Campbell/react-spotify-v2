@@ -1,52 +1,113 @@
 import * as actionTypes from '../actionTypes';
 import { addOrMerge } from '../utils';
 
-const defaultState = {};
+const defaultState = {
+    artistData: {},
+    isFetching: false
+};
 
-const artists = (state={}, action) => {
+const artists = (state=defaultState, action) => {
     switch (action.type) {
+
+        case actionTypes.FETCH_ARTIST_REQUEST:
+            return {
+                ...state,
+                isFetching: true
+            };
+        
+        case actionTypes.FETCH_ARTIST_FAILED:
+            return {
+                ...state,
+                isFetching: false
+            };
+
+        case actionTypes.FETCH_ARTIST_ABORT:
+            return {
+                ...state,
+                isFetching: false
+            };
+
+        case actionTypes.FETCH_ARTIST_SUCCESS:
+            return {
+                isFetching: false,
+                artistData: {
+                    ...state.artistData,
+                    [action.payload.artistId]: {
+                        ...state.artistData[action.payload.artistId],
+                        fullProfileFetched: true,
+                        lastFetchedAt: action.payload.timestamp
+                    }
+                }
+            };
 
         case actionTypes.STORE_USERS_TOP_ARTISTS:
             return {
                 ...state,
-                ...action.payload.artistObjects
+                artistData: {
+                    ...state.artistData,
+                    ...action.payload.artistObjects
+                }
             };
 
         case actionTypes.STORE_USERS_RECENT_TRACKS:
             return {
                 ...state,
-                ...action.payload.artistObjects
+                artistData: {
+                    ...state.artistData,
+                    ...action.payload.artistObjects
+                }
             };
 
         case actionTypes.STORE_ARTISTS_PROFILE:
-            return addOrMerge(state, action.payload.artistProfileObject, action.payload.artistId);
+            return {
+                ...state,
+                artistData: addOrMerge(state.artistData, action.payload.artistProfileObject, action.payload.artistId)
+            };
 
         case actionTypes.STORE_ARTISTS_TOP_TRACKS:
-            return addOrMerge( 
-                addOrMerge(state, { topTrackIds: action.payload.trackIds }, action.payload.artistId),
-                action.payload.artistObjects
-            );
-
+            return {
+                ...state,
+                artistData: addOrMerge( 
+                    addOrMerge(state.artistData, { topTrackIds: action.payload.trackIds }, action.payload.artistId),
+                    action.payload.artistObjects
+                )
+            };
+            
         case actionTypes.STORE_ARTISTS_RELATED_ARTISTS:
-            return addOrMerge(
-                addOrMerge(state, { relatedArtistIds: action.payload.relatedArtistIds }, action.payload.artistId),
-                action.payload.relatedArtistObjects
-            );
+            return {
+                ...state,
+                artistData: addOrMerge(
+                    addOrMerge(state.artistData, { relatedArtistIds: action.payload.relatedArtistIds }, action.payload.artistId),
+                    action.payload.relatedArtistObjects
+                )
+            };
 
         case actionTypes.STORE_ARTISTS_ALBUMS:
-            return addOrMerge(
-                addOrMerge(state, { albumIds: action.payload.albumIds }, action.payload.artistId),
-                action.payload.artistObjects
-            );
+            return {
+                ...state,
+                artistData: addOrMerge(
+                    addOrMerge(state.artistData, { albumIds: action.payload.albumIds }, action.payload.artistId),
+                    action.payload.artistObjects
+                )
+            }
 
         case actionTypes.STORE_ALBUM:
-            return addOrMerge(state, action.payload.artistObjects);
+            return {
+                ...state,
+                artistData: addOrMerge(state.artistData, action.payload.artistObjects)
+            };
 
         case actionTypes.STORE_PLAYLIST:
-            return addOrMerge(state, action.payload.artistObjects);
+            return {
+                ...state,
+                artistData: addOrMerge(state.artistData, action.payload.artistObjects)
+            };
 
         case actionTypes.STORE_NEW_RELEASES:
-            return addOrMerge(state, action.payload.artistObjects);
+            return {
+                ...state,
+                artistData: addOrMerge(state.artistData, action.payload.artistObjects)
+            };
 
         default: 
             return state;
