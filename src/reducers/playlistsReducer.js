@@ -15,6 +15,9 @@ const playlists = (state=defaultState, action) => {
         case actionTypes.STORE_FEATURED_PLAYLISTS:
             return addOrMerge(state, action.payload.playlistObjects);
 
+        case actionTypes.STORE_CATEGORIES_PLAYLISTS:
+            return addOrMerge(state, action.payload.playlistObjects);
+
         
 
         default:

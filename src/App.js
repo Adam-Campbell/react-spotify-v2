@@ -8,6 +8,7 @@ import ArtistProfile from './components/ArtistProfile';
 import Album from './components/Album';
 import Playlist from './components/Playlist';
 import Highlights from './components/Highlights';
+import Category from './components/Category';
 
 class App extends Component {
   render() {
@@ -36,6 +37,10 @@ class App extends Component {
                 render={({match}) => <Playlist playlistId={match.params.playlistId} />}
               />
               <Route path="/highlights" component={Highlights} />
+              <Route 
+                path="/category/:category"
+                render={({match}) => <Category category={match.params.category} />}
+              />
             </Switch>
           </BrowserRouter>
         )}
