@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
+import AlbumHeader from '../AlbumHeader';
+import TrackCollection from '../TrackCollection';
 
 class AlbumContainer extends Component {
     componentDidMount() {
@@ -9,12 +11,26 @@ class AlbumContainer extends Component {
     }
 
     render() {
-        return <p>Artist Profile here</p>
+        if (!this.props.album || !this.props.album.fullAlbumFetched) {
+            return null;
+        }
+        const { tracks } = this.props.album;
+        return (
+            <main className="album">
+                <AlbumHeader albumId={this.props.albumId} />
+                <section className="album__tracks-container">
+                    <TrackCollection 
+                        trackIds={tracks}
+                        useAlbumLayout={true}
+                    />
+                </section>
+            </main>
+        );
     }
 }
 
-const mapStateToProps = (state) => ({
-
+const mapStateToProps = (state, ownProps) => ({
+    album: state.albums.albumData[ownProps.albumId]
 });
 
 export default connect(

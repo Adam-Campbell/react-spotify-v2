@@ -43,19 +43,13 @@ const artists = (state=defaultState, action) => {
         case actionTypes.STORE_USERS_TOP_ARTISTS:
             return {
                 ...state,
-                artistData: {
-                    ...state.artistData,
-                    ...action.payload.artistObjects
-                }
+                artistData: addOrMerge(state.artistData, action.payload.artistObjects)
             };
 
         case actionTypes.STORE_USERS_RECENT_TRACKS:
             return {
                 ...state,
-                artistData: {
-                    ...state.artistData,
-                    ...action.payload.artistObjects
-                }
+                artistData: addOrMerge(state.artistData, action.payload.artistObjects)
             };
 
         case actionTypes.STORE_ARTISTS_PROFILE:
