@@ -22,5 +22,6 @@ export const authURL = `https://accounts.spotify.com/authorize?client_id=${clien
 export const collectionTypes = {
     artists: 'ARTISTS',
     albums: 'ALBUMS',
-    playlists: 'PLAYLISTS'
+    playlists: 'PLAYLISTS',
+    categories: 'CATEGORIES'
 };

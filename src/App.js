@@ -11,6 +11,7 @@ import Highlights from './components/Highlights';
 import Category from './components/Category';
 import NavToggle from './components/NavToggle';
 import Nav from './components/Nav';
+import Search from './components/Search';
 
 class App extends Component {
 
@@ -63,6 +64,10 @@ class App extends Component {
                     <Route 
                       path="/category/:category"
                       render={({match}) => <Category category={match.params.category} />}
+                    />
+                    <Route 
+                      path="/search"
+                      render={() => <Search />}
                     />
                   </Switch>
                 

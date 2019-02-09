@@ -10,7 +10,10 @@ const CardCollection = props => (
             <div key={`${item.id}--${index}`}className="card-collection__card-holder">
                 <Card 
                     linkDestination={props.URLPath + item.id}
-                    imageURL={item.images[0].url}
+                    imageURL={props.collectionType === collectionTypes.categories ? 
+                        item.icons[0].url : 
+                        item.images[0].url
+                    }
                     label={item.name}
                 />
             </div>
@@ -23,7 +26,8 @@ CardCollection.propTypes = {
     collectionType: PropTypes.oneOf([
         collectionTypes.artists, 
         collectionTypes.albums, 
-        collectionTypes.playlists
+        collectionTypes.playlists,
+        collectionTypes.categories
     ])
 };
 
@@ -45,6 +49,12 @@ const mapStateToProps = (state, ownProps) => {
             return {
                 items: ownProps.itemIds.map(itemId => state.playlists.playlistData[itemId]),
                 URLPath: '/playlist/'
+            };
+
+        case collectionTypes.categories:
+            return {
+                items: ownProps.itemIds.map(itemId => state.categories.categoryData[itemId]),
+                URLPath: '/category/'
             };
 
         default:

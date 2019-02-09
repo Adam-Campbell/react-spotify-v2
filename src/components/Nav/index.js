@@ -18,7 +18,7 @@ class Nav extends Component {
 
     logoRef = React.createRef();
     searchRef = React.createRef();
-    browseRef = React.createRef();
+    highlightsRef = React.createRef();
     meRef = React.createRef();
     fadeTween = null;
 
@@ -26,7 +26,7 @@ class Nav extends Component {
         this.fadeTween = TweenMax.staggerFrom([
             this.logoRef.current,
             this.searchRef.current,
-            this.browseRef.current,
+            this.highlightsRef.current,
             this.meRef.current
         ], 0.2, {
             opacity: 0,
@@ -48,10 +48,10 @@ class Nav extends Component {
                             Search
                         </NavLink>
                     </li>
-                    <li className="nav__list-item" ref={this.browseRef}>
-                        <NavLink to="/browse" className="nav__link" onClick={this.props.toggleNav}>
+                    <li className="nav__list-item" ref={this.highlightsRef}>
+                        <NavLink to="/highlights" className="nav__link" onClick={this.props.toggleNav}>
                         <FontAwesomeIcon icon={faList} />
-                            Browse
+                            Highlights
                         </NavLink>
                     </li>
                     <li className="nav__list-item" ref={this.meRef}>
