@@ -15,6 +15,8 @@ const CardCollection = props => (
                         item.images[0].url
                     }
                     label={item.name}
+                    itemId={item.id}
+                    collectionType={props.collectionType}
                 />
             </div>
         ))}

@@ -89,7 +89,7 @@ export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
     if (playlist && playlist.fullPlaylistFetched && Date.now() - playlist.lastFetchedAt <= 3600000) {
         return dispatch(fetchPlaylistAbort(playlistId));
     }
-    Promise.all([
+    return Promise.all([
         dispatch(fetchPlaylistInfo(token, playlistId, market))
     ])
     .then(() => {

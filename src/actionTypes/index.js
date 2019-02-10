@@ -5,3 +5,4 @@ export * from './albumActionTypes';
 export * from './playlistActionTypes';
 export * from './highlightsActionTypes';
 export * from './categoryActionTypes';
+export * from './transitionActionTypes';

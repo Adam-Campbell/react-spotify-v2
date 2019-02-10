@@ -1,6 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
+import { cloneDeep } from 'lodash';
 
 const fetchUserRequest = () => ({
     type: actionTypes.FETCH_USER_REQUEST
@@ -135,7 +136,13 @@ const fetchUsersPlaylists = (token) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const playlistSchema = new schema.Entity('playlists');
+        const playlistSchema = new schema.Entity('playlists', {}, {
+            processStrategy: (value, parent, key) => {
+                const cloned = cloneDeep(value);
+                delete cloned.tracks;
+                return cloned;
+            }
+        });
         const normalizedData = normalize(response.data.items, [playlistSchema]);
         dispatch(storeUsersPlaylists(
             normalizedData.entities.playlists,
