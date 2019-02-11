@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Section from '../Section';
 import Card from '../Card';
+import { collectionTypes } from '../../constants';
 
 const SearchResults = props => {
     switch (props.resultsFilter) {
@@ -15,6 +16,8 @@ const SearchResults = props => {
                                     linkDestination={`/artist/${artist.id}`}
                                     imageURL={artist.images.length ? artist.images[0].url : ''}
                                     label={artist.name}
+                                    collectionType={collectionTypes.artists}
+                                    itemId={artist.id}
                                 />
                             </div>
                         ))}
@@ -32,6 +35,8 @@ const SearchResults = props => {
                                     linkDestination={`/album/${album.id}`}
                                     imageURL={album.images.length ? album.images[0].url : ''}
                                     label={album.name}
+                                    collectionType={collectionTypes.albums}
+                                    itemId={album.id}
                                 />
                             </div>
                         ))}
@@ -49,6 +54,8 @@ const SearchResults = props => {
                                     linkDestination={`/playlist/${playlist.id}`}
                                     imageURL={playlist.images.length ? playlist.images[0].url : ''}
                                     label={playlist.name}
+                                    collectionType={collectionTypes.playlists}
+                                    itemId={playlist.id}
                                 />
                             </div>
                         ))}
@@ -66,6 +73,8 @@ const SearchResults = props => {
                                     linkDestination={`/artist/${artist.id}`}
                                     imageURL={artist.images.length ? artist.images[0].url : ''}
                                     label={artist.name}
+                                    collectionType={collectionTypes.artists}
+                                    itemId={artist.id}
                                 />
                             </div>
                         ))}

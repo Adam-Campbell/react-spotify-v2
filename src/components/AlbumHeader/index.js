@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import * as ActionCreators from '../../actions';
-import { TimelineMax } from 'gsap';
+import { constructTimeline } from '../../utils';
 
 class AlbumHeader extends Component {
 
@@ -18,29 +18,43 @@ class AlbumHeader extends Component {
     timeline = null;
 
     componentDidMount() {
-        if (this.props.imageWidth === null) return;
-
-        const { imageWidth, imageHeight, imageX, imageY } = this.props;
-        const { width, height, top, left } = this.imageRef.current.getBoundingClientRect();
-        const deltaX = imageX - left;
-        const deltaY = imageY - top;
-        this.timeline = new TimelineMax();
-        this.timeline.from(this.imageRef.current, 0.3, {
-            width: imageWidth,
-            height: imageHeight,
-            x: deltaX,
-            y: deltaY
-        })
-        .from(this.titleRef.current, 0.4, {
-            opacity: 0
-        })
-        .from(this.underlineRef.current, 0.6, {
-            scaleX: 0
-        })
-        .from(this.linkContainerRef.current, 0.4, {
-            opacity: 0
+        const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+        const { top, left } = this.imageRef.current.getBoundingClientRect();
+        constructTimeline(this.timeline, {
+            hasTransition,
+            image: this.imageRef.current,
+            title: this.titleRef.current,
+            underline: this.underlineRef.current,
+            container: this.linkContainerRef.current,
+            prevImageWidth: imageWidth,
+            prevImageHeight: imageHeight,
+            prevImageTop: imageY,
+            prevImageLeft: imageX,
+            imageTop: top,
+            imageLeft: left
         });
         this.props.purgeTransitionImageRect();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.albumId !== this.props.albumId) {
+            const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+            const { top, left } = this.imageRef.current.getBoundingClientRect();
+            constructTimeline(this.timeline, {
+                hasTransition,
+                image: this.imageRef.current,
+                title: this.titleRef.current,
+                underline: this.underlineRef.current,
+                container: this.linkContainerRef.current,
+                prevImageWidth: imageWidth,
+                prevImageHeight: imageHeight,
+                prevImageTop: imageY,
+                prevImageLeft: imageX,
+                imageTop: top,
+                imageLeft: left
+            });
+            this.props.purgeTransitionImageRect(); 
+        }
     }
 
     render() {
@@ -78,7 +92,8 @@ const mapStateToProps = (state, ownProps) => {
         imageWidth: state.transitions.imageWidth,
         imageHeight: state.transitions.imageHeight,
         imageX: state.transitions.imageX,
-        imageY: state.transitions.imageY
+        imageY: state.transitions.imageY,
+        hasTransition: state.transitions.hasTransition
     };
 };
 

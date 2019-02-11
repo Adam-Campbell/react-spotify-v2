@@ -4,14 +4,16 @@ const defaultState = {
     imageWidth: null,
     imageHeight: null,
     imageX: null,
-    imageY: null
+    imageY: null,
+    hasTransition: false
 };
 
 const reducer = (state=defaultState, action) => {
     switch (action.type) {
         case actionTypes.STORE_TRANSITION_IMAGE_RECT:
             return {
-                ...action.payload
+                ...action.payload,
+                hasTransition: true
             };
 
         case actionTypes.PURGE_TRANSITION_IMAGE_RECT:
