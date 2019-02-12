@@ -41,7 +41,25 @@ const user = (state=defaultState, action) => {
             return {
                 ...state,
                 playlistIds: [ ...action.payload.playlistIds ]
-            }
+            };
+
+        case actionTypes.STORE_USERS_FOLLOWED_ARTISTS:
+            return {
+                ...state,
+                followedArtistIds: [ ...action.payload.artistIds ]
+            };
+
+        case actionTypes.FOLLOW_ARTIST_SUCCESS: 
+            return {
+                ...state,
+                followedArtistIds: [ ...state.followedArtistIds, action.payload.artistId ]
+            };
+
+        case actionTypes.UNFOLLOW_ARTIST_SUCCESS:
+            return {
+                ...state,
+                followedArtistIds: state.followedArtistIds.filter(id =>  id !== action.payload.artistId)
+            };
 
         default:
             return state;

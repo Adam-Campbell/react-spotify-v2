@@ -51,6 +51,14 @@ const storeUsersPlaylists = (playlistObjects, playlistIds) => ({
     }
 });
 
+const storeUsersFollowedArtists = (artistObjects, artistIds) => ({
+    type: actionTypes.STORE_USERS_FOLLOWED_ARTISTS,
+    payload: {
+        artistObjects,
+        artistIds
+    }
+});
+
 const setMarket = (market) => ({
     type: actionTypes.SET_MARKET,
     payload: {
@@ -153,6 +161,25 @@ const fetchUsersPlaylists = (token) => async (dispatch) => {
     }
 }
 
+const fetchUsersFollowedArtists = (token) => async (dispatch) => {
+    try {
+        const response = await axios.get('https://api.spotify.com/v1/me/following?type=artist', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const artistSchema = new schema.Entity('artists');
+        const normalizedData = normalize(response.data.artists.items, [artistSchema]);
+        dispatch(storeUsersFollowedArtists(
+            normalizedData.entities.artists,
+            normalizedData.result
+        ));
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+
 export const fetchUser = () => async (dispatch, getState) => {
     dispatch(fetchUserRequest())
     const token = getState().accessToken.token;
@@ -160,7 +187,8 @@ export const fetchUser = () => async (dispatch, getState) => {
         dispatch(fetchUsersProfile(token)),
         dispatch(fetchUsersTopArtists(token)),
         dispatch(fetchUsersRecentTracks(token)),
-        dispatch(fetchUsersPlaylists(token))
+        dispatch(fetchUsersPlaylists(token)),
+        dispatch(fetchUsersFollowedArtists(token))
     ])
     .then(() => {
         dispatch(fetchUserSuccess());

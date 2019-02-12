@@ -20,19 +20,19 @@ class PlaylistHeader extends Component {
     componentDidMount() {
         const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
         const { top, left } = this.imageRef.current.getBoundingClientRect();
-        constructTimeline(this.timeline, {
-            hasTransition,
-            image: this.imageRef.current,
-            title: this.titleRef.current,
-            underline: this.underlineRef.current,
-            container: this.containerRef.current,
-            prevImageWidth: imageWidth,
-            prevImageHeight: imageHeight,
-            prevImageTop: imageY,
-            prevImageLeft: imageX,
-            imageTop: top,
-            imageLeft: left
-        });
+        // constructTimeline(this.timeline, {
+        //     hasTransition,
+        //     image: this.imageRef.current,
+        //     title: this.titleRef.current,
+        //     underline: this.underlineRef.current,
+        //     container: this.containerRef.current,
+        //     prevImageWidth: imageWidth,
+        //     prevImageHeight: imageHeight,
+        //     prevImageTop: imageY,
+        //     prevImageLeft: imageX,
+        //     imageTop: top,
+        //     imageLeft: left
+        // });
         this.props.purgeTransitionImageRect();
     }
 
@@ -40,19 +40,19 @@ class PlaylistHeader extends Component {
         if (prevProps.playlist !== this.props.playlistId) {
             const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
             const { top, left } = this.imageRef.current.getBoundingClientRect();
-            constructTimeline(this.timeline, {
-                hasTransition,
-                image: this.imageRef.current,
-                title: this.titleRef.current,
-                underline: this.underlineRef.current,
-                container: this.containerRef.current,
-                prevImageWidth: imageWidth,
-                prevImageHeight: imageHeight,
-                prevImageTop: imageY,
-                prevImageLeft: imageX,
-                imageTop: top,
-                imageLeft: left
-            });
+            // constructTimeline(this.timeline, {
+            //     hasTransition,
+            //     image: this.imageRef.current,
+            //     title: this.titleRef.current,
+            //     underline: this.underlineRef.current,
+            //     container: this.containerRef.current,
+            //     prevImageWidth: imageWidth,
+            //     prevImageHeight: imageHeight,
+            //     prevImageTop: imageY,
+            //     prevImageLeft: imageX,
+            //     imageTop: top,
+            //     imageLeft: left
+            // });
             this.props.purgeTransitionImageRect();
         }
     }
@@ -67,7 +67,15 @@ class PlaylistHeader extends Component {
                     <span className="playlist-header__underline" ref={this.underlineRef}></span>
                     <div ref={this.containerRef}>
                         <p className="playlist__owner">A playlist by {ownerName}</p>
-                        <Followers followerCount={playlistFollowerCount} />
+                        <Followers 
+                            followerCount={playlistFollowerCount}
+                            isFollowing={this.props.isFollowing}
+                            showButton={true} 
+                            handleClick={this.props.isFollowing ? 
+                                () => this.props.unfollowPlaylist(this.props.playlistId) :
+                                () => this.props.followPlaylist(this.props.playlistId)
+                            }
+                        />
                     </div>
                 </div>
             </header>
@@ -81,6 +89,7 @@ const mapStateToProps = (state, ownProps) => {
         imageURL: playlist.images[0].url,
         playlistName: playlist.name,
         ownerName: playlist.owner.display_name,
+        isFollowing: playlist.isFollowing,
         playlistFollowerCount: playlist.followers.total,
         imageWidth: state.transitions.imageWidth,
         imageHeight: state.transitions.imageHeight,
@@ -93,7 +102,9 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(
     mapStateToProps,
     {
-        purgeTransitionImageRect: ActionCreators.purgeTransitionImageRect
+        purgeTransitionImageRect: ActionCreators.purgeTransitionImageRect,
+        followPlaylist: ActionCreators.followPlaylist,
+        unfollowPlaylist: ActionCreators.unfollowPlaylist
     }
 )(PlaylistHeader);
 

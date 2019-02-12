@@ -64,6 +64,36 @@ const playlists = (state=defaultState, action) => {
                 playlistData: addOrMerge(state.playlistData, action.payload.playlistObjects)
             };
 
+        case actionTypes.STORE_PLAYLIST_FOLLOW_STATUS:
+            return {
+                ...state,
+                playlistData: addOrMerge(
+                    state.playlistData, 
+                    { isFollowing: action.payload.isFollowing }, 
+                    action.payload.playlistId
+                )
+            };
+
+        case actionTypes.FOLLOW_PLAYLIST_SUCCESS:
+            return {
+                ...state,
+                playlistData: addOrMerge(
+                    state.playlistData, 
+                    { isFollowing: true }, 
+                    action.payload.playlistId
+                )
+            };
+
+        case actionTypes.UNFOLLOW_PLAYLIST_SUCCESS:
+            return {
+                ...state,
+                playlistData: addOrMerge(
+                    state.playlistData, 
+                    { isFollowing: false }, 
+                    action.payload.playlistId
+                )
+            };
+
         
 
         default:
