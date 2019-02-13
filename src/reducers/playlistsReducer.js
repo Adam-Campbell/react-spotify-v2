@@ -27,18 +27,18 @@ const playlists = (state=defaultState, action) => {
                 isFetching: false
             };
 
-        case actionTypes.FETCH_PLAYLIST_SUCCESS:
-            return {
-                isFetching: false,
-                playlistData: {
-                    ...state.playlistData,
-                    [action.payload.playlistId]: {
-                        ...state.playlistData[action.payload.playlistId],
-                        fullPlaylistFetched: true,
-                        lastFetchedAt: action.payload.timestamp
-                    }
-                }
-            };
+        // case actionTypes.FETCH_PLAYLIST_SUCCESS:
+        //     return {
+        //         isFetching: false,
+        //         playlistData: {
+        //             ...state.playlistData,
+        //             [action.payload.playlistId]: {
+        //                 ...state.playlistData[action.payload.playlistId],
+        //                 fullPlaylistFetched: true,
+        //                 lastFetchedAt: action.payload.timestamp
+        //             }
+        //         }
+        //     };
 
         case actionTypes.STORE_USERS_PLAYLISTS:
             return {
@@ -49,7 +49,7 @@ const playlists = (state=defaultState, action) => {
         case actionTypes.STORE_PLAYLIST:
             return {
                 ...state,
-                playlistData: addOrMerge(state.playlistData, action.payload.playlistObject)
+                playlistData: addOrMerge(state.playlistData, action.payload.playlistObject, action.payload.playlistId)
             };
 
         case actionTypes.STORE_FEATURED_PLAYLISTS:

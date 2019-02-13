@@ -12,6 +12,9 @@ class PlaylistContainer extends Component {
     }
 
     render() {
+
+        //return null;
+
         if (!this.props.playlist || !this.props.playlist.fullPlaylistFetched) {
             return null;
         }
