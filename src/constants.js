@@ -25,3 +25,9 @@ export const collectionTypes = {
     playlists: 'PLAYLISTS',
     categories: 'CATEGORIES'
 };
+
+export const modalTypes = {
+    uploadImage: 'UPLOAD_IMAGE',
+    createPlaylist: 'CREATE_PLAYLIST',
+    addToPlaylist: 'ADD_TO_PLAYLIST'
+};

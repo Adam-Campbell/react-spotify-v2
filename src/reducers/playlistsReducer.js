@@ -94,7 +94,25 @@ const playlists = (state=defaultState, action) => {
                 )
             };
 
-        
+        case actionTypes.UPDATE_PLAYLIST_NAME_SUCCESS:
+            return {
+                ...state,
+                playlistData: addOrMerge(
+                    state.playlistData,
+                    { name: action.payload.newPlaylistName },
+                    action.payload.playlistId
+                )
+            }
+
+        case actionTypes.UPDATE_PLAYLIST_IMAGE_SUCCESS:
+            return {
+                ...state,
+                playlistData: addOrMerge(
+                    state.playlistData,
+                    { images: [{ height: null, width: null, url: action.payload.imageURI }] },
+                    action.payload.playlistId
+                )
+            }
 
         default:
             return state;

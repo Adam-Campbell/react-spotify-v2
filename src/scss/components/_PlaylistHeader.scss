@@ -26,6 +26,16 @@
         }
         @media(min-width: 1000px) {
             margin-left: 0;
+            margin-top: 16px;
+        }
+    }
+    &__name {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        .fa-pencil-alt {
+            font-size: 1rem;
+            margin-left: 1rem;
         }
     }
     &__underline {
@@ -35,6 +45,39 @@
         background: $color--primary;
         margin-bottom: 16px;
         transform-origin: left;
+    }
+    &__name-input {
+        font-family: sans-serif;
+        color: $color--primary;
+        font-size: 1rem;
+        font-weight: 400;
+        background: $color--bg-dark;
+        border-radius: 4px;
+        border: none;
+        padding: 8px;
+    }
+    &__name-button {
+        font-family: sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        background: $color--accent;
+        color: $color--bg-primary;
+        border-radius: 4px;
+        border: none;
+        margin-left: 8px;
+        padding: 8px;
+    }
+    &__image-button {
+        font-family: sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        background: $color--accent;
+        color: $color--bg-primary;
+        border-radius: 4px;
+        border: none;
+        margin-top: 8px;
+        padding: 8px;
+        cursor: pointer;
     }
     &__owner {
 

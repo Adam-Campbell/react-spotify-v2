@@ -8,6 +8,7 @@ import playlists from './playlistsReducer';
 import highlights from './highlightsReducer';
 import categories from './categoriesReducer';
 import transitions from './transitionsReducer';
+import modal from './modalReducer';
 
 export default combineReducers({
     accessToken,
@@ -18,5 +19,6 @@ export default combineReducers({
     playlists,
     highlights,
     categories,
-    transitions
+    transitions,
+    modal
 });

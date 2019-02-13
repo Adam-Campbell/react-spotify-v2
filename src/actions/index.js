@@ -7,3 +7,4 @@ export * from './highlightsActions';
 export * from './categoryActions';
 export * from './transitionActions';
 export * from './followActions';
+export * from './modalActions';
