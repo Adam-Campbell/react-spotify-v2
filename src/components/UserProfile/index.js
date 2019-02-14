@@ -35,6 +35,7 @@ class UserProfileContainer extends Component {
                     <CardCollection 
                         itemIds={this.props.playlistIds}
                         collectionType={collectionTypes.playlists}
+                        includeCreatePlaylistCard={true}
                     />
                 </Section>
             </main>

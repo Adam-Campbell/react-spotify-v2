@@ -61,6 +61,12 @@ const user = (state=defaultState, action) => {
                 followedArtistIds: state.followedArtistIds.filter(id =>  id !== action.payload.artistId)
             };
 
+        case actionTypes.CREATE_PLAYLIST_SUCCESS:
+            return {
+                ...state,
+                playlistIds: [ action.payload.playlistId,  ...state.playlistIds, ]
+            }
+
         default:
             return state;
     }

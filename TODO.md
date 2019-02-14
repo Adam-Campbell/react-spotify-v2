@@ -10,7 +10,7 @@
 
 - The Followers component needs to be updated to show a Follow/Unfollow button where appropriate, with callbacks supplied to the component to handle the actual following/unfollowing. -- DONE --
 
-- Modals need to be implement to handle creating playlists, uploading cover images, adding a track to a playlist, global errors. Use a premade modal solution for this. 
+- Modals need to be implement to handle creating playlists, uploading cover images, adding a track to a playlist, global errors. Use a premade modal solution for this. --DONE--
 
 - Image placeholder functionality needs to be implemented for the scenarios where the API returns a resource that doesn't have an image associated with it.
 

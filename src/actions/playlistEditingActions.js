@@ -195,3 +195,49 @@ export const removeTrackFromPlaylist = (trackURI, trackId, playlistId) => async 
         dispatch(removeTrackFromPlaylistFailed(err));
     }
 }
+
+
+
+const createPlaylistRequest = () => ({
+    type: actionTypes.CREATE_PLAYLIST_REQUEST
+});
+
+const createPlaylistSuccess = (playlistObject, playlistId) => ({
+    type: actionTypes.CREATE_PLAYLIST_SUCCESS,
+    payload: {
+        playlistObject, 
+        playlistId
+    }
+});
+
+const createPlaylistFailed = (error) => ({
+    type: actionTypes.CREATE_PLAYLIST_FAILED,
+    payload: {
+        error
+    }
+});
+
+export const createPlaylist = (playlistName) => async (dispatch, getState) => {
+    const token = getState().accessToken.token;
+    const currentUserId = getState().user.id;
+    try {
+        const response = await axios.request(`https://api.spotify.com/v1/users/${currentUserId}/playlists`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            data: {
+                name: playlistName
+            }
+        });
+        const playlistObject = response.data;
+        dispatch(createPlaylistSuccess(
+            playlistObject,
+            playlistObject.id
+        ));
+    } catch (err) {
+        dispatch(createPlaylistFailed(err));
+    }
+}
+

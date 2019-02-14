@@ -148,6 +148,17 @@ const playlists = (state=defaultState, action) => {
                 }
             }
 
+        case actionTypes.CREATE_PLAYLIST_SUCCESS:
+            return {
+                ...state,
+                playlistData: {
+                    ...state.playlistData,
+                    [action.payload.playlistId]: {
+                        ...action.payload.playlistObject
+                    }
+                }
+            }
+
         default:
             return state;
     }

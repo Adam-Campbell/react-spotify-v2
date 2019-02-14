@@ -2,18 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Card from '../Card';
+import CreatePlaylistCard from '../CreatePlaylistCard';
 import { collectionTypes } from '../../constants';
+
+const getImageURL = (item, collectionType) => {
+    if (collectionType === collectionTypes.categories) {
+        return item.icons[0].url;
+    } else {
+        return item.images.length ? item.images[0].url : '';
+    }
+}
+
 
 const CardCollection = props => (
     <div className="card-collection">
+        {props.includeCreatePlaylistCard && <CreatePlaylistCard />}
         {props.items.map((item, index) => (
             <div key={`${item.id}--${index}`}className="card-collection__card-holder">
                 <Card 
                     linkDestination={props.URLPath + item.id}
-                    imageURL={props.collectionType === collectionTypes.categories ? 
-                        item.icons[0].url : 
-                        item.images[0].url
-                    }
+                    imageURL={getImageURL(item, props.collectionType)}
                     label={item.name}
                     itemId={item.id}
                     collectionType={props.collectionType}
@@ -25,6 +33,7 @@ const CardCollection = props => (
 
 CardCollection.propTypes = {
     itemIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    includeCreatePlaylistCard: PropTypes.bool,
     collectionType: PropTypes.oneOf([
         collectionTypes.artists, 
         collectionTypes.albums, 
