@@ -4,6 +4,7 @@ import ReactModal from 'react-modal';
 import * as ActionCreators from '../../actions';
 import { modalTypes } from '../../constants';
 import UploadImageModal from '../UploadImageModal';
+import AddToPlaylistModal from '../AddToPlaylistModal';
 
 ReactModal.setAppElement('#root');
 
@@ -11,6 +12,9 @@ const getModalContent = (modalType, modalProps) => {
     switch (modalType) {
         case modalTypes.uploadImage:
             return <UploadImageModal {...modalProps} />;
+
+        case modalTypes.addToPlaylist:
+            return <AddToPlaylistModal {...modalProps} />;
 
         default:
             return null;

@@ -2,11 +2,11 @@
 
 - Category fetching needs to be updated so that when fetching a category it fetches the categories general info as well as its playlists. This ensures that all of the necessary info will be present even if the users entry point into the app is the category page itself. 
 
-- Playlist route needs to identify whether the playlist being view is owned by the current user, and render appropriately. Either create two completely seperate components that the route can render depending on whether the playlist is owned by the user, or create one component that it will always render, and that component will conditionaly render certain parts depending on whether the user owns the playlist. 
+- Playlist route needs to identify whether the playlist being view is owned by the current user, and render appropriately. Either create two completely seperate components that the route can render depending on whether the playlist is owned by the user, or create one component that it will always render, and that component will conditionaly render certain parts depending on whether the user owns the playlist. --DONE--
 
-- Playlist editing functionality needs to be implemented. Adding tracks to / removing tracks from playlists, updating the name of playlist and uploading new cover images for the playlist.
+- Playlist editing functionality needs to be implemented. Adding tracks to / removing tracks from playlists, updating the name of playlist and uploading new cover images for the playlist. --DONE--
 
-- The add to playlist button that appears within the Track component needs to be made functional. Add a tooltip to indicate what it does (use premade tooltip solution)
+- The add to playlist button that appears within the Track component needs to be made functional. Add a tooltip to indicate what it does (use premade tooltip solution) -- DONE -- (minus tooltip)
 
 - The Followers component needs to be updated to show a Follow/Unfollow button where appropriate, with callbacks supplied to the component to handle the actual following/unfollowing. -- DONE --
 

@@ -30,7 +30,11 @@ class PlaylistContainer extends Component {
                     <PlaylistHeader playlistId={this.props.playlistId} />
                 }
                 <section className="playlist__tracks-container">
-                    <TrackCollection trackIds={tracks} />
+                    <TrackCollection 
+                        trackIds={tracks} 
+                        contextId={this.props.playlistId}
+                        includeRemoveTrackButton={isOwner} 
+                    />
                 </section>
             </main>
         );

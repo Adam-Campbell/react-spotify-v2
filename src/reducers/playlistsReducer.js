@@ -102,7 +102,7 @@ const playlists = (state=defaultState, action) => {
                     { name: action.payload.newPlaylistName },
                     action.payload.playlistId
                 )
-            }
+            };
 
         case actionTypes.UPDATE_PLAYLIST_IMAGE_SUCCESS:
             return {
@@ -112,6 +112,40 @@ const playlists = (state=defaultState, action) => {
                     { images: [{ height: null, width: null, url: action.payload.imageURI }] },
                     action.payload.playlistId
                 )
+            };
+
+        case actionTypes.ADD_TRACK_TO_PLAYLIST_SUCCESS:
+            return {
+                ...state,
+                playlistData: {
+                    ...state.playlistData,
+                    [action.payload.playlistId]: {
+                        ...state.playlistData[action.payload.playlistId],
+                        tracks: state.playlistData[action.payload.playlistId].tracks ?
+                                [
+                                    ...state.playlistData[action.payload.playlistId].tracks, 
+                                    action.payload.trackId
+                                ] :
+                                [ action.payload.trackId ]
+                        
+                    }
+                }
+            }
+
+        case actionTypes.REMOVE_TRACK_FROM_PLAYLIST_SUCCESS:
+            return {
+                ...state,
+                playlistData: {
+                    ...state.playlistData,
+                    [action.payload.playlistId]: {
+                        ...state.playlistData[action.payload.playlistId],
+                        tracks: state.playlistData[action.payload.playlistId].tracks ?
+                                state.playlistData[action.payload.playlistId].tracks.filter(id => 
+                                    id !== action.payload.trackId
+                                ) :
+                                []
+                    }
+                }
             }
 
         default:

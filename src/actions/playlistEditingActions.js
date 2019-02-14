@@ -98,3 +98,100 @@ export const updatePlaylistImage = (imageData, playlistId) => async (dispatch, g
         ));
     }
 }
+
+
+const addTrackToPlaylistRequest = (trackId, playlistId) => ({
+    type: actionTypes.ADD_TRACK_TO_PLAYLIST_REQUEST,
+    payload: {
+        trackId,
+        playlistId
+    }
+});
+
+const addTrackToPlaylistSuccess = (trackId, playlistId) => ({
+    type: actionTypes.ADD_TRACK_TO_PLAYLIST_SUCCESS,
+    payload: {
+        trackId,
+        playlistId
+    }
+});
+
+const addTrackToPlaylistFailed = (error, trackId, playlistId) => ({
+    type: actionTypes.ADD_TRACK_TO_PLAYLIST_FAILED,
+    payload: {
+        error,
+        trackId,
+        playlistId
+    }
+});
+
+export const addTrackToPlaylist = (trackURI, trackId, playlistId) => async (dispatch, getState) => {
+    const token = getState().accessToken.token;
+    try {
+        const response = await axios.request(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            data: {
+                uris: [ trackURI ]
+            }
+        });
+        if (response.status === 201) {
+            dispatch(addTrackToPlaylistSuccess(
+                trackId,
+                playlistId
+            ));
+        }
+    } catch (err) {
+        dispatch(addTrackToPlaylistFailed(
+            err, 
+            trackId,
+            playlistId
+        ));
+    }
+}
+
+
+const removeTrackFromPlaylistRequest = (trackId, playlistId) => ({
+    type: actionTypes.REMOVE_TRACK_FROM_PLAYLIST_REQUEST
+});
+
+const removeTrackFromPlaylistSuccess = (trackId, playlistId) => ({
+    type: actionTypes.REMOVE_TRACK_FROM_PLAYLIST_SUCCESS,
+    payload: {
+        trackId,
+        playlistId
+    }
+});
+
+const removeTrackFromPlaylistFailed = (error, playlistId) => ({
+    type: actionTypes.REMOVE_TRACK_FROM_PLAYLIST_FAILED,
+    payload: {
+        error,
+        playlistId
+    }
+});
+
+export const removeTrackFromPlaylist = (trackURI, trackId, playlistId) => async (dispatch, getState) => {
+    const token = getState().accessToken.token;
+    try {
+        const response = await axios.request(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            method: 'DELETE',
+            data: {
+                tracks: [
+                    { uri: trackURI }
+                ]
+            }
+        });
+        if (response.status === 200) {
+            dispatch(removeTrackFromPlaylistSuccess(trackId, playlistId))
+        }
+    } catch (err) {
+        dispatch(removeTrackFromPlaylistFailed(err));
+    }
+}

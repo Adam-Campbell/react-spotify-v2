@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import * as ActionCreators from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { modalTypes } from '../../constants';
 
 export const convertMsToMinSec = ms => {
     const toSecs = ms / 1000;
@@ -21,14 +24,41 @@ const Track = props => (
         <FontAwesomeIcon icon={faPlayCircle} />
         {props.useAlbumLayout && <span className="track__number">{props.trackNumber}</span>}
         <p className="track__name">{props.name}</p>
-        <FontAwesomeIcon icon={faPlus} />
+        <FontAwesomeIcon 
+            icon={faPlus} 
+            onClick={(e) => {
+                e.stopPropagation();
+                props.openModal(
+                    modalTypes.addToPlaylist, 
+                    { 
+                        trackURI: props.trackURI, 
+                        trackId: props.trackId 
+                    }
+                );
+            }}
+        />
+        {props.includeRemoveTrackButton && (
+            <FontAwesomeIcon 
+                icon={faTimes} 
+                onClick={(e) => {
+                    e.stopPropagation();
+                    props.removeTrackFromPlaylist(
+                        props.trackURI,
+                        props.trackId,
+                        props.contextId
+                    );
+                }}
+            />
+        )}
         <span className="track__duration">{props.duration}</span>
     </li>
 );
 
 Track.propTypes = {
     trackId: PropTypes.string.isRequired,
-    useAlbumLayout: PropTypes.bool
+    useAlbumLayout: PropTypes.bool,
+    includeRemoveTrackButton: PropTypes.bool,
+    contextId: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -38,9 +68,16 @@ const mapStateToProps = (state, ownProps) => {
         name: track.name,
         imageURL: album.images[0].url,
         duration: convertMsToMinSec(track.duration_ms),
-        trackNumber: track.track_number
+        trackNumber: track.track_number,
+        trackURI: track.uri
     };
 };
 
-export default connect(mapStateToProps)(Track);
+export default connect(
+    mapStateToProps,
+    { 
+        openModal: ActionCreators.openModal,
+        removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist
+    }
+)(Track);
 
