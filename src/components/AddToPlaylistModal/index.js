@@ -16,7 +16,11 @@ const AddToPlaylistModal = props => (
                         props.closeModal();
                     }}
                 >
-                  <img className="add-to-playlist-modal__item-image" src={playlist.images[0].url} alt="" />  
+                  <img 
+                    className="add-to-playlist-modal__item-image" 
+                    src={playlist.images.length ? playlist.images[0].url : ''} 
+                    alt="" 
+                />  
                   <p className="add-to-playlist-modal__item-text">{playlist.name}</p>
                 </li>
             ))}

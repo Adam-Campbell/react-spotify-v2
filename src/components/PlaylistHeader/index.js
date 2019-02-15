@@ -86,7 +86,7 @@ class PlaylistHeader extends Component {
 const mapStateToProps = (state, ownProps) => {
     const playlist = state.playlists.playlistData[ownProps.playlistId];
     return {
-        imageURL: playlist.images[0].url,
+        imageURL: playlist.images.length ? playlist.images[0].url : '',
         playlistName: playlist.name,
         ownerName: playlist.owner.display_name,
         isFollowing: playlist.isFollowing,

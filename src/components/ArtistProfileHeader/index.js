@@ -93,7 +93,7 @@ class ArtistProfileHeader extends Component {
 const mapStateToProps = (state, ownProps) => {
     const artist = state.artists.artistData[ownProps.artistId];
     return {
-        imageURL: artist.images[0].url,
+        imageURL: artist.images.length ? artist.images[0].url : '',
         name: artist.name,
         followerCount: artist.followers.total,
         usersFollowedArtistIds: state.user.followedArtistIds,

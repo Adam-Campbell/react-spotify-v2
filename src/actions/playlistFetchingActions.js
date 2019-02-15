@@ -4,6 +4,38 @@ import axios from 'axios';
 import { getUsersMarket } from './userActions';
 import { cloneDeep } from 'lodash';
 
+/*
+
+PLAYLIST FETCHING EXPLANATION
+------------------------------
+
+In order to fetch a playlist plus all of its tracks, multiple requests (potentially) have to be made.
+The main endpoint for retreiving the playlist object will also retreive the first 100 tracks, any 
+additional tracks have to be fetched seperately in groups of 100 (max) at a time. 
+
+However the initial request to get the playlist object must be made first in order for us to know how many
+tracks the playlist has. 
+
+Functions:
+
+makePlaylistDataRequests
+    - Makes initial request to retreive the playlist object
+    - Once the playlist object has been received, it checks how many tracks the playlist has
+    - If it has more than 100, it makes the necessary requests to retreive all tracks, 100 tracks at a time
+    - These requests are made concurrently for faster execution
+    - Once all requests have completed, it returns all of the data gathered in the previous steps
+
+fetchPlaylist
+    - Calls the makePlaylistDataRequests function, and awaits the result
+    - Once the data has been returned, processes the data: 
+        - Normalizes the data seperating out all nested entities
+        - Takes any additional trackIds from the subsequent API calls and appends them to the tracks
+          array on the playlist object, ensuring that the original order of the tracks is preserved 
+
+*/
+
+
+
 const fetchPlaylistRequest = (playlistId) => ({
     type: actionTypes.FETCH_PLAYLIST_REQUEST,
     payload: {
@@ -69,70 +101,6 @@ const checkIfFollowing = (token, playlistId, currentUserId) => async (dispatch) 
     }
 }
 
-/*
-
-Fetching all additional tracks
-
-Initial playlist fetch will get the playlist object, and the first 100 tracks objects. 
-Once normalized this will give me the following entities:
-
-playlists
-tracks
-artists
-albums
-
-I will also have an ordered array of the first 100 trackIds. 
-
-From there I can grab the total amount of tracks, and either use a while loop with a counter to keep making
-requests until the end of the list is reached, or calculate ahead of time how many requests it will take and
-just keep going until that many requests have been completed. However, I will also have to keep track of
-my position (offset) within the track list.
-
-
-
-
-Fetch all data before normalizing...
-
-Make the initial request, and then check the total amount of tracks (don't need to normalize for this).
-
-Create an array with the first request as the only element. 
-
-Now use a loop to keep making requests for the tracks, moving through the list of tracks until the end 
-is reached. Every new request made gets added to the array. 
-
-Once all requests have been made the array can be returned. 
-
-Elsewhere,  Promise.all will be used to wait for all of the promises to be fulfilled. Now we have an array where
-the first element is the (not yet normalized) result of the first API call (contains the playlist object), and
-every subsequent element is the result of one of the subsequent API calls, which each contain some number of 
-track objects (not yet normalized however). Critically, they are all in the correct order.
-
-Pop the first element off of the array. 
-
-First element can be normalized, which will give us the playlist object (with its tracks property replaced with
-an array of trackIds), as well as various track, artist and album entities. 
-
-Now all of the remaning elements can be normalized with a reduce function. Each of the remaining elements when
-normalized will give us an ordered array of trackIds, as well as track, album and artist entities. Set up the
-reduce such that we end up with the following structure:
-
-{
-    trackIds: [],
-    tracks: {},
-    artists: {},
-    albums: {}
-}
-
-Finally, we can take the data returned from this reduce function and combine it with the data from the first 
-element (we popped it off the array before calling reduce). We will take the trackIds array and add it onto the
-end of the tracks property of the playlist object. Then we will merge all of the entity dictionaries with their
-counterparts from the first element. 
-
-*/
-
-
-
-
 
 /**
  * This function makes the initial request for the playlist object and the first 100 tracks, and then makes
@@ -143,7 +111,7 @@ counterparts from the first element.
  * @param {*} playlistId 
  * @param {*} market 
  */
-const fetchPlaylistData = async (token, playlistId, market) => {
+const makePlaylistDataRequests = async (token, playlistId, market) => {
     const promiseArray = [];
     let escapeHatch = 1;
     try {
@@ -195,7 +163,7 @@ export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
     }
     try {
     dispatch(checkIfFollowing(token, playlistId, currentUserId))
-    const allRequests = await fetchPlaylistData(token, playlistId, market);
+    const allRequests = await makePlaylistDataRequests(token, playlistId, market);
     const playlistRequest = allRequests.shift();
     const additionalTrackRequests = allRequests;
 

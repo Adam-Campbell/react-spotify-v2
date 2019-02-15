@@ -1,6 +1,6 @@
 ## UI
 
-- Category fetching needs to be updated so that when fetching a category it fetches the categories general info as well as its playlists. This ensures that all of the necessary info will be present even if the users entry point into the app is the category page itself. 
+- Category fetching needs to be updated so that when fetching a category it fetches the categories general info as well as its playlists. This ensures that all of the necessary info will be present even if the users entry point into the app is the category page itself.   (unsure if this is necessary)
 
 - Playlist route needs to identify whether the playlist being view is owned by the current user, and render appropriately. Either create two completely seperate components that the route can render depending on whether the playlist is owned by the user, or create one component that it will always render, and that component will conditionaly render certain parts depending on whether the user owns the playlist. --DONE--
 

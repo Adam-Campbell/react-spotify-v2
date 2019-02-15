@@ -11,7 +11,7 @@ const UserProfileHeader = props => (
 );
 
 const mapStateToProps = state => ({
-    userImageURL: state.user.images[0].url,
+    userImageURL: state.user.images.length ? state.user.images[0].url : '',
     userDisplayName: state.user.display_name,
     userFollowerCount: state.user.followers.total
 });

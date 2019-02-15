@@ -15,6 +15,7 @@ import Search from './components/Search';
 import ScrollToTop from './components/ScrollToTop';
 import WithUserInfo from './components/WithUserInfo';
 import Modal from './components/Modal';
+import Player from './components/Player';
 
 class App extends Component {
 
@@ -79,7 +80,7 @@ class App extends Component {
                           </Switch>
                         
                       </div>
-                      <section className="player-controls"></section>
+                      <Player />
                     </div>
                   </ScrollToTop>
                 </BrowserRouter>

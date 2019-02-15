@@ -87,7 +87,7 @@ const mapStateToProps = (state, ownProps) => {
         artistName: artist.name,
         artistId: artist.id,
         albumName: album.name,
-        imageURL: album.images[0].url,
+        imageURL: album.images.length ? album.images[0].url : '',
         releaseDate: album.release_date,
         imageWidth: state.transitions.imageWidth,
         imageHeight: state.transitions.imageHeight,
