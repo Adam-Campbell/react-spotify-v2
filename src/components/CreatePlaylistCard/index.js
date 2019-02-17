@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
 
-const CreatePlaylistCard = props => (
+export const CreatePlaylistCard = props => (
     <div className="card-collection__card-holder">
         <div 
             className="create-playlist-card" 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
-const Followers = props => (
+export const Followers = props => (
     <div className="followers">
         <FontAwesomeIcon icon={faUsers} />
         <p>{props.followerCount} followers</p>

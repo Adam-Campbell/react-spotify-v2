@@ -5,16 +5,16 @@ import Card from '../Card';
 import CreatePlaylistCard from '../CreatePlaylistCard';
 import { collectionTypes } from '../../constants';
 
-const getImageURL = (item, collectionType) => {
+export const getImageURL = (item, collectionType) => {
     if (collectionType === collectionTypes.categories) {
-        return item.icons[0].url;
+        return item.icons.length ? item.icons[0].url : '';
     } else {
         return item.images.length ? item.images[0].url : '';
     }
 }
 
 
-const CardCollection = props => (
+export const CardCollection = props => (
     <div className="card-collection">
         {props.includeCreatePlaylistCard && <CreatePlaylistCard />}
         {props.items.map((item, index) => (

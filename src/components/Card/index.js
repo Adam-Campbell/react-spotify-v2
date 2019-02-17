@@ -37,7 +37,7 @@ the card will then redirect to the new route which will load instantly since the
 
 
 
-class Card extends Component {
+export class Card extends Component {
     imageRef = React.createRef();
 
     static propTypes = {

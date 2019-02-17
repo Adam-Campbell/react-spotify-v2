@@ -18,7 +18,7 @@ export const convertMsToMinSec = ms => {
 };
 
 
-const Track = props => (
+export const Track = props => (
     <li className="track">
         {props.useAlbumLayout || <img className="track__image" alt="" src={props.imageURL} />}
         <FontAwesomeIcon icon={faPlayCircle} />
@@ -66,7 +66,7 @@ const mapStateToProps = (state, ownProps) => {
     const album = state.albums.albumData[track.album];
     return {
         name: track.name,
-        imageURL: album.images[0].url,
+        imageURL: album.images.length ? album.images[0].url : '',
         duration: convertMsToMinSec(track.duration_ms),
         trackNumber: track.track_number,
         trackURI: track.uri
