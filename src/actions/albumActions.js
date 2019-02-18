@@ -95,7 +95,7 @@ export const fetchAlbum = (albumId) => async (dispatch, getState) => {
     if (album && album.fullAlbumFetched) {
         return dispatch(fetchAlbumAbort(albumId));
     }
-    dispatch(fetchAlbumInfo(token, albumId, market))
+    return dispatch(fetchAlbumInfo(token, albumId, market))
     .then(() => {
         const timestamp = Date.now();
         dispatch(fetchAlbumSuccess(albumId, timestamp));

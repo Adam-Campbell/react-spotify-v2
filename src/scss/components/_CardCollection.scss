@@ -1,0 +1,23 @@
+.card-collection {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -8px;
+    margin-right: -8px;
+    &__card-holder {
+        padding: 8px;
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-items: stretch;
+        width: 50%;
+        @media (min-width: 600px) {
+            width: 33.33333%;
+        }
+        @media (min-width: 768px) {
+            width: 25%;
+        }
+        @media (min-width: 1200px) {
+            width: 20%;
+        }
+    }
+}

@@ -161,7 +161,7 @@ export const fetchArtist = (artistId) => async (dispatch, getState) => {
     if (artist && artist.fullProfileFetched && Date.now() - artist.lastFetchedAt <= 3600000) {
         return dispatch(fetchArtistAbort(artistId));
     }
-    Promise.all([
+    return Promise.all([
         dispatch(fetchArtistsInfo(token, artistId)),
         dispatch(fetchArtistsTopTracks(token, artistId, market)),
         dispatch(fetchArtistsRelatedArtists(token, artistId)),

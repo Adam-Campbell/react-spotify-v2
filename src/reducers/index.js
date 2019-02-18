@@ -7,6 +7,8 @@ import albums from './albumsReducer';
 import playlists from './playlistsReducer';
 import highlights from './highlightsReducer';
 import categories from './categoriesReducer';
+import transitions from './transitionsReducer';
+import modal from './modalReducer';
 
 export default combineReducers({
     accessToken,
@@ -16,5 +18,7 @@ export default combineReducers({
     albums,
     playlists,
     highlights,
-    categories
+    categories,
+    transitions,
+    modal
 });
