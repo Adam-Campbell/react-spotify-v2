@@ -6,7 +6,7 @@ import CardCollection from '../CardCollection';
 import Section from '../Section';
 import { collectionTypes } from '../../constants';
 
-class ArtistProfileContainer extends Component {
+class Highlights extends Component {
     componentDidMount() {
         this.props.fetchHighlights();
     }
@@ -52,4 +52,4 @@ export default connect(
     {
         fetchHighlights: ActionCreators.fetchHighlights
     }
-)(ArtistProfileContainer);
+)(Highlights);

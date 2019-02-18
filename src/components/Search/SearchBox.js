@@ -5,6 +5,7 @@ const SearchBox = props => (
     <section className="search-box">
         <p className="search-box__label">Search for an artist, album or playlist</p>
         <input
+            type="text"
             className="search-box__input"
             placeholder="Start typing..."
             value={props.searchTerm}

@@ -19,7 +19,6 @@ class UploadImageModal extends Component {
     };
 
     checkForFile = () => {
-        //console.log('checkForFile called');
         const imageFile = this.fileInput.current.files[0];
         if (imageFile) {
             this.reader.readAsDataURL(imageFile);

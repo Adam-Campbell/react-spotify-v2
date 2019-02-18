@@ -33,15 +33,13 @@ class SearchContainer extends Component {
     }
 
     fetchSearchResults = async (searchTerm) => {
-        const { token } = this.props;
-        const market = this.props.market || await this.props.getUsersMarket(token);
+        const { token, market } = this.props;
         const response = await axios.get(
             `https://api.spotify.com/v1/search?q=${searchTerm}&type=artist,album,playlist&market=${market}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        console.log(response.data);
         this.setState({
             artists: response.data.artists.items,
             albums: response.data.albums.items,
@@ -70,9 +68,4 @@ const mapStateToProps = (state) => ({
     market: state.user.country
 });
 
-export default connect(
-    mapStateToProps,
-    {
-        getUsersMarket: ActionCreators.getUsersMarket
-    }
-)(SearchContainer);
+export default connect(mapStateToProps)(SearchContainer);

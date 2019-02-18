@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
@@ -23,15 +21,23 @@ class Nav extends Component {
     fadeTween = null;
 
     componentDidMount() {
-        this.fadeTween = TweenMax.staggerFrom([
-            this.logoRef.current,
-            this.searchRef.current,
-            this.highlightsRef.current,
+        // ensure that all refs have current nodes before initializing timeline
+        if (
+            this.logoRef.current && 
+            this.searchRef.current && 
+            this.highlightsRef.current &&
             this.meRef.current
-        ], 0.2, {
-            opacity: 0,
-            delay: 0.3
-        }, 0.15);
+        ) {
+            this.fadeTween = TweenMax.staggerFrom([
+                this.logoRef.current,
+                this.searchRef.current,
+                this.highlightsRef.current,
+                this.meRef.current
+            ], 0.2, {
+                opacity: 0,
+                delay: 0.3
+            }, 0.15);
+        }
     }
 
     render() {
@@ -50,7 +56,7 @@ class Nav extends Component {
                     </li>
                     <li className="nav__list-item" ref={this.highlightsRef}>
                         <NavLink to="/highlights" className="nav__link" onClick={this.props.toggleNav}>
-                        <FontAwesomeIcon icon={faList} />
+                            <FontAwesomeIcon icon={faList} />
                             Highlights
                         </NavLink>
                     </li>
@@ -63,9 +69,8 @@ class Nav extends Component {
                     </ul>
                 </nav>
             </React.Fragment>
-        )
+        );
     }
 }
-
 
 export default Nav;
