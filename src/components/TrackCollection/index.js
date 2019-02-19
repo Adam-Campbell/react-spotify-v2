@@ -10,6 +10,7 @@ const TrackCollection = props => (
             key={`${trackId}--${index}`}
             useAlbumLayout={props.useAlbumLayout}
             contextId={props.contextId}
+            contextURI={props.contextURI}
             includeRemoveTrackButton={props.includeRemoveTrackButton}
           />
       ))}
@@ -21,6 +22,7 @@ TrackCollection.propTypes = {
     useAlbumLayout: PropTypes.bool,
     includeRemoveTrackButton: PropTypes.bool,
     contextId: PropTypes.string,
+    contextURI: PropTypes.string
 };
 
 export default TrackCollection;

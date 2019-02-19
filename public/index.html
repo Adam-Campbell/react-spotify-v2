@@ -66,6 +66,7 @@
         player.addListener('player_state_changed', state => { console.log(state); });
         player.addListener('ready', ({ device_id }) => {
           console.log('Ready with Device ID', device_id);
+          window._REACTIFY_GLOBAL_DEVICE_ID_ = device_id;
         });
         player.connect();
         window.player = player;

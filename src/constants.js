@@ -8,6 +8,7 @@ const permissionsRequired = [
     'user-follow-modify',
     'user-follow-read',
     'user-library-read',
+    'user-modify-playback-state',
     'user-read-birthdate',
     'user-read-email',
     'user-read-playback-state',

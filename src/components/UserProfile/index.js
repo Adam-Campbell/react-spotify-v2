@@ -23,6 +23,8 @@ class UserProfileContainer extends Component {
                 <Section title="Recently Played Tracks">
                     <TrackCollection 
                         trackIds={this.props.recentTracksIds.slice(0,5)}
+                        contextURI={this.props.userURI}
+                        contextId={this.props.userId}
                     />
                 </Section>
                 <Section title="Your Top Artists">
@@ -45,6 +47,7 @@ class UserProfileContainer extends Component {
 
 const mapStateToProps = (state) => ({
     userId: state.user.id,
+    userURI: state.user.uri,
     recentTracksIds: state.user.recentTracksIds,
     topArtistsIds: state.user.topArtistsIds,
     playlistIds: state.user.playlistIds

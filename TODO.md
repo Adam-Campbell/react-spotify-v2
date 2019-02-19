@@ -89,7 +89,60 @@ player: {
     currentContext: {String}
 }
 
-This assumes that volume and track position are not in player state. 
+This assumes that volume and track position are not in player state.
+
+I think that the track list for the current context, and the shuffled variant of it, should not be kept in redux, since they would only be in redux for the audio elem implementation, and having something only being in redux for one of the implementations is too messy. 
+
+
+
+
+## How the SDK implementation could work
+
+- To start playing a track, hit the API endpoint https://api.spotify.com/v1/me/player/play. Will need to pass the player id as query param, and at minimum pass a context uri in the body. Investigate how the track uri array and offset values behave.
+
+- Playing and pausing can be achieved by issuing the command to the Player class instance, and then updating state with the data it returns.
+
+- When clicking on a track within the UI, we will look at the track uri and context uri for that track. If both of those match the data in state, then we just need to either pause or play the track (via the Player class instance). If one or both doesn't match, then we need to make a request to the API endpoint with the relevant details (ie the new context uri, tracks uris or offset etc).
+
+- When clicking on the skip to next track or skip to previous track buttons, we just make the request to the player instance. The player instance takes care of all the behaviours for us (determining the right action based on the offset within the curent context, the current repeat and shuffle settings etc). Once the track has been updated the player will emit data that we can use to update the store. 
+
+- To seek a specific place within the current track we just have to make a request to the player instance. 
+
+- To set volume of track we just have to make request to player instance.  
+
+- To toggle shuffle and repeat modes, we just make a request to the player instance, ensuring that the UI is also updated to match.
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

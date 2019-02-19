@@ -19,7 +19,18 @@ export const convertMsToMinSec = ms => {
 
 
 export const Track = props => (
-    <li className="track">
+    <li className="track"
+        onClick={() => {
+            if (window._REACTIFY_GLOBAL_DEVICE_ID_) {
+                props.selectTrack(
+                    window._REACTIFY_GLOBAL_DEVICE_ID_, 
+                    props.contextURI,
+                    props.contextId, 
+                    props.trackURI
+                );
+            }
+        }}
+    >
         {props.useAlbumLayout || <img className="track__image" alt="" src={props.imageURL} />}
         <FontAwesomeIcon icon={faPlayCircle} />
         {props.useAlbumLayout && <span className="track__number">{props.trackNumber}</span>}
@@ -58,7 +69,8 @@ Track.propTypes = {
     trackId: PropTypes.string.isRequired,
     useAlbumLayout: PropTypes.bool,
     includeRemoveTrackButton: PropTypes.bool,
-    contextId: PropTypes.string
+    contextId: PropTypes.string,
+    contextURI: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -77,7 +89,8 @@ export default connect(
     mapStateToProps,
     { 
         openModal: ActionCreators.openModal,
-        removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist
+        removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist,
+        selectTrack: ActionCreators.selectTrack
     }
 )(Track);
 

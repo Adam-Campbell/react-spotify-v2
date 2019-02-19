@@ -8,3 +8,4 @@ export * from './categoryActionTypes';
 export * from './transitionActionTypes';
 export * from './followActionTypes';
 export * from './modalActionTypes';
+export * from './playerActionTypes';

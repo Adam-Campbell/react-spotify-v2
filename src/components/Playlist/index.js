@@ -19,7 +19,7 @@ class PlaylistContainer extends Component {
             return null;
         }
         const isOwner = this.props.playlist.owner.id === this.props.currentUserId;
-        const { tracks } = this.props.playlist;
+        const { tracks, uri } = this.props.playlist;
         // As well as conditionally rendering OwnedPlaylistHeader when current user owns the playlist, 
         // the Track components rendered need to have the ability to add a track to a modal when the 
         // current user owns the playlist (but only when that is the case).
@@ -33,6 +33,7 @@ class PlaylistContainer extends Component {
                     <TrackCollection 
                         trackIds={tracks} 
                         contextId={this.props.playlistId}
+                        contextURI={uri}
                         includeRemoveTrackButton={isOwner} 
                     />
                 </section>

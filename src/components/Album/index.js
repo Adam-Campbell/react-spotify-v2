@@ -14,7 +14,7 @@ class AlbumContainer extends Component {
         if (!this.props.album || !this.props.album.fullAlbumFetched) {
             return null;
         }
-        const { tracks } = this.props.album;
+        const { tracks, id, uri } = this.props.album;
         return (
             <main className="album">
                 <AlbumHeader albumId={this.props.albumId} />
@@ -22,6 +22,8 @@ class AlbumContainer extends Component {
                     <TrackCollection 
                         trackIds={tracks}
                         useAlbumLayout={true}
+                        contextId={id}
+                        contextURI={uri}
                     />
                 </section>
             </main>
