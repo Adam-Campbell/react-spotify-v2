@@ -95,6 +95,18 @@ I think that the track list for the current context, and the shuffled variant of
 
 
 
+I can depend on the player_state_changed event to update everything from the above list except for currentContext. This is because Spotify do not provide a context when dealing with tracks directly from a users or artists profile (that is, not from an album or playlist). 
+
+So I have to use a seperate action to update the current context. The only time a context changes is when a track is clicked from the app and the SELECT_TRACK action fires (you can't swap contexts from within the player controls for example), so I can just update the context within the SELECT_TRACK_SUCCESS action. 
+
+
+
+
+
+
+
+
+
 
 ## How the SDK implementation could work
 
@@ -112,7 +124,14 @@ I think that the track list for the current context, and the shuffled variant of
 
 - To toggle shuffle and repeat modes, we just make a request to the player instance, ensuring that the UI is also updated to match.
 
- 
+
+
+
+## How the audio elem implementation could work
+
+- Same redux structure as SDK approach.
+
+-  
 
 
 
@@ -504,6 +523,101 @@ SDK:
 The SDK handles moving to the next track, however we have to update
 the current track within the redux store by hooking into the change
 event emitted by the SDK.
+
+
+
+
+
+
+
+
+
+ABOLISH CLASSES!!!!!
+
+
+I have a flag in the store indicating whether or not the SDK is
+active. 
+
+Then I just have a series of thunks that the app can call, and these
+thunks will behave differently depending on whether or not the SDK 
+player is active. 
+
+
+
+selectTrack
+    if SDK active, makes call to API to begin playback of track. Upon
+    success, it updates store with new context. The SDK will update the
+    store with the new track, playing status etc. 
+
+    if sDK not active, it updates the store with the new track, context
+    and playing status. The audio element itself is connected to the
+    store so it will update when the store updates.
+
+
+
+resume and pause 
+    if SDK active, make the necessary call to the player instance, and
+    the player will update the store.
+
+    if SDK not active, just update the store. 
+
+
+nextTrack and previousTrack
+    if SDK active, make the necessary call to the player instance, and
+    the player will update the store.
+
+    if SDK not active, finds the position of the current track within
+    the current context, and moves to the next track or the previous
+    track depending on what was requested (or stays the same if 
+    certain conditions are met). It updates the store with the new 
+    track.
+
+
+seekPositionInTrack
+    if SDK active, use global ref of player and call seek method to 
+    seek to specified time. Nothing in the store needs to be updated.
+
+    if SDK not active, use ref for audio element to seek to specified
+    point. Again nothing in the store needs to be updated. 
+
+
+
+setShuffle
+    if SDK active, call API to set shuffle state, then update the store
+    with the new shuffle state.
+
+    if SDK not active, update the store with the new shuffle state.
+    This means updating the isShuffled property, and also either 
+    creating the shuffledContextTrackIds array, or setting it back to
+    an empty array, depending on whether we are currently shuffling or
+    unshuffling.
+
+
+setRepeat
+    if SDK active, call API to set repeat state, then update the store
+    with the new repeat state.
+
+    if SDK not active, update the store with the new repeat state.
+
+
+
+
+
+
+
+
+
+
+player: {
+    isPlaying: {Bool}
+    isShuffled: {Bool}
+    trackId: {String}
+    contextURI: {String}
+    contextTrackIds: [ {String} ]
+    shuffledContextTrackIds: [ {String} ] or []
+}
+
+
 
 
 

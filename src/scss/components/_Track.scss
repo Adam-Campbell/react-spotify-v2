@@ -9,6 +9,9 @@
     &:nth-child(2n) {
         background: rgba(17,17,17,0.1);
     }
+    &.currently-playing {
+        color: $color--accent;
+    }
     &__image {
         width: 50px;
         height: auto;

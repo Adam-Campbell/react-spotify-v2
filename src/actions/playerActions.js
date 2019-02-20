@@ -5,8 +5,11 @@ const selectTrackRequest = () => ({
     type: actionTypes.SELECT_TRACK_REQUEST
 });
 
-const selectTrackSuccess = () => ({
-    type: actionTypes.SELECT_TRACK_SUCCESS
+const selectTrackSuccess = (newContextURI) => ({
+    type: actionTypes.SELECT_TRACK_SUCCESS,
+    payload: {
+        newContextURI
+    }
 });
 
 const selectTrackFailed = (error) => ({
@@ -77,7 +80,7 @@ const makeReqWithURIList = (token, deviceId, contextId, contextType, trackURI, s
 
 
 
-export const selectTrack = (deviceId, contextURI, contextId, trackURI) => async (dispatch, getState) => {
+const selectTrack = (deviceId, contextURI, contextId, trackURI) => async (dispatch, getState) => {
     console.log(contextURI, trackURI);
     try {
         const state = getState();
@@ -90,13 +93,108 @@ export const selectTrack = (deviceId, contextURI, contextId, trackURI) => async 
 
         if (contextType === 'album' || contextType === 'playlist') {
             const response = await makeReqWithContext(token, deviceId, contextURI, trackURI);
-            dispatch(selectTrackSuccess());
+            dispatch(selectTrackSuccess(contextURI));
         } else if (contextType === 'artist' || contextType === 'user') {
             const response = await makeReqWithURIList(token, deviceId, contextId, contextType, trackURI, state);
-            dispatch(selectTrackSuccess());
+            dispatch(selectTrackSuccess(contextURI));
         }
         
     } catch (err) {
         dispatch(selectTrackFailed(err));
     }
 }
+
+
+export const updatePlayerState = (trackId, isPlaying) => ({
+    type: actionTypes.UPDATE_PLAYER_STATE,
+    payload: {
+        trackId,
+        isPlaying
+    }
+});
+
+
+const setShuffleRequest = (shuffleValue) => ({
+    type: actionTypes.SET_SHUFFLE_REQUEST,
+    payload: {
+        shuffleValue
+    }
+});
+
+const setShuffleSuccess = (shuffleValue) => ({
+    type: actionTypes.SET_SHUFFLE_SUCCESS,
+    payload: {
+        shuffleValue
+    }
+});
+
+const setShuffleFailed = (error, shuffleValue) => ({
+    type: actionTypes.SET_SHUFFLE_FAILED,
+    payload: {
+        error,
+        shuffleValue
+    }
+});
+
+export const setShuffle = (shuffleValue) => async (dispatch, getState) => {
+    const token = getState().accessToken.token;
+    const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
+    try {
+        const response = await axios.request(
+            `https://api.spotify.com/v1/me/player/shuffle?device_id=${deviceId}&state=${shuffleValue}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            method: 'PUT'
+        });
+        console.log(response.data);
+        dispatch(setShuffleSuccess(shuffleValue));
+    } catch (err) {
+        dispatch(setShuffleFailed(err, shuffleValue));
+    }
+}
+
+
+const setRepeatRequest = (newRepeatValue) => ({
+    type: actionTypes.SET_REPEAT_REQUEST,
+    payload: {
+        newRepeatValue
+    }
+});
+
+const setRepeatSuccess = (newRepeatValue) => ({
+    type: actionTypes.SET_REPEAT_SUCCESS,
+    payload: {
+        newRepeatValue
+    }
+});
+
+const setRepeatFailed = (error, attemptedRepeatValue) => ({
+    type: actionTypes.SET_REPEAT_FAILED,
+    payload: {
+        error,
+        attemptedRepeatValue
+    }
+});
+
+export const setRepeat = (newRepeatValue) => async (dispatch, getState) => {
+    const token = getState().accessToken.token;
+    const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
+    try {
+        const response = await axios.request(
+            `https://api.spotify.com/v1/me/player/repeat?state=${newRepeatValue}&device_id=${deviceId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            method: 'PUT'
+        });
+        dispatch(setRepeatSuccess(newRepeatValue));
+    } catch (err) {
+        dispatch(setRepeatFailed(err, newRepeatValue));
+    }
+}
+
+
+export const confirmSDKAvailable = () => ({
+    type: actionTypes.CONFIRM_SDK_AVAILABLE
+});

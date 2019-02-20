@@ -6,10 +6,63 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './store';
+import { updatePlayerState, confirmSDKAvailable } from './actions';
+import { IsomorphicPlayerProvider } from './components/IsomorphicPlayerProvider'
+
+let player;
+
+window.onSpotifyWebPlaybackSDKReady = () => {
+    console.log('Spotify web playback SDK is ready');
+    player = new window.Spotify.Player({
+      name: 'Reactify Player',
+      getOAuthToken: (cb) => {
+        let token;
+        if (window.location.hash) {
+          token = window.location.hash.replace(/.*access_token=([^&]+).*/, '$1');
+          return cb(token);
+        } else {
+          const JSONAccessToken = localStorage.getItem('accessToken');
+          if (JSONAccessToken) {
+            const accessToken = JSON.parse(JSONAccessToken);
+            token = accessToken.token;
+            return cb(token);
+          }
+        }
+        return null;
+      }
+    });
+    player.addListener('initialization_error', ({ message }) => { console.error(message); });
+    player.addListener('authentication_error', ({ message }) => { console.error(message); });
+    player.addListener('account_error', ({ message }) => { console.error(message); });
+    player.addListener('playback_error', ({ message }) => { console.error(message); });
+    player.addListener('player_state_changed', state => { 
+        console.log(state); 
+        const trackId = state.track_window && 
+                        state.track_window.current_track &&
+                        state.track_window.current_track.id;
+        const isPlaying = !state.paused;
+        store.dispatch(updatePlayerState(
+            trackId,
+            isPlaying
+        ));
+    });
+    player.addListener('ready', ({ device_id }) => {
+      console.log('Ready with Device ID', device_id);
+      window._REACTIFY_GLOBAL_DEVICE_ID_ = device_id;
+      store.dispatch(confirmSDKAvailable());
+    });
+    player.connect();
+    window.player = player;
+};
+
+//console.log(player);
+
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <IsomorphicPlayerProvider>
+          <App />
+        </IsomorphicPlayerProvider>
     </Provider>, 
     document.getElementById('root')
 );
