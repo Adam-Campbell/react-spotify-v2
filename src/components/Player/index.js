@@ -5,6 +5,7 @@ import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import PlayerTrackInfo from './PlayerTrackInfo';
 import PlayerControls from './PlayerControls';
 import PlayerVolumeControl from './PlayerVolumeControl';
+import PlayerAudioElement from './PlayerAudioElement';
 
 class Player extends Component {
     render() {
@@ -15,6 +16,7 @@ class Player extends Component {
                     <PlayerTrackInfo />
                     <PlayerControls />
                     <PlayerVolumeControl />
+                    <PlayerAudioElement />
                 </div>
             </section>
         );

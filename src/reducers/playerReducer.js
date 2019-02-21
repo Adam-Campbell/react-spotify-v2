@@ -58,6 +58,7 @@ const player = (state=defaultState, action) => {
                 ...state,
                 isPlaying: true,
                 trackId: action.payload.trackId,
+                repeat: state.repeat === 'track' ? 'context' : state.repeat,
                 contextURI: action.payload.contextURI,
                 contextTrackIds: action.payload.contextTrackIds,
                 shuffledContextTrackIds: action.payload.shuffledContextTrackIds
