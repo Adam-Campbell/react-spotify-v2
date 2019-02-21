@@ -25,11 +25,17 @@ It also needs a way to determine what kind of player is being used - the SDK or 
 
 export class IsomorphicPlayer extends Component {
 
+    constructor(props) {
+        super(props);
+        this.playerRef = props.playerRef;
+    }
+
     get playerInstance() {
         return window.player;
     }
 
     resume = async () => {
+        //console.log(this.playerRef);
         await this.playerInstance.resume();
     };
 

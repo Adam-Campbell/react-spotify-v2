@@ -105,11 +105,13 @@ const selectTrack = (deviceId, contextURI, contextId, trackURI) => async (dispat
 }
 
 
-export const updatePlayerState = (trackId, isPlaying) => ({
+export const updatePlayerState = (trackId, isPlaying, isShuffled, repeatMode) => ({
     type: actionTypes.UPDATE_PLAYER_STATE,
     payload: {
         trackId,
-        isPlaying
+        isPlaying,
+        isShuffled,
+        repeatMode
     }
 });
 
@@ -136,7 +138,7 @@ const setShuffleFailed = (error, shuffleValue) => ({
     }
 });
 
-export const setShuffle = (shuffleValue) => async (dispatch, getState) => {
+const setShuffle = (shuffleValue) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
     try {
@@ -177,7 +179,7 @@ const setRepeatFailed = (error, attemptedRepeatValue) => ({
     }
 });
 
-export const setRepeat = (newRepeatValue) => async (dispatch, getState) => {
+const setRepeat = (newRepeatValue) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
     try {

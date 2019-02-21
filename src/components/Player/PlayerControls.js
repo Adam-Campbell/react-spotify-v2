@@ -28,12 +28,12 @@ class PlayerControls extends Component {
                             onClick={() => this.props.setShuffle(!this.props.isShuffled)}
                             className={this.props.isShuffled ? 'active' : ''} 
                         />
-                        <FontAwesomeIcon icon={faStepBackward} onClick={previousTrack} />
+                        <FontAwesomeIcon icon={faStepBackward} onClick={this.props.skipBackwards} />
                         <FontAwesomeIcon 
                             icon={this.props.isPlaying ? faPauseCircle : faPlayCircle} 
-                            onClick={this.props.isPlaying ? pause: resume}
+                            onClick={this.props.isPlaying ? this.props.pausePlayer: this.props.resumePlayer}
                         />
-                        <FontAwesomeIcon icon={faStepForward} onClick={nextTrack} />
+                        <FontAwesomeIcon icon={faStepForward} onClick={this.props.skipForwards} />
                         <span className="player-controls__repeat">
                             <FontAwesomeIcon 
                                 icon={faSyncAlt}
@@ -65,6 +65,10 @@ export default connect(
     mapStateToProps,
     {
         setShuffle: ActionCreators.setShuffle,
-        setRepeat: ActionCreators.setRepeat
+        setRepeat: ActionCreators.setRepeat,
+        resumePlayer: ActionCreators.resumePlayer,
+        pausePlayer: ActionCreators.pausePlayer,
+        skipForwards: ActionCreators.skipForwards,
+        skipBackwards: ActionCreators.skipBackwards
     }
 )(PlayerControls);

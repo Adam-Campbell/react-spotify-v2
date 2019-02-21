@@ -10,6 +10,7 @@ import { updatePlayerState, confirmSDKAvailable } from './actions';
 import { IsomorphicPlayerProvider } from './components/IsomorphicPlayerProvider'
 
 let player;
+let playerRef = { player: null };
 
 window.onSpotifyWebPlaybackSDKReady = () => {
     console.log('Spotify web playback SDK is ready');
@@ -41,15 +42,20 @@ window.onSpotifyWebPlaybackSDKReady = () => {
                         state.track_window.current_track &&
                         state.track_window.current_track.id;
         const isPlaying = !state.paused;
+        const isShuffled = state.shuffle;
+        const repeatMode = state.repeat_mode;
         store.dispatch(updatePlayerState(
             trackId,
-            isPlaying
+            isPlaying,
+            isShuffled,
+            repeatMode
         ));
     });
     player.addListener('ready', ({ device_id }) => {
       console.log('Ready with Device ID', device_id);
       window._REACTIFY_GLOBAL_DEVICE_ID_ = device_id;
-      store.dispatch(confirmSDKAvailable());
+      playerRef.player = player;
+      //store.dispatch(confirmSDKAvailable());
     });
     player.connect();
     window.player = player;

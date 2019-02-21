@@ -5,11 +5,17 @@ import * as actionTypes from '../actionTypes';
 const defaultState = {
     isPlaying: false,
     isShuffled: false,
-    repeat: 'off',
+    repeat: 'context',
     trackId: '',
     contextURI: '',
+    contextTrackIds: [],
+    shuffledContextTrackIds: [],
     SDKAvailable: false
 };
+
+// repeat modes - 1 === 'context', 2 === 'track', 0 === 'off'. Context is the default when using SDK. 
+
+const repeatModeStrings = ['off', 'context', 'track'];
 
 const player = (state=defaultState, action) => {
     switch (action.type) {
@@ -18,32 +24,82 @@ const player = (state=defaultState, action) => {
             return {
                 ...state,
                 isPlaying: action.payload.isPlaying,
-                trackId: action.payload.trackId
+                trackId: action.payload.trackId,
+                isShuffled: action.payload.isShuffled,
+                repeat: repeatModeStrings[action.payload.repeatMode]
             };
 
-        case actionTypes.SELECT_TRACK_SUCCESS:
+        case actionTypes.SDK_SELECT_TRACK_SUCCESS:
             return {
                 ...state,
                 contextURI: action.payload.newContextURI
             };
 
-        case actionTypes.SET_SHUFFLE_SUCCESS:
-            return {
-                ...state,
-                isShuffled: action.payload.shuffleValue
-            };
+        // case actionTypes.SDK_SET_SHUFFLE_SUCCESS:
+        //     return {
+        //         ...state,
+        //         isShuffled: action.payload.shuffleValue
+        //     };
 
-        case actionTypes.SET_REPEAT_SUCCESS:
-            return {
-                ...state,
-                repeat: action.payload.newRepeatValue
-            };
+        // case actionTypes.SDK_SET_REPEAT_SUCCESS:
+        //     return {
+        //         ...state,
+        //         repeat: action.payload.newRepeatValue
+        //     };
 
         case actionTypes.CONFIRM_SDK_AVAILABLE:
             return {
                 ...state,
                 SDKAvailable: true
             };
+
+        case actionTypes.STANDARD_SELECT_TRACK:
+            return {
+                ...state,
+                isPlaying: true,
+                trackId: action.payload.trackId,
+                contextURI: action.payload.contextURI,
+                contextTrackIds: action.payload.contextTrackIds,
+                shuffledContextTrackIds: action.payload.shuffledContextTrackIds
+            };
+
+        case actionTypes.STANDARD_PAUSE_PLAYER:
+            return {
+                ...state,
+                isPlaying: false
+            };
+
+        case actionTypes.STANDARD_RESUME_PLAYER:
+            return {
+                ...state,
+                isPlaying: true
+            };
+
+        case actionTypes.STANDARD_SKIP_FORWARDS:
+            return {
+                ...state,
+                trackId: action.payload.newTrackId,
+                isPlaying: action.payload.shouldPlay,
+                repeat: state.repeat === 'track' ? 'context' : state.repeat
+            };
+
+        case actionTypes.STANDARD_SKIP_BACKWARDS:
+            return {
+                ...state,
+                trackId: action.payload.newTrackId
+            };
+
+        case actionTypes.STANDARD_SET_SHUFFLE:
+            return {
+                ...state,
+                isShuffled: action.payload.newShuffleValue
+            };
+
+        case actionTypes.STANDARD_SET_REPEAT:
+            return {
+                ...state,
+                repeat: action.payload.newRepeatValue
+            }
 
         default: 
             return state;

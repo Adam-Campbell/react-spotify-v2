@@ -1,10 +1,10 @@
 import * as actionTypes from '../../actionTypes';
 import axios from 'axios';
 
-const SDKSelectTrackSuccess = (contextURI) => ({
+const SDKSelectTrackSuccess = (newContextURI) => ({
     type: actionTypes.SDK_SELECT_TRACK_SUCCESS,
     payload: {
-        contextURI
+        newContextURI
     }
 });
 
@@ -72,5 +72,171 @@ export const SDKSelectTrack = (deviceId, contextURI, contextId, trackURI) => asy
         
     } catch (err) {
         dispatch(SDKSelectTrackFailed(err));
+    }
+}
+
+
+const SDKResumePlayerSuccess = () => ({
+    type: actionTypes.SDK_RESUME_PLAYER_SUCCESS
+});
+
+const SDKResumePlayerFailed = (error) => ({
+    type: actionTypes.SDK_RESUME_PLAYER_FAILED,
+    payload: {
+        error
+    }
+});
+
+export const SDKResumePlayer = () => async (dispatch, getState) => {
+    try {
+        await window.player.resume();
+        dispatch(SDKResumePlayerSuccess());
+    } catch (err) {
+        dispatch(SDKResumePlayerFailed(err));
+    }
+};
+
+
+const SDKPausePlayerSuccess = () => ({
+    type: actionTypes.SDK_PAUSE_PLAYER_SUCCESS
+});
+
+const SDKPausePlayerFailed = (error) => ({
+    type: actionTypes.SDK_PAUSE_PLAYER_FAILED,
+    payload: {
+        error
+    }
+});
+
+export const SDKPausePlayer = () => async (dispatch) => {
+    try {
+        await window.player.pause();
+        dispatch(SDKPausePlayerSuccess());
+    } catch (err) {
+        dispatch(SDKPausePlayerFailed(err));
+    }
+};
+
+
+const SDKSkipForwardsSuccess = () => ({
+    type: actionTypes.SDK_SKIP_FORWARDS_SUCCESS
+});
+
+const SDKSkipForwardsFailed = (error) => ({
+    type: actionTypes.SDK_SKIP_FORWARDS_FAILED,
+    payload: {
+        error
+    }
+});
+
+export const SDKSkipForwards = () => async (dispatch) => {
+    try {
+        await window.player.nextTrack();
+        dispatch(SDKSkipForwardsSuccess())
+    } catch (err) {
+        dispatch(SDKSkipForwardsFailed(err));
+    }
+}
+
+const SDKSkipBackwardsSuccess = () => ({
+    type: actionTypes.SDK_SKIP_BACKWARDS_SUCCESS
+});
+
+const SDKSkipBackwardsFailed = (error) => ({
+    type: actionTypes.SDK_SKIP_BACKWARDS_FAILED,
+    payload: {
+        error
+    }
+});
+
+export const SDKSkipBackwards = () => async (dispatch) => {
+    try {
+        await window.player.previousTrack();
+        dispatch(SDKSkipBackwardsSuccess())
+    } catch (err) {
+        dispatch(SDKSkipForwardsFailed(err));
+    }
+}
+
+
+
+const SDKSetShuffleRequest = (shuffleValue) => ({
+    type: actionTypes.SDK_SET_SHUFFLE_REQUEST,
+    payload: {
+        shuffleValue
+    }
+});
+
+const SDKSetShuffleSuccess = (shuffleValue) => ({
+    type: actionTypes.SDK_SET_SHUFFLE_SUCCESS,
+    payload: {
+        shuffleValue
+    }
+});
+
+const SDKSetShuffleFailed = (error, shuffleValue) => ({
+    type: actionTypes.SDK_SET_SHUFFLE_FAILED,
+    payload: {
+        error,
+        shuffleValue
+    }
+});
+
+export const SDKSetShuffle = (shuffleValue) => async (dispatch, getState) => {
+    const token = getState().accessToken.token;
+    const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
+    try {
+        const response = await axios.request(
+            `https://api.spotify.com/v1/me/player/shuffle?device_id=${deviceId}&state=${shuffleValue}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            method: 'PUT'
+        });
+        console.log(response.data);
+        dispatch(SDKSetShuffleSuccess(shuffleValue));
+    } catch (err) {
+        dispatch(SDKSetShuffleFailed(err, shuffleValue));
+    }
+}
+
+
+const SDKSetRepeatRequest = (newRepeatValue) => ({
+    type: actionTypes.SDK_SET_REPEAT_REQUEST,
+    payload: {
+        newRepeatValue
+    }
+});
+
+const SDKSetRepeatSuccess = (newRepeatValue) => ({
+    type: actionTypes.SDK_SET_REPEAT_SUCCESS,
+    payload: {
+        newRepeatValue
+    }
+});
+
+const SDKSetRepeatFailed = (error, attemptedRepeatValue) => ({
+    type: actionTypes.SDK_SET_REPEAT_FAILED,
+    payload: {
+        error,
+        attemptedRepeatValue
+    }
+});
+
+export const SDKSetRepeat = (newRepeatValue) => async (dispatch, getState) => {
+    console.log(newRepeatValue);
+    const token = getState().accessToken.token;
+    const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
+    try {
+        const response = await axios.request(
+            `https://api.spotify.com/v1/me/player/repeat?state=${newRepeatValue}&device_id=${deviceId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            method: 'PUT'
+        });
+        dispatch(SDKSetRepeatSuccess(newRepeatValue));
+    } catch (err) {
+        dispatch(SDKSetRepeatFailed(err, newRepeatValue));
     }
 }

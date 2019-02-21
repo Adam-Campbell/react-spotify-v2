@@ -21,14 +21,21 @@ export const convertMsToMinSec = ms => {
 export const Track = props => (
     <li className={`track ${props.isCurrentlySelected ? 'currently-playing' : ''}`}
         onClick={() => {
-            if (window._REACTIFY_GLOBAL_DEVICE_ID_) {
-                props.selectTrack(
-                    window._REACTIFY_GLOBAL_DEVICE_ID_, 
-                    props.contextURI,
-                    props.contextId, 
-                    props.trackURI
-                );
-            }
+                if (props.isCurrentlySelected) {
+                    if (props.isPlaying) {
+                        props.pausePlayer();
+                    } else {
+                        props.resumePlayer();
+                    }
+                } else {
+                    props.selectTrack({
+                        deviceId: window._REACTIFY_GLOBAL_DEVICE_ID_, 
+                        contextURI: props.contextURI,
+                        contextId: props.contextId, 
+                        trackURI: props.trackURI,
+                        trackId: props.trackId
+                    });
+                }
         }}
     >
         {props.useAlbumLayout || <img className="track__image" alt="" src={props.imageURL} />}
@@ -98,7 +105,9 @@ export default connect(
     { 
         openModal: ActionCreators.openModal,
         removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist,
-        selectTrack: ActionCreators.selectTrack
+        selectTrack: ActionCreators.selectTrack,
+        pausePlayer: ActionCreators.pausePlayer,
+        resumePlayer: ActionCreators.resumePlayer
     }
 )(Track);
 
