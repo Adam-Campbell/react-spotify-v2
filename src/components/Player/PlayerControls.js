@@ -8,7 +8,6 @@ import { faStepBackward } from '@fortawesome/free-solid-svg-icons';
 import { faStepForward } from '@fortawesome/free-solid-svg-icons';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
-import { IsomorphicPlayerConsumer } from '../IsomorphicPlayerProvider';
 
 class PlayerControls extends Component {
 
@@ -18,10 +17,38 @@ class PlayerControls extends Component {
         'track': 'off'
     };
 
+    progBarOuterRef = React.createRef();
+    progBarInnerRef = React.createRef();
+    knobRef = React.createRef();
+    progBarInterval = null;
+
+    componentDidMount() {
+        this.progBarInterval = setInterval(this.updateProgBar, 50);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.progBarInterval);
+    }
+
+    updateProgBar = async () => {
+        if (this.progBarInnerRef.current && this.knobRef.current) {
+            const progress = await this.props.getTrackProgress();
+            const progressPercent = `${progress * 100}%`;
+            this.progBarInnerRef.current.style.width = progressPercent;
+            this.knobRef.current.style.left = progressPercent;
+        }
+    }
+
+    handleProgBarClick = (e) => {
+        const { clientX } = e;
+        const { left, width } = this.progBarOuterRef.current.getBoundingClientRect();
+        const progressDecimal = (clientX - left) / width;
+        const constrainedProgressDecimal = Math.max(0, Math.min(1, progressDecimal));
+        this.props.setTrackProgress(constrainedProgressDecimal);
+    }
+
     render() {
         return (
-            <IsomorphicPlayerConsumer>
-                {({ resume, pause, nextTrack, previousTrack }) => (
                     <div className="player-controls">
                         <FontAwesomeIcon 
                             icon={faRandom} 
@@ -42,15 +69,17 @@ class PlayerControls extends Component {
                             />
                             <span style={{ display: this.props.repeat === 'track' ? 'initial' : 'none' }}>1</span>
                         </span>
-                        <span className="player-controls__prog-bar-outer">
-                            <div className="player-controls__prog-bar-inner"></div>
-                            <span className="player-controls__prog-bar-knob">
+                        <span 
+                            className="player-controls__prog-bar-outer" 
+                            ref={this.progBarOuterRef}
+                            onClick={this.handleProgBarClick}
+                        >
+                            <div className="player-controls__prog-bar-inner" ref={this.progBarInnerRef}></div>
+                            <span className="player-controls__prog-bar-knob" ref={this.knobRef}>
                                 <span className="player-controls__prog-bar-knob-inner"></span>
                             </span>
                         </span>
                     </div>
-                )}
-            </IsomorphicPlayerConsumer>
         )
     }
 }

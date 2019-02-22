@@ -35,18 +35,6 @@ const player = (state=defaultState, action) => {
                 contextURI: action.payload.newContextURI
             };
 
-        // case actionTypes.SDK_SET_SHUFFLE_SUCCESS:
-        //     return {
-        //         ...state,
-        //         isShuffled: action.payload.shuffleValue
-        //     };
-
-        // case actionTypes.SDK_SET_REPEAT_SUCCESS:
-        //     return {
-        //         ...state,
-        //         repeat: action.payload.newRepeatValue
-        //     };
-
         case actionTypes.CONFIRM_SDK_AVAILABLE:
             return {
                 ...state,
@@ -93,7 +81,8 @@ const player = (state=defaultState, action) => {
         case actionTypes.STANDARD_SET_SHUFFLE:
             return {
                 ...state,
-                isShuffled: action.payload.newShuffleValue
+                isShuffled: action.payload.newShuffleValue,
+                shuffledContextTrackIds: action.payload.shuffledContextTrackIds
             };
 
         case actionTypes.STANDARD_SET_REPEAT:

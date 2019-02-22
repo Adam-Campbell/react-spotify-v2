@@ -7,6 +7,7 @@ class PlayerAudioElement extends Component {
         super(props);
         this.audio = new Audio();
         this.audio.addEventListener('ended', this.handleEnded);
+        window.audioEl = this.audio;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -20,7 +21,7 @@ class PlayerAudioElement extends Component {
             prevProps.trackId !== this.props.trackId ||
             prevProps.contextURI !== this.props.contextURI
         ) {
-            this.audio.pause();
+            //this.audio.pause();
             this.audio.src = this.props.trackPreviewURL;
         }
 

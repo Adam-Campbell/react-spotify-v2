@@ -7,10 +7,8 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './store';
 import { updatePlayerState, confirmSDKAvailable } from './actions';
-import { IsomorphicPlayerProvider } from './components/IsomorphicPlayerProvider'
 
 let player;
-let playerRef = { player: null };
 
 window.onSpotifyWebPlaybackSDKReady = () => {
     console.log('Spotify web playback SDK is ready');
@@ -54,8 +52,8 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     player.addListener('ready', ({ device_id }) => {
       console.log('Ready with Device ID', device_id);
       window._REACTIFY_GLOBAL_DEVICE_ID_ = device_id;
-      playerRef.player = player;
-      //store.dispatch(confirmSDKAvailable());
+      window._REACTIFY_GLOBAL_PLAYER_INSTANCE_ = player;
+      store.dispatch(confirmSDKAvailable());
     });
     player.connect();
     window.player = player;
@@ -66,9 +64,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
 ReactDOM.render(
     <Provider store={store}>
-        <IsomorphicPlayerProvider>
-          <App />
-        </IsomorphicPlayerProvider>
+      <App />
     </Provider>, 
     document.getElementById('root')
 );

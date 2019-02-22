@@ -133,16 +133,32 @@ export const standardSkipBackwards = () => (dispatch, getState) => {
     dispatch(standardSkipBackwardsPlainAction(nextTrackId))
 };
 
-export const standardSetShuffle = (newShuffleValue) => ({
-    type: actionTypes.STANDARD_SET_SHUFFLE,
-    payload: {
-        newShuffleValue
-    }
-});
-
 export const standardSetRepeat = (newRepeatValue) => ({
     type: actionTypes.STANDARD_SET_REPEAT,
     payload: {
         newRepeatValue
     }
 });
+
+const standardSetShufflePlainAction = (newShuffleValue, shuffledContextTrackIds) => ({
+    type: actionTypes.STANDARD_SET_SHUFFLE,
+    payload: {
+        newShuffleValue,
+        shuffledContextTrackIds
+    }
+});
+
+export const standardSetShuffle = () => (dispatch, getState) => {
+    const {
+        isShuffled,
+        trackId,
+        contextTrackIds
+    } = getState().player;
+
+    if (isShuffled) {
+        return dispatch(standardSetShufflePlainAction(false, []));
+    }
+
+    const shuffledContextTrackIds = getShuffledTrackIds(trackId, contextTrackIds);
+    dispatch(standardSelectTrackPlainAction(true, shuffledContextTrackIds));
+}
