@@ -19,9 +19,28 @@ export const convertMsToMinSec = ms => {
 
 
 export const Track = props => (
-    <li className="track">
+    <li className={`track ${props.isCurrentlySelected ? 'currently-playing' : ''}`}
+        onClick={() => {
+                if (props.isCurrentlySelected) {
+                    if (props.isPlaying) {
+                        props.pausePlayer();
+                    } else {
+                        props.resumePlayer();
+                    }
+                } else {
+                    props.selectTrack({
+                        contextURI: props.contextURI,
+                        contextId: props.contextId, 
+                        trackURI: props.trackURI,
+                        trackId: props.trackId
+                    });
+                }
+        }}
+    >
         {props.useAlbumLayout || <img className="track__image" alt="" src={props.imageURL} />}
-        <FontAwesomeIcon icon={faPlayCircle} />
+        {(props.isCurrentlySelected && props.isPlaying) ? <FontAwesomeIcon icon={faPauseCircle} /> :
+            <FontAwesomeIcon icon={faPlayCircle} />
+        }
         {props.useAlbumLayout && <span className="track__number">{props.trackNumber}</span>}
         <p className="track__name">{props.name}</p>
         <FontAwesomeIcon 
@@ -58,18 +77,25 @@ Track.propTypes = {
     trackId: PropTypes.string.isRequired,
     useAlbumLayout: PropTypes.bool,
     includeRemoveTrackButton: PropTypes.bool,
-    contextId: PropTypes.string
+    contextId: PropTypes.string,
+    contextURI: PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {
     const track = state.tracks[ownProps.trackId];
     const album = state.albums.albumData[track.album];
+    // const currentTrack = state.player.trackId;
+    // const currentContext = state.player.contextURI;
+    const isCurrentlySelected = state.player.trackId === ownProps.trackId && 
+                               state.player.contextURI === ownProps.contextURI;
     return {
         name: track.name,
         imageURL: album.images.length ? album.images[0].url : '',
         duration: convertMsToMinSec(track.duration_ms),
         trackNumber: track.track_number,
-        trackURI: track.uri
+        trackURI: track.uri,
+        isCurrentlySelected,
+        isPlaying: state.player.isPlaying
     };
 };
 
@@ -77,7 +103,10 @@ export default connect(
     mapStateToProps,
     { 
         openModal: ActionCreators.openModal,
-        removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist
+        removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist,
+        selectTrack: ActionCreators.selectTrack,
+        pausePlayer: ActionCreators.pausePlayer,
+        resumePlayer: ActionCreators.resumePlayer
     }
 )(Track);
 

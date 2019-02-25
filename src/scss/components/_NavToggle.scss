@@ -8,9 +8,10 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 55px;
+        height: 45px;
         padding: 10px 20px;
         z-index: 1000;
+        background: $color--bg-primary;
     }
     &__line {
         background-color: $color--primary;

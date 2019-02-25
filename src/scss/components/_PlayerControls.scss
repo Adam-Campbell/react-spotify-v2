@@ -58,6 +58,11 @@
         font-size: 24px;
         margin: auto 4px;
         vertical-align: middle;
+        color: $color--primary;
+    }
+    .svg-inline--fa.active,
+    .fas.active {
+        color: $color--accent;
     }
     .fa-sync-alt {
         font-size: 16px;
@@ -66,5 +71,19 @@
     .fa-random {
         font-size: 16px;
         margin-right: 24px;
+    }
+    &__repeat {
+        position: relative;
+        vertical-align: middle;
+        span {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            transform: translate(50%, 50%);
+            color: $color--accent;
+            font-family: sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+        }
     }
 }

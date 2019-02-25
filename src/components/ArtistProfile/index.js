@@ -23,7 +23,7 @@ class ArtistProfileContainer extends Component {
         if (!this.props.artist || !this.props.artist.fullProfileFetched) {
             return null;
         }
-        const { topTrackIds, albumIds, relatedArtistIds } = this.props.artist;
+        const { topTrackIds, albumIds, relatedArtistIds, uri } = this.props.artist;
         return (
             <main className="artist-profile">
                 <ArtistProfileHeader 
@@ -32,6 +32,8 @@ class ArtistProfileContainer extends Component {
                 <Section title="Popular Tracks">
                     <TrackCollection 
                         trackIds={topTrackIds.slice(0,5)}
+                        contextURI={uri}
+                        contextId={this.props.artistId}
                     />
                 </Section>
                 <Section title="Music">

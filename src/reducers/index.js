@@ -9,6 +9,7 @@ import highlights from './highlightsReducer';
 import categories from './categoriesReducer';
 import transitions from './transitionsReducer';
 import modal from './modalReducer';
+import player from './playerReducer';
 
 export default combineReducers({
     accessToken,
@@ -20,5 +21,6 @@ export default combineReducers({
     highlights,
     categories,
     transitions,
-    modal
+    modal,
+    player
 });
