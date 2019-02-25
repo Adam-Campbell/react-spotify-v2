@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 class PlayerVolumeControl extends Component {
 
@@ -67,6 +66,28 @@ class PlayerVolumeControl extends Component {
         });
     }
 
+    handleKeyDown = (e) => {
+        const { key } = e;
+        const { volumeDecimal } = this.state;
+        if (key === 'ArrowUp' || key === 'ArrowRight') {
+            e.preventDefault();
+            const newVolumeDecimal = Math.min(1, volumeDecimal + 0.01);
+            this.setState({
+                volumeDecimal: newVolumeDecimal
+            }, () => {
+                this.props.setPlayerVolume(this.state.volumeDecimal);
+            });
+        } else if (key === 'ArrowDown' || key === 'ArrowLeft') {
+            e.preventDefault();
+            const newVolumeDecimal = Math.max(0, volumeDecimal - 0.01);
+            this.setState({
+                volumeDecimal: newVolumeDecimal
+            }, () => {
+                this.props.setPlayerVolume(this.state.volumeDecimal);
+            });
+        }
+    }
+
     render() {
         const { volumeDecimal } = this.state;
         console.log(volumeDecimal)
@@ -85,6 +106,12 @@ class PlayerVolumeControl extends Component {
                     style={{ bottom: `${volumeDecimal*100}%` }} 
                     ref={this.knobRef}
                     onMouseDown={this.handleMouseDown}
+                    onKeyDown={this.handleKeyDown}
+                    tabIndex="0"
+                    role="slider"
+                    aria-valuemax={1}
+                    aria-valuemin={0}
+                    aria-valuenow={volumeDecimal}
                 >
                     <span 
                         className="volume-control__knob-inner"

@@ -29,7 +29,6 @@ export const Track = props => (
                     }
                 } else {
                     props.selectTrack({
-                        deviceId: window._REACTIFY_GLOBAL_DEVICE_ID_, 
                         contextURI: props.contextURI,
                         contextId: props.contextId, 
                         trackURI: props.trackURI,

@@ -6,7 +6,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './store';
-import { updatePlayerState, confirmSDKAvailable } from './actions';
+import { SDKUpdatePlayerState, confirmSDKAvailable } from './actions';
 
 let player;
 
@@ -42,7 +42,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         const isPlaying = !state.paused;
         const isShuffled = state.shuffle;
         const repeatMode = state.repeat_mode;
-        store.dispatch(updatePlayerState(
+        store.dispatch(SDKUpdatePlayerState(
             trackId,
             isPlaying,
             isShuffled,
@@ -53,7 +53,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       console.log('Ready with Device ID', device_id);
       window._REACTIFY_GLOBAL_DEVICE_ID_ = device_id;
       window._REACTIFY_GLOBAL_PLAYER_INSTANCE_ = player;
-      store.dispatch(confirmSDKAvailable());
+      store.dispatch(confirmSDKAvailable(device_id));
     });
     player.connect();
     window.player = player;

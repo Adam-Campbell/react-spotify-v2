@@ -82,8 +82,22 @@ class TrackProgressBar extends Component {
         }
     }
 
+    handleKeyDown = (e) => {
+        const { key } = e;
+        const { trackProgressDecimal } = this.state;
+        if (key === 'ArrowUp' || key === 'ArrowRight') {
+            e.preventDefault();
+            const newTrackProgressDecimal = Math.min(1, trackProgressDecimal + 0.01);
+            this.props.setTrackProgress(newTrackProgressDecimal);
+        } else if (key === 'ArrowDown' || key === 'ArrowLeft') {
+            e.preventDefault();
+            const newTrackProgressDecimal = Math.max(0, trackProgressDecimal - 0.01);
+            this.props.setTrackProgress(newTrackProgressDecimal);
+        }
+    }
+
     render() {
-        const { trackProgressDecimal, progressBarActive } = this.state;
+        const { trackProgressDecimal } = this.state;
         return (
             <span 
                 className="player-controls__prog-bar-outer" 
@@ -100,6 +114,12 @@ class TrackProgressBar extends Component {
                     ref={this.knobRef}
                     style={{ left: `${trackProgressDecimal*100}%` }}
                     onMouseDown={this.handleMouseDown}
+                    onKeyDown={this.handleKeyDown}
+                    tabIndex="0"
+                    role="slider"
+                    aria-valuemax={1}
+                    aria-valuemin={0}
+                    aria-valuenow={trackProgressDecimal}
                 >
                     <span className="player-controls__prog-bar-knob-inner" ref={this.knobInnerRef}></span>
                 </span>

@@ -1,6 +1,6 @@
 import * as actionTypes from '../../actionTypes';
 import axios from 'axios';
-import { 
+import {
     SDKSelectTrack, 
     SDKResumePlayer, 
     SDKPausePlayer,
@@ -19,13 +19,14 @@ import {
     standardSetRepeat
 } from './standardActions';
 
-export const selectTrack = ({ deviceId, contextURI, contextId, trackURI, trackId }) => async (dispatch, getState) => {
+export { SDKUpdatePlayerState } from './SDKActions';
+
+export const selectTrack = ({ contextURI, contextId, trackURI, trackId }) => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
     if (SDKAvailable) {
         // dispatch the related SDK action
         return dispatch(SDKSelectTrack(
-            deviceId,
             contextURI,
             contextId,
             trackURI
@@ -97,3 +98,10 @@ export const setShuffle = (shuffleValue) => async (dispatch, getState) => {
         return dispatch(standardSetShuffle(shuffleValue));
     }
 }
+
+export const confirmSDKAvailable = (deviceId) => ({
+    type: actionTypes.CONFIRM_SDK_AVAILABLE,
+    payload: {
+        deviceId
+    }
+});

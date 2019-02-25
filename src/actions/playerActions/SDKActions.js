@@ -1,6 +1,16 @@
 import * as actionTypes from '../../actionTypes';
 import axios from 'axios';
 
+export const SDKUpdatePlayerState = (trackId, isPlaying, isShuffled, repeatMode) => ({
+    type: actionTypes.SDK_UPDATE_PLAYER_STATE,
+    payload: {
+        trackId,
+        isPlaying,
+        isShuffled,
+        repeatMode
+    }
+});
+
 const SDKSelectTrackSuccess = (newContextURI) => ({
     type: actionTypes.SDK_SELECT_TRACK_SUCCESS,
     payload: {
@@ -51,11 +61,12 @@ const makeReqWithURIList = (token, deviceId, contextId, contextType, trackURI, s
     });
 }
 
-export const SDKSelectTrack = (deviceId, contextURI, contextId, trackURI) => async (dispatch, getState) => {
+export const SDKSelectTrack = (contextURI, contextId, trackURI) => async (dispatch, getState) => {
     console.log(contextURI, trackURI);
     try {
         const state = getState();
         const token = state.accessToken.token;
+        const deviceId = state.player.deviceId;
         // determine context type from the contextURI string. Have to split it and then work backwards from
         // the end because the amount of data appearing before the part we're interested changes in different
         // contexts, but the amount of data after the part we're interested in is constant. 
@@ -183,8 +194,9 @@ const SDKSetShuffleFailed = (error, shuffleValue) => ({
 });
 
 export const SDKSetShuffle = (shuffleValue) => async (dispatch, getState) => {
-    const token = getState().accessToken.token;
-    const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
+    const state = getState();
+    const token = state.accessToken.token;
+    const deviceId = state.player.deviceId;
     try {
         const response = await axios.request(
             `https://api.spotify.com/v1/me/player/shuffle?device_id=${deviceId}&state=${shuffleValue}`, {
@@ -224,9 +236,9 @@ const SDKSetRepeatFailed = (error, attemptedRepeatValue) => ({
 });
 
 export const SDKSetRepeat = (newRepeatValue) => async (dispatch, getState) => {
-    console.log(newRepeatValue);
-    const token = getState().accessToken.token;
-    const deviceId = window._REACTIFY_GLOBAL_DEVICE_ID_;
+    const state = getState();
+    const token = state.accessToken.token;
+    const deviceId = state.player.deviceId;
     try {
         const response = await axios.request(
             `https://api.spotify.com/v1/me/player/repeat?state=${newRepeatValue}&device_id=${deviceId}`, {

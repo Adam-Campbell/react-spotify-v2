@@ -10,7 +10,8 @@ const defaultState = {
     contextURI: '',
     contextTrackIds: [],
     shuffledContextTrackIds: [],
-    SDKAvailable: false
+    SDKAvailable: false,
+    deviceId: null
 };
 
 // repeat modes - 1 === 'context', 2 === 'track', 0 === 'off'. Context is the default when using SDK. 
@@ -20,7 +21,7 @@ const repeatModeStrings = ['off', 'context', 'track'];
 const player = (state=defaultState, action) => {
     switch (action.type) {
 
-        case actionTypes.UPDATE_PLAYER_STATE:
+        case actionTypes.SDK_UPDATE_PLAYER_STATE:
             return {
                 ...state,
                 isPlaying: action.payload.isPlaying,
@@ -38,7 +39,8 @@ const player = (state=defaultState, action) => {
         case actionTypes.CONFIRM_SDK_AVAILABLE:
             return {
                 ...state,
-                SDKAvailable: true
+                SDKAvailable: true,
+                deviceId: action.payload.deviceId
             };
 
         case actionTypes.STANDARD_SELECT_TRACK:
