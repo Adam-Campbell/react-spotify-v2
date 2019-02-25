@@ -6,7 +6,6 @@ import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import PlayerTrackInfo from './PlayerTrackInfo';
 import PlayerControls from './PlayerControls';
 import PlayerVolumeControl from './PlayerVolumeControl';
-import PlayerAudioElement from './PlayerAudioElement';
 
 class Player extends Component {
 
@@ -14,7 +13,6 @@ class Player extends Component {
         super(props);
         this.audio = new Audio();
         this.audio.addEventListener('ended', this.handleEnded);
-        window.audioEl = this.audio;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -69,6 +67,14 @@ class Player extends Component {
         }
     }
 
+    setPlayerVolume = async (newVolume) => {
+        if (this.props.SDKAvailable) {
+           window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.setVolume(newVolume); 
+        } else {
+            this.audio.volume = newVolume;
+        }
+    }
+
     render() {
         return (
             <section className="player">
@@ -79,7 +85,9 @@ class Player extends Component {
                         getTrackProgress={this.getTrackProgress} 
                         setTrackProgress={this.setTrackProgress}
                     />
-                    <PlayerVolumeControl />
+                    <PlayerVolumeControl 
+                        setPlayerVolume={this.setPlayerVolume}
+                    />
                 </div>
             </section>
         );
