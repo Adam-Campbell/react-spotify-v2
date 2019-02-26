@@ -16,8 +16,13 @@
         align-items: center;
         padding: 0 16px;
         height: 100%;
+        transform: translateY(100%);
+        transition: transform ease-out 0.2s;
         @media (min-width: 768px) {
             flex-direction: row;
+        }
+        &.show-player {
+            transform: translateY(0);
         }
     }
     .fa-caret-up {
@@ -76,4 +81,9 @@
     .player-controls__prog-bar-knob-inner {
         display: inline-block;
     }
+}
+
+.nav-open.player {
+    transform: translateX(250px);
+    transition: transform ease-out 0.3s;
 }

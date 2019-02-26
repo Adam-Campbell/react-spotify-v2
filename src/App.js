@@ -80,7 +80,7 @@ class App extends Component {
                           </Switch>
                         
                       </div>
-                      <Player />
+                      <Player navIsOpen={this.state.navIsOpen} />
                     </div>
                   </ScrollToTop>
                 </BrowserRouter>

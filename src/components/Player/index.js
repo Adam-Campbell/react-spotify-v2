@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,11 +10,19 @@ import PlayerVolumeControl from './PlayerVolumeControl';
 
 class Player extends Component {
 
+    static propTypes = {
+        navIsOpen: PropTypes.bool.isRequired
+    };
+
     constructor(props) {
         super(props);
         this.audio = new Audio();
         this.audio.addEventListener('ended', this.handleEnded);
+        this.state = {
+            isFullScreen: false
+        };
     }
+
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         // if SDKAvailable is true then the SDK player is active so the audio element shouldn't be doing
@@ -75,11 +84,25 @@ class Player extends Component {
         }
     }
 
+    toggleFullScreen = () => {
+        this.setState(prevState => ({
+            isFullScreen: !prevState.isFullScreen
+        }));
+    }
+
     render() {
+        const { isFullScreen } = this.state;
+        const { isActive, navIsOpen } = this.props;
         return (
-            <section className="player">
-                <div className="player__inner-container">
-                    <FontAwesomeIcon icon={faCaretUp} />
+            <section 
+                className={
+                    `player
+                    ${isFullScreen ? 'full-screen-player' : ''} 
+                    ${navIsOpen ? 'nav-open' : ''}`
+                }
+            >
+                <div className={`player__inner-container ${isActive ? 'show-player' : ''}`}>
+                    <FontAwesomeIcon icon={faCaretUp} onClick={this.toggleFullScreen} />
                     <PlayerTrackInfo />
                     <PlayerControls 
                         getTrackProgress={this.getTrackProgress} 
@@ -95,6 +118,7 @@ class Player extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    isActive: state.player.isActive,
     SDKAvailable: state.player.SDKAvailable,
     isPlaying: state.player.isPlaying,
     isShuffled: state.player.isShuffled,
