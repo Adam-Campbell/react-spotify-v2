@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Followers from '../Followers';
 import * as ActionCreators from '../../actions';
 import { constructTimeline } from '../../utils';
+import SmartImage from '../SmartImage';
 
 class PlaylistHeader extends Component {
 
@@ -61,7 +62,12 @@ class PlaylistHeader extends Component {
         const { imageURL, playlistName, ownerName, playlistFollowerCount } = this.props;
         return (
             <header className="playlist-header">
-                <img className="playlist-header__image" alt="" src={imageURL} ref={this.imageRef} />
+                <SmartImage 
+                    imageURL={imageURL}
+                    isArtist={false}
+                    isFixedSize={true}
+                    containerRef={this.imageRef}
+                />
                 <div className="playlist-header__text-container">
                     <h1 className="heading" ref={this.titleRef}>{playlistName}</h1>
                     <span className="playlist-header__underline" ref={this.underlineRef}></span>

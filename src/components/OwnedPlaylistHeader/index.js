@@ -8,6 +8,7 @@ import PlaylistNameInput from './PlaylistNameInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
+import SmartImage from '../SmartImage';
 
 /*
 
@@ -114,7 +115,12 @@ class OwnedPlaylistHeader extends Component {
         const { imageURL, playlistName, ownerName, playlistFollowerCount } = this.props;
         return (
             <header className="playlist-header" onClick={this.handleClick}>
-                <img className="playlist-header__image" alt="" src={imageURL} ref={this.imageRef} />
+                <SmartImage 
+                    imageURL={imageURL}
+                    isArtist={false}
+                    isFixedSize={true}
+                    containerRef={this.imageRef}
+                />
                 <button
                     className="playlist-header__image-button"
                     onClick={this.openUploadImageModal}

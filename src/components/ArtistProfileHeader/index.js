@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import Followers from '../Followers';
 import { constructTimeline } from '../../utils';
+import SmartImage from '../SmartImage';
 
 class ArtistProfileHeader extends Component {
 
@@ -61,11 +62,12 @@ class ArtistProfileHeader extends Component {
         const isFollowing = this.props.usersFollowedArtistIds.includes(this.props.artistId);
         return (
             <header className="artist-profile-header">
-                <img 
-                    className="artist-profile-header__image" 
-                    alt="" 
-                    src={this.props.imageURL}
-                    ref={this.imageRef} 
+                
+                <SmartImage 
+                    imageURL={this.props.imageURL}
+                    isArtist={true}
+                    isFixedSize={true}
+                    containerRef={this.imageRef}
                 />
                 <div className="artist-profile-header__text-container">
                     <h1 
@@ -89,6 +91,17 @@ class ArtistProfileHeader extends Component {
         );
     }
 }
+
+/*
+
+<img 
+                    className="artist-profile-header__image" 
+                    alt="" 
+                    src={this.props.imageURL}
+                    ref={this.imageRef} 
+                />
+
+*/
 
 const mapStateToProps = (state, ownProps) => {
     const artist = state.artists.artistData[ownProps.artistId];

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import { Link, withRouter } from 'react-router-dom';
 import { collectionTypes } from '../../constants';
+import SmartImage from '../SmartImage';
 
 
 /*
@@ -99,15 +100,20 @@ export class Card extends Component {
     render() {
         return (
             <a href={this.props.linkDestination} className="card" onClick={this.handleClick}>
-                <div className="card__image-container">
-                    <img className="card__image" alt="" src={this.props.imageURL} ref={this.imageRef} />
-                </div>
+                <SmartImage 
+                    imageURL={this.props.imageURL}
+                    isArtist={this.props.collectionType === collectionTypes.artists}
+                    isFixedSize={false}
+                    containerRef={this.imageRef}
+                />
                 <p className="card__label">{this.props.label}</p>
             </a>
         )
     }
 }
 
+// <img className="card__image" alt="" src={this.props.imageURL} ref={this.imageRef} />
+// <div className="card__image-container"></div>
 
 export default withRouter(
     connect(
