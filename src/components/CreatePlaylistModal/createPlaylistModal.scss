@@ -1,0 +1,32 @@
+@import '../../sharedStyles/index.scss';
+
+.create-playlist-modal {
+    font-family: sans-serif;
+    color: $black;
+    &__input {
+        width: 100%;
+        border: solid 1px $black;
+        border-radius: 4px;
+        padding: 8px;
+        margin-bottom: 8px;
+    }
+    &__create-button {
+        font-weight: 700;
+        padding: 8px;
+        border-radius: 4px;
+        border: none;
+        background: $brand;
+        color: $white;
+        cursor: pointer;
+    }
+    &__cancel-button {
+        font-weight: 700;
+        padding: 8px;
+        border-radius: 4px;
+        border: none;
+        background: $warning;
+        color: $white;
+        margin-left: 8px;
+        cursor: pointer;
+    }
+}

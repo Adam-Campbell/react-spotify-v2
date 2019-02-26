@@ -1,0 +1,53 @@
+@import '../../sharedStyles/index.scss';
+
+.album-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 32px;
+    font-family: sans-serif;
+    color: $black;
+    @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: center;
+    }
+    @media (min-width: 1000px) {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 320px;
+    }
+    &__image {
+        width: 250px;
+        height: 250px;
+        object-fit: cover;
+        object-position: 50% 50%;
+    }
+    &__text-container {
+        @media (min-width: 768px) {
+            margin-left: 32px;
+        }
+        @media(min-width: 1000px) {
+            margin-left: 0;
+        }
+    }
+    &__underline {
+        display: block;
+        width: 100%;
+        height: 4px;
+        background: $black;
+        margin-bottom: 16px;
+        transform-origin: left;
+    }
+    &__artist-link {
+        text-decoration: none;
+        color: $black;
+        &:hover {
+            text-decoration: underline;
+            color: $brand;
+        }
+    }
+    &__release-date {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+}
