@@ -3,6 +3,7 @@ import * as actionTypes from '../actionTypes';
 // repeat is either 'track', 'context' or 'off'
 
 const defaultState = {
+    isActive: false,
     isPlaying: false,
     isShuffled: false,
     repeat: 'context',
@@ -33,7 +34,8 @@ const player = (state=defaultState, action) => {
         case actionTypes.SDK_SELECT_TRACK_SUCCESS:
             return {
                 ...state,
-                contextURI: action.payload.newContextURI
+                contextURI: action.payload.newContextURI,
+                isActive: true
             };
 
         case actionTypes.CONFIRM_SDK_AVAILABLE:
@@ -51,7 +53,8 @@ const player = (state=defaultState, action) => {
                 repeat: state.repeat === 'track' ? 'context' : state.repeat,
                 contextURI: action.payload.contextURI,
                 contextTrackIds: action.payload.contextTrackIds,
-                shuffledContextTrackIds: action.payload.shuffledContextTrackIds
+                shuffledContextTrackIds: action.payload.shuffledContextTrackIds,
+                isActive: true
             };
 
         case actionTypes.STANDARD_PAUSE_PLAYER:
