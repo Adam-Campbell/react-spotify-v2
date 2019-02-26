@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import * as ActionCreators from '../../actions';
 import { constructTimeline } from '../../utils';
+import SmartImage from '../SmartImage';
 
 class AlbumHeader extends Component {
 
@@ -61,7 +62,12 @@ class AlbumHeader extends Component {
         const { imageURL, albumName, artistId, artistName, releaseDate } = this.props;
         return (
             <header className="album-header">
-                <img className="album-header__image" alt="" src={imageURL} ref={this.imageRef} />
+                <SmartImage 
+                    imageURL={imageURL}
+                    isArtist={false}
+                    isFixedSize={true}
+                    containerRef={this.imageRef}
+                />
                 <div className="album-header__text-container">
                     <h1 className="album-header__name heading" ref={this.titleRef} >{albumName}</h1>
                     <span className="album-header__underline" ref={this.underlineRef} ></span>
