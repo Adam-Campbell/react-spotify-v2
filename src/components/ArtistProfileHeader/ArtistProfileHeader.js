@@ -9,54 +9,12 @@ import SmartImage from '../SmartImage';
 class ArtistProfileHeader extends Component {
 
     static propTypes = {
-        artistId: PropTypes.string.isRequired
-    }
-
-    imageRef = React.createRef();
-    titleRef = React.createRef();
-    underlineRef = React.createRef();
-    followersContainerRef = React.createRef();
-    timeline = null;
-
-    componentDidMount() {
-        const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        const { top, left } = this.imageRef.current.getBoundingClientRect();
-        // constructTimeline(this.timeline, {
-        //     hasTransition,
-        //     image: this.imageRef.current,
-        //     title: this.titleRef.current,
-        //     underline: this.underlineRef.current,
-        //     container: this.followersContainerRef.current,
-        //     prevImageWidth: imageWidth,
-        //     prevImageHeight: imageHeight,
-        //     prevImageTop: imageY,
-        //     prevImageLeft: imageX,
-        //     imageTop: top,
-        //     imageLeft: left
-        // });
-        this.props.purgeTransitionImageRect();
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.artistId !== this.props.artistId) {
-            const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-            const { top, left } = this.imageRef.current.getBoundingClientRect();
-            // constructTimeline(this.timeline, {
-            //     hasTransition,
-            //     image: this.imageRef.current,
-            //     title: this.titleRef.current,
-            //     underline: this.underlineRef.current,
-            //     container: this.followersContainerRef.current,
-            //     prevImageWidth: imageWidth,
-            //     prevImageHeight: imageHeight,
-            //     prevImageTop: imageY,
-            //     prevImageLeft: imageX,
-            //     imageTop: top,
-            //     imageLeft: left
-            // }); 
-            this.props.purgeTransitionImageRect();   
-        }
-    }
+        artistId: PropTypes.string.isRequired,
+        imageRef: PropTypes.object.isRequired,
+        titleRef: PropTypes.object.isRequired,
+        underlineRef: PropTypes.object.isRequired,
+        followersContainerRef: PropTypes.object.isRequired
+    };
 
     render() {
         const isFollowing = this.props.usersFollowedArtistIds.includes(this.props.artistId);
@@ -67,15 +25,15 @@ class ArtistProfileHeader extends Component {
                     imageURL={this.props.imageURL}
                     isArtist={true}
                     isFixedSize={true}
-                    containerRef={this.imageRef}
+                    containerRef={this.props.imageRef}
                 />
                 <div className="artist-profile-header__text-container">
                     <h1 
                         className="artist-profile-header__name heading" 
-                        ref={this.titleRef} 
+                        ref={this.props.titleRef} 
                     >{this.props.name}</h1>
-                    <span className="artist-profile-header__underline" ref={this.underlineRef} ></span>
-                    <div ref={this.followersContainerRef}>
+                    <span className="artist-profile-header__underline" ref={this.props.underlineRef} ></span>
+                    <div ref={this.props.followersContainerRef}>
                         <Followers 
                             followerCount={this.props.followerCount} 
                             isFollowing={isFollowing}
@@ -91,17 +49,6 @@ class ArtistProfileHeader extends Component {
         );
     }
 }
-
-/*
-
-<img 
-                    className="artist-profile-header__image" 
-                    alt="" 
-                    src={this.props.imageURL}
-                    ref={this.imageRef} 
-                />
-
-*/
 
 const mapStateToProps = (state, ownProps) => {
     const artist = state.artists.artistData[ownProps.artistId];

@@ -8,7 +8,9 @@ import { TimelineMax } from 'gsap';
  * @param {?HTMLElement} options.image - a reference to the image DOM node.
  * @param {?HTMLElement} options.title - a reference to the title/heading DOM node
  * @param {?HTMLElement} options.underline - a reference to the DOM node acting as an underline for title
- * @param {?HTMLElement} options.container - a reference to the DOM node containing any additional elements
+ * @param {?HTMLElement} options.headerAdditional - a reference to the DOM node containing any additional header elements
+ * @param {?HTMLElement} options.mainContent - a reference to the DOM node containing the main content of the page
+ * @param {?HTMLElement} options.fullPage - a reference to the DOM node containing the entire page
  * @param {?Number} options.prevImageWidth - the width of the image that was clicked pre-route-change
  * @param {?Number} options.prevImageHeight - the height of the image that was clicked pre-route-change
  * @param {?Number} options.prevImageTop - the top offset of the image that was clicked pre-route-change
@@ -22,7 +24,9 @@ export const constructTimeline = (timeline, options) => {
         image, 
         title, 
         underline, 
-        container,
+        headerAdditional,
+        mainContent,
+        fullPage,
         prevImageWidth,
         prevImageHeight, 
         prevImageTop,
@@ -31,11 +35,10 @@ export const constructTimeline = (timeline, options) => {
         imageLeft,
         hasTransition
     } = options;
-    
-    // Return early if the current mounting/updating operation doesn't require a transition (!hasTransition),
-    // or if any of the react refs passed in don't currently have an actual DOM node associated with them.
+
+    // Return early if any of the refs passed in do not currently have a DOM node associated with them. 
     // Prevents errors where GSAP ends up trying to set attributes on null instead of a DOM node. 
-    if (!hasTransition || !image || !title || !underline || !container) {
+    if (!image || !title || !underline || !headerAdditional || !mainContent || !fullPage) {
         return;
     }
 
@@ -46,26 +49,38 @@ export const constructTimeline = (timeline, options) => {
     } else {
         timeline = new TimelineMax();
     }
-    
-    // Now calculate the deltaX and deltaY based off of the prev and current image positions. This is the
-    // initial transform that the img DOM node needs to animate from.
-    const deltaX = prevImageLeft - imageLeft;
-    const deltaY = prevImageTop - imageTop;
 
-    // Now construct the timeline
-    timeline.from(image, 0.3, {
-        width: prevImageWidth,
-        height: prevImageHeight,
-        x: deltaX,
-        y: deltaY
-    })
-    .from(title, 0.4, {
-        opacity: 0
-    })
-    .from(underline, 0.6, {
-        scaleX: 0
-    })
-    .from(container, 0.4, {
-        opacity: 0
-    });
+    // When hasTransition is true, construct a more complicated timeline that gives the appearance of the card
+    // that was previously clicked transitioning into the main image at the top of the new page
+    if (hasTransition) {
+        // Now calculate the deltaX and deltaY based off of the prev and current image positions. This is the
+        // initial transform that the img DOM node needs to animate from.
+        const deltaX = prevImageLeft - imageLeft;
+        const deltaY = prevImageTop - imageTop;
+
+        // Now construct the timeline
+        timeline.from(image, 0.3, {
+            width: prevImageWidth,
+            height: prevImageHeight,
+            x: deltaX,
+            y: deltaY
+        })
+        .from(title, 0.4, {
+            opacity: 0
+        })
+        .from(underline, 0.6, {
+            scaleX: 0
+        })
+        .from(headerAdditional, 0.4, {
+            opacity: 0
+        })
+        .from(mainContent, 0.4, {
+            opacity: 0
+        });
+        // When hasTransition is false, construct a simple timeline which just fades everything in. 
+    } else {
+        timeline.from(fullPage, 0.6, {
+            opacity: 0
+        });
+    }
 }

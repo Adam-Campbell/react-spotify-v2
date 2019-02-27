@@ -10,10 +10,39 @@
 
 - The modals could probably be made to look a little better.
 
-- Investigate storing an SCSS file for each component within the folder for that component and importing it within the index.js file for that folder, as opposed to just having a seperate SCSS folder holding all of the SCSS.
+- [DONE] Investigate storing an SCSS file for each component within the folder for that component and importing it within the index.js file for that folder, as opposed to just having a seperate SCSS folder holding all of the SCSS.
 
 
 - Investigate the warning message I'm getting when starting the app. I believe it is because I'm potentially dispatching an action within render (the checkForAccessToken method potentially dispatches an action). I should refactor this, and potentially use this as an opportunity to review the general auth flow. Regarding the warning, I think I should just check if the accessToken prop is there in render, if it is then I render the app, if not then I render null, but I don't redirect within the render method. In componentDidMount I will check for the access token in window hash, local storage etc, and if it isn't there then I will programatically redirect from within the componentDidMount method. 
+
+
+
+
+## Page transitions
+
+- Transitions will be managed at the route level. 
+
+- When navigating to the artist, album or playlist routes, if hasTransition is true then the full card transforing into main image animation will play out. If hasTransition is false, then everything on the page simply fades in. 
+
+- Do the same checks when the entity id changes but the route does not - either playing the full card animation or just a fade in. At the moment there is no scenario where a transition to a new id on the same route would occur without using the full card transition, but it will be more future proof to just leave the check in. 
+
+- Think about possible transitions for the other routes. 
+
+- Think about possible mounting transitions for the various modals. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
