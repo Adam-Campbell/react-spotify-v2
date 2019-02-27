@@ -3,33 +3,97 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import PlaylistHeader from '../PlaylistHeader';
-import TrackCollection from '../TrackCollection';
 import OwnedPlaylistHeader from '../OwnedPlaylistHeader';
+import TrackCollection from '../TrackCollection';
+import { constructTimeline } from '../../utils';
 
-class PlaylistContainer extends Component {
+class Playlist extends Component {
+
+    static propTypes = {
+        playlistId: PropTypes.string.isRequired
+    };
+
+    pageContainerRef = React.createRef();
+    imageRef = React.createRef();
+    titleRef = React.createRef();
+    underlineRef = React.createRef();
+    followersContainerRef = React.createRef();
+    mainContentContainerRef = React.createRef();
+    timeline = null;
+
     componentDidMount() {
-        this.props.fetchPlaylist(this.props.playlistId);
+        const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+        const { top, left } = this.imageRef.current.getBoundingClientRect();
+        constructTimeline(this.timeline, {
+            hasTransition,
+            image: this.imageRef.current,
+            title: this.titleRef.current,
+            underline: this.underlineRef.current,
+            headerAdditional: this.followersContainerRef.current,
+            mainContent: this.mainContentContainerRef.current,
+            fullPage: this.pageContainerRef.current,
+            prevImageWidth: imageWidth,
+            prevImageHeight: imageHeight,
+            prevImageTop: imageY,
+            prevImageLeft: imageX,
+            imageTop: top,
+            imageLeft: left
+        });
+        this.props.purgeTransitionImageRect();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.playlistId !== this.props.playlistId) {
+            const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+            const { top, left } = this.imageRef.current.getBoundingClientRect();
+            constructTimeline(this.timeline, {
+                hasTransition,
+                image: this.imageRef.current,
+                title: this.titleRef.current,
+                underline: this.underlineRef.current,
+                headerAdditional: this.followersContainerRef.current,
+                mainContent: this.mainContentContainerRef.current,
+                fullPage: this.pageContainerRef.current,
+                prevImageWidth: imageWidth,
+                prevImageHeight: imageHeight,
+                prevImageTop: imageY,
+                prevImageLeft: imageX,
+                imageTop: top,
+                imageLeft: left
+            });
+            this.props.purgeTransitionImageRect();
+        }
     }
 
     render() {
-
-        //return null;
-
-        if (!this.props.playlist || !this.props.playlist.fullPlaylistFetched) {
-            return null;
-        }
         const isOwner = this.props.playlist.owner.id === this.props.currentUserId;
         const { tracks, uri } = this.props.playlist;
-        // As well as conditionally rendering OwnedPlaylistHeader when current user owns the playlist, 
-        // the Track components rendered need to have the ability to add a track to a modal when the 
-        // current user owns the playlist (but only when that is the case).
         return (
-            <main className="playlist">
-                {isOwner ? 
-                    <OwnedPlaylistHeader playlistId={this.props.playlistId} /> :
-                    <PlaylistHeader playlistId={this.props.playlistId} />
-                }
-                <section className="playlist__tracks-container">
+            <main 
+                className="playlist"
+                ref={this.pageContainerRef}
+            >
+                {isOwner ? (
+                    <OwnedPlaylistHeader 
+                        playlistId={this.props.playlistId}
+                        imageRef={this.imageRef}
+                        titleRef={this.titleRef}
+                        underlineRef={this.underlineRef}
+                        followersContainerRef={this.followersContainerRef} 
+                    />
+                ) : (
+                    <PlaylistHeader 
+                        playlistId={this.props.playlistId} 
+                        imageRef={this.imageRef}
+                        titleRef={this.titleRef}
+                        underlineRef={this.underlineRef}
+                        followersContainerRef={this.followersContainerRef} 
+                    />
+                )}
+                <section 
+                    className="playlist__tracks-container"
+                    ref={this.mainContentContainerRef}
+                >
                     <TrackCollection 
                         trackIds={tracks} 
                         contextId={this.props.playlistId}
@@ -44,12 +108,17 @@ class PlaylistContainer extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     playlist: state.playlists.playlistData[ownProps.playlistId],
-    currentUserId: state.user.id 
+    currentUserId: state.user.id,
+    imageWidth: state.transitions.imageWidth,
+    imageHeight: state.transitions.imageHeight,
+    imageX: state.transitions.imageX, 
+    imageY: state.transitions.imageY,
+    hasTransition: state.transitions.hasTransition
 });
 
-export const ConnectedPlaylist = connect(
+export default connect(
     mapStateToProps,
     {
-        fetchPlaylist: ActionCreators.fetchPlaylist
+        purgeTransitionImageRect: ActionCreators.purgeTransitionImageRect
     }
-)(PlaylistContainer);
+)(Playlist)

@@ -1,3 +1,3 @@
-import { ConnectedPlaylist } from './Playlist';
+import { ConnectedPlaylistContainer } from './PlaylistContainer';
 import './playlist.scss';
-export default ConnectedPlaylist;
+export default ConnectedPlaylistContainer;
