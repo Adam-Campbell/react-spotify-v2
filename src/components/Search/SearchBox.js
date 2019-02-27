@@ -16,14 +16,15 @@ const SearchBox = props => (
                 props.fetchSearchResults(newSearchTerm);
             }}
         ></input>
-        <span className="search-box__underline"></span>
+        <span className="search-box__underline" ref={props.underlineRef}></span>
     </section>
 );
 
 SearchBox.propTypes = {
     searchTerm: PropTypes.string.isRequired,
     updateSearchTerm: PropTypes.func.isRequired,
-    fetchSearchResults: PropTypes.func.isRequired
+    fetchSearchResults: PropTypes.func.isRequired,
+    underlineRef: PropTypes.object.isRequired
 };
 
 export default SearchBox;

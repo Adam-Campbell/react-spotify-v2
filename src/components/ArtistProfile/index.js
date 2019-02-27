@@ -1,2 +1,2 @@
-import { ConnectedArtistProfile } from './ArtistProfile';
-export default ConnectedArtistProfile;
+import { ConnectedArtistProfileContainer } from './ArtistProfileContainer';
+export default ConnectedArtistProfileContainer;

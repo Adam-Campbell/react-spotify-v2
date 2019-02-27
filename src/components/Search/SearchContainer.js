@@ -1,22 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import * as ActionCreators from '../../actions';
 import Search from './Search';
 import { debounce } from 'lodash';
-import { layer } from '@fortawesome/fontawesome-svg-core';
+import { TimelineMax } from 'gsap';
 
 class SearchContainer extends Component {
 
     constructor(props) {
         super(props);
         this.debouncedFetchSearchResults = debounce(this.fetchSearchResults, 200).bind(this);
+        this.underlineRef = React.createRef();
+        this.timeline = null;
         this.state = {
             artists: [],
             albums: [],
             playlists: [],
             searchTerm: '',
             resultsFilter: 'ARTISTS'
+        }
+    }
+
+    componentDidMount() {
+        if (this.underlineRef.current) {
+            this.timeline = new TimelineMax();
+            this.timeline.from(this.underlineRef.current, 0.6, {
+                scaleX: 0
+            });
         }
     }
 
@@ -58,6 +68,7 @@ class SearchContainer extends Component {
                 updateSearchTerm={this.updateSearchTerm}
                 updateResultsFilter={this.updateResultsFilter}
                 fetchSearchResults={this.debouncedFetchSearchResults}
+                underlineRef={this.underlineRef}
             />
         )
     }

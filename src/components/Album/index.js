@@ -1,3 +1,3 @@
-import { ConnectedAlbum } from './Album';
+import { ConnectedAlbumContainer } from './AlbumContainer';
 import './album.scss';
-export default ConnectedAlbum;
+export default ConnectedAlbumContainer;
