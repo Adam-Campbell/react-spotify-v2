@@ -10,24 +10,6 @@ import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
 import SmartImage from '../SmartImage';
 
-/*
-
-Additional functionality required: 
-
-Playlist name editing
-    - conditionally render h1 or text input based on state
-    - add actions to send PUT request to API to update the name
-
-Playlist cover image uploading 
-    - handle in modal triggered by button in playlist header
-
-The transition animation will need to be handled differently in this component compared to additional
-header components due to the additional elements present in this component. It will probably be easier
-to just handle the animations manually rather than try to adjust the constructTimeline function to handle
-this case.
-
-*/
-
 class OwnedPlaylistHeader extends Component {
 
     static propTypes = {

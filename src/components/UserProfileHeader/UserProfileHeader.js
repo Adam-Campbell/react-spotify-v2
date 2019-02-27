@@ -16,4 +16,4 @@ const mapStateToProps = state => ({
     userFollowerCount: state.user.followers.total
 });
 
-export const ConnectedUserProfileHeader =  connect(mapStateToProps)(UserProfileHeader);
+export const ConnectedUserProfileHeader = connect(mapStateToProps)(UserProfileHeader);

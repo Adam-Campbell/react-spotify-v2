@@ -1,2 +1,3 @@
-import { ConnectedHighlights } from './Highlights';
-export default ConnectedHighlights;
+import { ConnectedHighlightsContainer } from './HighlightsContainer';
+import './highlights.scss';
+export default ConnectedHighlightsContainer;

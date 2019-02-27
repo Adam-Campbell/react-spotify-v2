@@ -12,22 +12,26 @@ export class SmartImage extends Component {
         containerRef: PropTypes.object,
     }
 
+    image = new Image();
+
     state = {
         imageLoaded: false
     }
 
     componentDidMount() {
-        this.loadImageInMemory(this.props.imageURL);
+        const { imageURL } = this.props;
+        this.image.addEventListener('load', this.confirmImageLoaded);
+        this.image.src = imageURL;
     }
 
-    loadImageInMemory = (imageURL) => {
-        const image = new Image();
-        image.addEventListener('load', () => {
-            this.setState({
-                imageLoaded: true
-            });
+    componentWillUnmount() {
+        this.image.removeEventListener('load', this.confirmImageLoaded);
+    }
+
+    confirmImageLoaded = () => {
+        this.setState({
+            imageLoaded: true
         });
-        image.src = imageURL;
     }
 
     render() {

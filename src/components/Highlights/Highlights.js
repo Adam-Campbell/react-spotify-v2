@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
 import CardCollection from '../CardCollection';
 import Section from '../Section';
 import { collectionTypes } from '../../constants';
+import { TimelineMax } from 'gsap';
 
 class Highlights extends Component {
+
+    pageContainerRef = React.createRef();
+    timeline = null;
+
     componentDidMount() {
-        this.props.fetchHighlights();
+        if (this.pageContainerRef.current) {
+            this.timeline = new TimelineMax();
+            this.timeline.from(this.pageContainerRef.current, 0.6, {
+                opacity: 0
+            });
+        }
     }
 
     render() {
-        if (!this.props.fullHighlightsFetched) {
-            return null;
-        }
         return (
-            <main className="highlights">
+            <main className="highlights" ref={this.pageContainerRef}>
                 <Section title="New Releases">
                     <CardCollection 
                         itemIds={this.props.newReleases}
@@ -47,9 +52,4 @@ const mapStateToProps = (state) => ({
     fullHighlightsFetched: state.highlights.fullHighlightsFetched
 });
 
-export const ConnectedHighlights = connect(
-    mapStateToProps,
-    {
-        fetchHighlights: ActionCreators.fetchHighlights
-    }
-)(Highlights);
+export default connect(mapStateToProps)(Highlights);

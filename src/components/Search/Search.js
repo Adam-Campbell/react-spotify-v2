@@ -10,6 +10,7 @@ const Search = props => (
             searchTerm={props.searchTerm}
             updateSearchTerm={props.updateSearchTerm}
             fetchSearchResults={props.fetchSearchResults}
+            underlineRef={props.underlineRef}
         />
         <SearchFilterSwitch 
             resultsFilter={props.resultsFilter}
@@ -32,7 +33,8 @@ Search.propTypes = {
     resultsFilter: PropTypes.string.isRequired,
     updateSearchTerm: PropTypes.func.isRequired,
     updateResultsFilter: PropTypes.func.isRequired,
-    fetchSearchResults: PropTypes.func.isRequired
+    fetchSearchResults: PropTypes.func.isRequired,
+    underlineRef: PropTypes.object.isRequired
 }
 
 export default Search;
