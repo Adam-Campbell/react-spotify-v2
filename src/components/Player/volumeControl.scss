@@ -1,0 +1,57 @@
+@import '../../scssVariables/index.scss';
+
+.volume-control {
+    display: none;
+    width: 6px;
+    height: 60px;
+    border-radius: 6px;
+    background-color: #ddd;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    @media(min-width: 768px) {
+        display: block;
+    }
+    &__inner {
+        display: none;
+        width: 6px;
+        height: 100%;
+        border-radius: 6px;
+        background-color: $brand;
+        position: absolute;
+        bottom: 0;
+        @media(min-width: 768px) {
+            display: block;
+        }
+    }
+    &__knob {
+        display: none;
+        width: 24px;
+        height: 24px;
+        background-color: rgba(221,221,221,0);
+        border-radius: 12px;
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        cursor: pointer;
+        @media(min-width: 768px) {
+            display: inline-block;
+        }
+    }
+    &__knob-inner {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        border-radius: 6px;
+        background-color: #bbb;
+        @media(min-width: 768px) {
+            display: inline-block;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+@import '../../scssVariables/index.scss';
+
+.card {
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    min-height: 100%;
+    padding: 8px;
+    &__image-container {
+        position: relative;
+        width: 100%;
+        padding-bottom: 100%;
+    }
+    &__image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 50%;
+    }
+    &__label {
+        font-family: sans-serif;
+        color: $black;
+        font-size: 1rem;
+    }
+}

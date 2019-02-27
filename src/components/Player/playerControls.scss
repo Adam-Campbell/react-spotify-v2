@@ -1,0 +1,91 @@
+@import '../../scssVariables/index.scss';
+
+.player-controls {
+    text-align: center;
+    padding: 8px;
+    &__prog-bar-outer {
+        display: none;
+        width: 220px;
+        height: 6px;
+        border-radius: 6px;
+        background-color: #ddd;
+        margin-top: 24px;
+        position: relative;
+        @media(min-width: 768px) {
+            display: block;
+        }
+    }
+    &__prog-bar-inner {
+        display: none;
+        position: absolute;
+        height: 6px;
+        border-radius: 6px;
+        background-color: $brand;
+        @media(min-width: 768px) {
+            display: block;
+        }
+    }
+    &__prog-bar-knob {
+        display: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        background-color: rgba(221,221,221,0);
+        position: absolute;
+        left: 0%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition: background-color 0.25s ease-out;
+        cursor: pointer;
+        @media(min-width: 768px) {
+            display: inline-block;
+        }
+    }
+    &__prog-bar-knob-inner {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        border-radius: 6px;
+        background-color: #bbb;
+        @media(min-width: 768px) {
+            display: inline-block;
+        }
+    }
+    .svg-inline--fa,
+    .fas {
+        font-size: 24px;
+        margin: auto 4px;
+        vertical-align: middle;
+        color: $black;
+    }
+    .svg-inline--fa.active,
+    .fas.active {
+        color: $brand;
+    }
+    .fa-sync-alt {
+        font-size: 16px;
+        margin-left: 24px;
+    }
+    .fa-random {
+        font-size: 16px;
+        margin-right: 24px;
+    }
+    &__repeat {
+        position: relative;
+        vertical-align: middle;
+        span {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            transform: translate(50%, 50%);
+            color: $black;
+            font-family: sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+        }
+    }
+}
