@@ -1,8 +1,10 @@
 import * as actionTypes from '../actionTypes';
 
 const defaultState = {
+    birthdate: '',
     country: '',
-    displayName: '',
+    display_name: '',
+    email: '',
     external_urls: {},
     followers: {},
     href: '',
@@ -13,7 +15,8 @@ const defaultState = {
     uri: '',
     topArtistsIds: [],
     recentTracksIds: [],
-    playlistIds: []
+    playlistIds: [],
+    followedArtistIds: []
 };
 
 const user = (state=defaultState, action) => {
