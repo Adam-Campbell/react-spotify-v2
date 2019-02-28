@@ -27,19 +27,6 @@ const playlists = (state=defaultState, action) => {
                 isFetching: false
             };
 
-        // case actionTypes.FETCH_PLAYLIST_SUCCESS:
-        //     return {
-        //         isFetching: false,
-        //         playlistData: {
-        //             ...state.playlistData,
-        //             [action.payload.playlistId]: {
-        //                 ...state.playlistData[action.payload.playlistId],
-        //                 fullPlaylistFetched: true,
-        //                 lastFetchedAt: action.payload.timestamp
-        //             }
-        //         }
-        //     };
-
         case actionTypes.STORE_USERS_PLAYLISTS:
             return {
                 ...state,
