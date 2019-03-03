@@ -45,6 +45,19 @@ be triggered when the interaction ends.
 
 */
 
+
+/*
+
+TODO -- 
+
+Need to recreate the post swipe animation in such a way that it can be cancelled when the component unmounts. 
+Currently if there is still an animation occuring when the component unmounts to transition to a new page, it
+causes an error. 
+
+Currently I have just commented out the instantiation of this animation to prevent the error occuring.
+
+*/
+
 export class Carousel extends Component {
 
     static propTypes = {
@@ -55,7 +68,8 @@ export class Carousel extends Component {
             collectionTypes.albums, 
             collectionTypes.playlists,
             collectionTypes.categories
-        ])
+        ]),
+        includeCreatePlaylistCard: PropTypes.bool.isRequired
     };
 
     state = {
@@ -212,7 +226,7 @@ export class Carousel extends Component {
         const xDelta = clientX - startX;
         const newOffset = startOffset + xDelta;
         // now constrain the offset
-        const containerWidth = this.props.cardData.length * 200;
+        const containerWidth = this.props.itemIds.length * 200;
         const { clientWidth } = document.documentElement;
         const lowerBound = -(containerWidth - clientWidth);
         const constrainedOffset = Math.max(Math.min(0, newOffset), lowerBound);
@@ -236,10 +250,10 @@ export class Carousel extends Component {
                 dragOrientation: null,
                 adjustedStartX: null
             });
-            const velocity = this.velocityTracker.getVelocity();
-            requestAnimationFrame(timestamp => {
-                this.createPostSwipeFrame(timestamp, velocity);
-            });
+            // const velocity = this.velocityTracker.getVelocity();
+            // requestAnimationFrame(timestamp => {
+            //     this.createPostSwipeFrame(timestamp, velocity);
+            // });
         }
     }
 
@@ -254,7 +268,7 @@ export class Carousel extends Component {
                 this.contentContainerRef.current.style.transform
             );
             const adjustedTranslate = prevTranslate + nextVelocity;
-            const containerWidth = this.props.cardData.length * 200;
+            const containerWidth = this.props.itemIds.length * 200;
             const { clientWidth } = document.documentElement;
             const limit = -(containerWidth - clientWidth);
             const constrainedTranslate = Math.min(0, Math.max(adjustedTranslate, limit));
@@ -266,7 +280,7 @@ export class Carousel extends Component {
     }
 
     render() {
-        const { itemIds, title, collectionType } = this.props;
+        const { itemIds, title, collectionType, includeCreatePlaylistCard } = this.props;
         const containerWidth = `${itemIds.length * 200}px`;
         return (
             <section className="carousel__section">
@@ -290,7 +304,7 @@ export class Carousel extends Component {
                     >
                         <CarouselCardCollection 
                             itemIds={itemIds}
-                            includeCreatePlaylistCard={false}
+                            includeCreatePlaylistCard={includeCreatePlaylistCard}
                             collectionType={collectionType}
                         />
                     </div>

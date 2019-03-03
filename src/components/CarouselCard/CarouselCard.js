@@ -57,6 +57,7 @@ class CarouselCard extends Component {
      * finally redirects to the specified route. 
      */
     fetchAndRedirect = async () => {
+        //e.preventDefault();
         const { width, height, top, left, y } = this.imageRef.current.getBoundingClientRect();
         // Provides an alternative way of calculating top offset that helps mitigate some inconsistencies
         // in certain older browsers
@@ -121,8 +122,6 @@ class CarouselCard extends Component {
     }
 
     handleMouseUp = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
         if (this.state.isActive) {
             this.fetchAndRedirect();
         }
@@ -130,8 +129,6 @@ class CarouselCard extends Component {
     }
 
     handleTouchEnd = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
         if (this.state.isActive) {
             this.fetchAndRedirect();
         }
@@ -151,6 +148,7 @@ class CarouselCard extends Component {
                 onTouchStart={this.handleTouchStart}
                 onTouchMove={this.handleTouchMove}
                 onTouchEnd={this.handleTouchEnd}
+                onClick={e => e.preventDefault()}
             >
                 <SmartImage 
                     imageURL={this.props.imageURL}
