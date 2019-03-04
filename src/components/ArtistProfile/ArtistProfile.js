@@ -8,6 +8,40 @@ import TrackCollection from '../TrackCollection';
 import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';
 import { constructTimeline } from '../../utils';
+import Carousel from '../Carousel';
+
+const sortSinglesFromAlbums = (allIds, albumData) => {
+    const albumIds = [];
+    const singleIds = [];
+    allIds.forEach(id => {
+        if (albumData[id].album_type === 'single') {
+            singleIds.push(id);
+        } else {
+            albumIds.push(id);
+        }
+    });
+    return {
+        albumIds,
+        singleIds
+    };
+};
+
+const _sortSinglesFromAlbums = (allIds, albumData) => {
+    allIds.reduce((acc, id) => {
+        return albumData[id].album_type === 'single' ?
+                {
+                    albumIds: [ ...acc.albumIds ],
+                    singleIds: [ ...acc.singleIds, id ]
+                } :
+                {
+                    albumIds: [ ...acc.albumIds, id ],
+                    singleIds: [ ...acc.singleIds ]
+                }
+    }, {
+      albumIds: [],
+      singleIds: []  
+    });
+};
 
 class ArtistProfile extends Component {
 
@@ -68,7 +102,11 @@ class ArtistProfile extends Component {
     }
 
     render() {
-        const { topTrackIds, albumIds, relatedArtistIds, uri } = this.props.artist;
+        const { topTrackIds, relatedArtistIds, uri } = this.props.artist;
+        const { albumIds, singleIds } = sortSinglesFromAlbums(
+                                            this.props.artist.albumIds, 
+                                            this.props.albums
+                                        );
         return (
             <main 
                 className="artist-profile"
@@ -89,26 +127,52 @@ class ArtistProfile extends Component {
                             contextId={this.props.artistId}
                         />
                     </Section>
-                    <Section title="Music">
-                        <CardCollection 
-                            itemIds={albumIds}
-                            collectionType={collectionTypes.albums}
-                        />
-                    </Section>
-                    <Section title="Related Artists">
-                        <CardCollection 
-                            itemIds={relatedArtistIds}
-                            collectionType={collectionTypes.artists}
-                        />
-                    </Section>
+                    <Carousel 
+                        itemIds={albumIds}
+                        title="Albums"
+                        collectionType={collectionTypes.albums}
+                        includeCreatePlaylistCard={false}
+                    />
+                    <Carousel 
+                        itemIds={singleIds}
+                        title="Singles"
+                        collectionType={collectionTypes.albums}
+                        includeCreatePlaylistCard={false}
+                    />
+                    <Carousel 
+                        itemIds={relatedArtistIds}
+                        title="Related Artists"
+                        collectionType={collectionTypes.artists}
+                        includeCreatePlaylistCard={false}
+                    />
                 </div>
             </main>
         );
     }
 }
 
+/*
+
+<Section title="Music">
+                        <CardCollection 
+                            itemIds={albumIds}
+                            collectionType={collectionTypes.albums}
+                        />
+                    </Section>
+
+                    <Section title="Related Artists">
+                        <CardCollection 
+                            itemIds={relatedArtistIds}
+                            collectionType={collectionTypes.artists}
+                        />
+                    </Section>
+
+
+*/
+
 const mapStateToProps = (state, ownProps) => ({
     artist: state.artists.artistData[ownProps.artistId],
+    albums: state.albums.albumData,
     imageWidth: state.transitions.imageWidth,
     imageHeight: state.transitions.imageHeight,
     imageX: state.transitions.imageX, 

@@ -1,0 +1,25 @@
+@import '../../scssVariables/index.scss';
+
+.carousel {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
+    &__section {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    &__title {
+        font-family: sans-serif;
+        font-weight: 700;
+        color: $black;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+    &__content-container {
+        display: flex;
+        align-items: flex-start;
+        cursor: pointer;
+        z-index: 1000;
+    }
+}

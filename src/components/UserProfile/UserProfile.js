@@ -8,6 +8,8 @@ import Section from '../Section';
 import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
+import CarouselCardCollection from '../CarouselCardCollection';
+import Carousel from '../Carousel';
 
 class UserProfileContainer extends Component {
 
@@ -37,22 +39,22 @@ class UserProfileContainer extends Component {
                         contextId={this.props.userId}
                     />
                 </Section>
-                <Section title="Your Top Artists">
-                    <CardCollection 
-                        itemIds={this.props.topArtistsIds}
-                        collectionType={collectionTypes.artists}
-                    />
-                </Section>
-                <Section title="Your Playlists">
-                    <CardCollection 
-                        itemIds={this.props.playlistIds}
-                        collectionType={collectionTypes.playlists}
-                        includeCreatePlaylistCard={true}
-                    />
-                </Section>
+                <Carousel 
+                    itemIds={this.props.topArtistsIds}
+                    title="Your Top Artists"
+                    collectionType={collectionTypes.artists}
+                    includeCreatePlaylistCard={false}
+                />
+                <Carousel 
+                    itemIds={this.props.playlistIds}
+                    title="Your Playlists"
+                    collectionType={collectionTypes.playlists}
+                    includeCreatePlaylistCard={false}
+                />
             </main>
         );
     }
+    
 }
 
 const mapStateToProps = (state) => ({

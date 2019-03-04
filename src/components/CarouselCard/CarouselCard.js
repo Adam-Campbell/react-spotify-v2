@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { collectionTypes } from '../../constants';
 import SmartImage from '../SmartImage';
 
-export class Card extends Component {
+class CarouselCard extends Component {
     imageRef = React.createRef();
 
     static propTypes = {
@@ -21,6 +21,12 @@ export class Card extends Component {
         ]),
         itemId: PropTypes.string
     }
+
+    state = {
+        isActive: false,
+        startX: null,
+        startY: null
+    };
 
     /**
      * This function simply returns the correct data fetching function based on the route that the card
@@ -50,8 +56,8 @@ export class Card extends Component {
      * transition, then ensures that the data for the route to be transitioned to has been fetched, then
      * finally redirects to the specified route. 
      */
-    handleClick = async (e) => {
-        e.preventDefault();
+    fetchAndRedirect = async () => {
+        //e.preventDefault();
         const { width, height, top, left, y } = this.imageRef.current.getBoundingClientRect();
         // Provides an alternative way of calculating top offset that helps mitigate some inconsistencies
         // in certain older browsers
@@ -65,22 +71,98 @@ export class Card extends Component {
         });
     }
 
+    startInteraction = (clientX, clientY) => {
+        this.setState({
+            isActive: true,
+            startX: clientX,
+            startY: clientY
+        });
+    }
+
+    endInteraction = () => {
+        this.setState({
+            isActive: false,
+            startX: null,
+            startY: null
+        });
+    }
+
+    handleMouseDown = (e) => {
+        const { clientX, clientY } = e;
+        this.startInteraction(clientX, clientY);
+    }
+
+    handleMouseMove = (e) => {
+        if (this.state.isActive) {
+            const { clientX, clientY } = e;
+            const { startX, startY } = this.state;
+            const absX = Math.abs(clientX - startX);
+            const absY = Math.abs(clientY - startY);
+            if (absX > 3 || absY > 3) {
+                this.endInteraction();
+            }
+        }
+    }
+
+    handleTouchStart = (e) => {
+        const { clientX, clientY } = e.targetTouches[0];
+        this.startInteraction(clientX, clientY);
+    }
+
+    handleTouchMove = (e) => {
+        if (this.state.isActive) {
+            const { clientX, clientY } = e.targetTouches[0];
+            const { startX, startY } = this.state;
+            const absX = Math.abs(clientX - startX);
+            const absY = Math.abs(clientY - startY);
+            if (absX > 3 || absY > 3) {
+                this.endInteraction();
+            }
+        }
+    }
+
+    handleMouseUp = (e) => {
+        if (this.state.isActive) {
+            this.fetchAndRedirect();
+        }
+        this.endInteraction();
+    }
+
+    handleTouchEnd = (e) => {
+        if (this.state.isActive) {
+            this.fetchAndRedirect();
+        }
+        this.endInteraction();
+    }
+
     render() {
+        const { isActive } = this.state;
         return (
-            <a href={this.props.linkDestination} className="card" onClick={this.handleClick}>
+            <a 
+                href={this.props.linkDestination} 
+                className={`carousel-card ${isActive ? 'active' : ''}`}
+                onMouseDown={this.handleMouseDown}
+                onMouseMove={this.handleMouseMove}
+                onMouseUp={this.handleMouseUp}
+                onMouseLeave={this.endInteraction}
+                onTouchStart={this.handleTouchStart}
+                onTouchMove={this.handleTouchMove}
+                onTouchEnd={this.handleTouchEnd}
+                onClick={e => e.preventDefault()}
+            >
                 <SmartImage 
                     imageURL={this.props.imageURL}
                     isArtist={this.props.collectionType === collectionTypes.artists}
                     isFixedSize={false}
                     containerRef={this.imageRef}
                 />
-                <p className="card__label">{this.props.label}</p>
+                <p className="carousel-card__label">{this.props.label}</p>
             </a>
-        )
+        );
     }
 }
 
-export const ConnectedCard = withRouter(
+export const ConnectedCarouselCard = withRouter(
     connect(
         undefined, 
         {
@@ -90,5 +172,5 @@ export const ConnectedCard = withRouter(
             fetchPlaylist: ActionCreators.fetchPlaylist,
             fetchCategory: ActionCreators.fetchCategory
         }
-    )(Card)
+    )(CarouselCard)
 );
