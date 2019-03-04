@@ -4,6 +4,7 @@ import CardCollection from '../CardCollection';
 import Section from '../Section';
 import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
+import Carousel from '../Carousel';
 
 class Highlights extends Component {
 
@@ -20,26 +21,27 @@ class Highlights extends Component {
     }
 
     render() {
+        const { newReleases, featuredPlaylists, categories } = this.props;
         return (
             <main className="highlights" ref={this.pageContainerRef}>
-                <Section title="New Releases">
-                    <CardCollection 
-                        itemIds={this.props.newReleases}
-                        collectionType={collectionTypes.albums}
-                    />
-                </Section>
-                <Section title="Featured Playlists">
-                    <CardCollection 
-                        itemIds={this.props.featuredPlaylists}
-                        collectionType={collectionTypes.playlists}
-                    />
-                </Section>
-                <Section title="Categories">
-                    <CardCollection 
-                        itemIds={this.props.categories}
-                        collectionType={collectionTypes.categories}
-                    />
-                </Section>
+                <Carousel 
+                    itemIds={newReleases}
+                    title="New Releases"
+                    collectionType={collectionTypes.albums}
+                    includeCreatePlaylistCard={false}
+                />
+                <Carousel 
+                    itemIds={featuredPlaylists}
+                    title="Featured Playlists"
+                    collectionType={collectionTypes.playlists}
+                    includeCreatePlaylistCard={false}
+                />
+                <Carousel 
+                    itemIds={categories}
+                    title="Categories"
+                    collectionType={collectionTypes.categories}
+                    includeCreatePlaylistCard={false}
+                />
             </main>
         );
     }

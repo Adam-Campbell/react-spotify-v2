@@ -9,25 +9,25 @@ const defaultState = {
 const categories = (state=defaultState, action) => {
     switch (action.type) {
 
-        case actionTypes.FETCH_CATEGORIES_PLAYLISTS_REQUEST:
+        case actionTypes.FETCH_CATEGORY_REQUEST:
             return {
                 ...state,
                 isFetching: true
             };
 
-        case actionTypes.FETCH_CATEGORIES_PLAYLISTS_FAILED:
+        case actionTypes.FETCH_CATEGORY_FAILED:
             return {
                 ...state,
                 isFetching: false
             };
 
-        case actionTypes.FETCH_CATEGORIES_PLAYLISTS_ABORT:
+        case actionTypes.FETCH_CATEGORY_ABORT:
             return {
                 ...state,
                 isFetching: false
             };
 
-        case actionTypes.FETCH_CATEGORIES_PLAYLISTS_SUCCESS:
+        case actionTypes.FETCH_CATEGORY_SUCCESS:
             return {
                 isFetching: false,
                 categoryData: {
@@ -45,6 +45,16 @@ const categories = (state=defaultState, action) => {
                 ...state,
                 categoryData: addOrMerge(state.categoryData, action.payload.categoryObjects)
             };
+
+        case actionTypes.STORE_CATEGORY_INFO:
+            return {
+                ...state,
+                categoryData: addOrMerge(
+                    state.categoryData, 
+                    action.payload.categoryObject, 
+                    action.payload.categoryId
+                )
+            }
 
         case actionTypes.STORE_CATEGORIES_PLAYLISTS:
             return {

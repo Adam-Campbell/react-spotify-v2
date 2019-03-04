@@ -44,7 +44,7 @@ class CarouselCard extends Component {
                 return this.props.fetchPlaylist;
 
             case collectionTypes.categories:
-                return this.props.fetchCategoriesPlaylists;
+                return this.props.fetchCategory;
 
             default:
                 return this.props.fetchArtist;
@@ -170,7 +170,7 @@ export const ConnectedCarouselCard = withRouter(
             fetchArtist: ActionCreators.fetchArtist,
             fetchAlbum: ActionCreators.fetchAlbum,
             fetchPlaylist: ActionCreators.fetchPlaylist,
-            fetchCategoriesPlaylists: ActionCreators.fetchCategoriesPlaylists
+            fetchCategory: ActionCreators.fetchCategory
         }
     )(CarouselCard)
 );

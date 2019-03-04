@@ -5,58 +5,6 @@ import VelocityTracker from './VelocityTracker';
 import CarouselCardCollection from '../CarouselCardCollection';
 import { collectionTypes } from '../../constants';
 
-/*
-__________
-__________
-  README
-__________
-__________
-
-
-This component has just been ported directly over from a seperate project where I created a minimal demo 
-version of what I am looking to create. There are various things that need to change. 
-
-- Styles need to be added. 
-
-- The TouchCard component that is rendered by this component doesn't exist in this project, adjust to work 
-with the card components I am using in this project. 
-
-- Move VelocityTracker class into its own file. 
-
-- Look into more precise algorithms for modelling the velocity decay after a swipe has completed. 
-
-- Look into improving the velocity calculations in general. 
-
-- Look into using requestAnimationFrame for all updates to the content containers translateX value 
-(currently just updating it as often as the JS engine will allow but limiting to once a frame with
-requestAnimationFrame will improve performance).
-
-
-Related - the card components will have to be altered to have an active state that becomes true when
-an 'interaction' begins (mouseDown or touchStart event occurs on the card), but is then set to false once
-a certain amount of horizontal (and maybe vertical) movement has occured. See the TouchCard component in
-example project for the minimal implementation of this. 
-
-Crucially, with the cards in this project, I need to only trigger the cards data fetching and redirect
-functionality when a touchEnd or mouseUp event occurs on the card AND the card is currently active. This
-means if a card is interacted with and then dragged around, then data fetching and redirecting will not 
-be triggered when the interaction ends. 
-
-
-*/
-
-
-/*
-
-TODO -- 
-
-Need to recreate the post swipe animation in such a way that it can be cancelled when the component unmounts. 
-Currently if there is still an animation occuring when the component unmounts to transition to a new page, it
-causes an error. 
-
-Currently I have just commented out the instantiation of this animation to prevent the error occuring.
-
-*/
 
 export class Carousel extends Component {
 
@@ -97,6 +45,13 @@ export class Carousel extends Component {
 
     contentContainerRef = React.createRef();
     interactionUpdateRAF = null;
+    postSwipeRAF = null;
+
+    componentWillUnmount = () => {
+        // In the event that there is still an animation frame saved in either of these variables, cancel it.
+        cancelAnimationFrame(this.interactionUpdateRAF);
+        cancelAnimationFrame(this.postSwipeRAF);
+    }
 
     /**
      * Takes the string value for the inline style 'transform' on the contentContainerRef node, which will be
@@ -226,14 +181,26 @@ export class Carousel extends Component {
         const xDelta = clientX - startX;
         const newOffset = startOffset + xDelta;
         // now constrain the offset
-        const containerWidth = this.props.itemIds.length * 200;
+        const containerWidth = this.props.itemIds.length * 260;
         const { clientWidth } = document.documentElement;
         const lowerBound = -(containerWidth - clientWidth);
-        const constrainedOffset = Math.max(Math.min(0, newOffset), lowerBound);
-        if (this.contentContainerRef.current) {
-            this.contentContainerRef.current.style.transform = `translateX(${constrainedOffset}px)`;
+        
+        // If lowerBound is non-negative, then the width of the content container is less than the current
+        // width of the client. In this case we just use 0 as our final offset value since there shouldn't be
+        // any offset on the container container. If lowerBound is negative however, then the content container
+        // is wider than the client, so we derive the value for finalOffset from the value of newOffset, 
+        // constrained to be in the range lowerBound <= finalOffset <= 0.
+        let finalOffset;
+        if (Math.sign(lowerBound) !== -1) {
+            finalOffset = 0;
+        } else {
+            finalOffset = Math.max(Math.min(0, newOffset), lowerBound);
         }
-        this.velocityTracker.addCoord(constrainedOffset);
+        
+        if (this.contentContainerRef.current) {
+            this.contentContainerRef.current.style.transform = `translateX(${finalOffset}px)`;
+        }
+        this.velocityTracker.addCoord(finalOffset);
     }
 
     /**
@@ -250,10 +217,10 @@ export class Carousel extends Component {
                 dragOrientation: null,
                 adjustedStartX: null
             });
-            // const velocity = this.velocityTracker.getVelocity();
-            // requestAnimationFrame(timestamp => {
-            //     this.createPostSwipeFrame(timestamp, velocity);
-            // });
+            const velocity = this.velocityTracker.getVelocity();
+            requestAnimationFrame(timestamp => {
+                this.createPostSwipeFrame(timestamp, velocity);
+            });
         }
     }
 
@@ -268,12 +235,12 @@ export class Carousel extends Component {
                 this.contentContainerRef.current.style.transform
             );
             const adjustedTranslate = prevTranslate + nextVelocity;
-            const containerWidth = this.props.itemIds.length * 200;
+            const containerWidth = this.props.itemIds.length * 260;
             const { clientWidth } = document.documentElement;
             const limit = -(containerWidth - clientWidth);
             const constrainedTranslate = Math.min(0, Math.max(adjustedTranslate, limit));
             this.contentContainerRef.current.style.transform = `translateX(${constrainedTranslate}px)`;
-            requestAnimationFrame(timestamp => {
+            this.postSwipeRAF = requestAnimationFrame(timestamp => {
                 this.createPostSwipeFrame(timestamp, nextVelocity);
             });
         }
@@ -281,7 +248,7 @@ export class Carousel extends Component {
 
     render() {
         const { itemIds, title, collectionType, includeCreatePlaylistCard } = this.props;
-        const containerWidth = `${itemIds.length * 200}px`;
+        const containerWidth = `${itemIds.length * 260}px`;
         return (
             <section className="carousel__section">
                 <h1 className="carousel__title">{title}</h1>
