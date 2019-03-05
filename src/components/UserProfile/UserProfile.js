@@ -49,7 +49,7 @@ class UserProfileContainer extends Component {
                     itemIds={this.props.playlistIds}
                     title="Your Playlists"
                     collectionType={collectionTypes.playlists}
-                    includeCreatePlaylistCard={false}
+                    includeCreatePlaylistCard={true}
                 />
             </main>
         );

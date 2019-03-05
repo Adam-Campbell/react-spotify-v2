@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Card from '../Card';
-import CreatePlaylistCard from '../CreatePlaylistCard';
+import { Card, CarouselCard, CreatePlaylistCard } from '../Cards';
 import { collectionTypes } from '../../constants';
 
 export const getImageURL = (item, collectionType) => {
@@ -13,22 +12,39 @@ export const getImageURL = (item, collectionType) => {
     }
 }
 
-
-export const CardCollection = props => (
-    <div className="card-collection">
-        {props.includeCreatePlaylistCard && <CreatePlaylistCard />}
-        {props.items.map((item, index) => (
-            <div key={`${item.id}--${index}`}className="card-collection__card-holder">
-                <Card 
+const CardCollection = (props) => (
+    props.isWithinCarousel ? (
+        <React.Fragment>
+            {props.includeCreatePlaylistCard && <CreatePlaylistCard />}
+            {props.items.map((item, index) => (
+                <CarouselCard 
+                    key={`${item.id}--${index}`}
                     linkDestination={props.URLPath + item.id}
                     imageURL={getImageURL(item, props.collectionType)}
                     label={item.name}
                     itemId={item.id}
                     collectionType={props.collectionType}
+                    additionalLabel={item.additional}
                 />
-            </div>
-        ))}
-    </div>
+            ))}
+        </React.Fragment>
+    ) : (
+        <div className="card-collection">
+            {props.includeCreatePlaylistCard && <CreatePlaylistCard />}
+            {props.items.map((item, index) => (
+                <div key={`${item.id}--${index}`}className="card-collection__card-holder">
+                    <Card 
+                        linkDestination={props.URLPath + item.id}
+                        imageURL={getImageURL(item, props.collectionType)}
+                        label={item.name}
+                        itemId={item.id}
+                        collectionType={props.collectionType}
+                        additionalLabel={props.additional}
+                    />
+                </div>
+            ))}
+        </div>
+    )
 );
 
 CardCollection.propTypes = {
@@ -39,7 +55,9 @@ CardCollection.propTypes = {
         collectionTypes.albums, 
         collectionTypes.playlists,
         collectionTypes.categories
-    ])
+    ]).isRequired,
+    isWithinCarousel: PropTypes.bool,
+    includeAdditionalLabel: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -50,11 +68,29 @@ const mapStateToProps = (state, ownProps) => {
                 URLPath: '/artist/'
             };
 
+        // case collectionTypes.albums_:
+        //     return {
+        //         items: ownProps.itemIds.map(itemId => state.albums.albumData[itemId]),
+        //         URLPath: '/album/'
+        //     };
+
         case collectionTypes.albums:
             return {
-                items: ownProps.itemIds.map(itemId => state.albums.albumData[itemId]),
+                items: ownProps.itemIds.map(itemId => {
+                    const albumObject = state.albums.albumData[itemId];
+                    if (ownProps.includeAdditionalLabel) {
+                        const albumArtistId = albumObject.artists[0];
+                        return {
+                            ...albumObject,
+                            additional: state.artists.artistData[albumArtistId].name
+                        }
+                    } else {
+                        return albumObject;
+                    }
+                }),
                 URLPath: '/album/'
             };
+        
 
         case collectionTypes.playlists:
             return {

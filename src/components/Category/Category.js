@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import CategoryHeader from '../CategoryHeader';
 import Carousel from '../Carousel';
 import { collectionTypes } from '../../constants';
+import Section from '../Section';
+import CardCollection from '../CardCollection';
 
 /* 
 
@@ -38,17 +40,29 @@ class Category extends Component {
                     underlineRef={this.underlineRef}
                 />
                 <div ref={this.mainContainerRef}>
-                    <Carousel 
-                        itemIds={playlistIds}
-                        title="Playlists"
-                        collectionType={collectionTypes.playlists}
-                        includeCreatePlaylistCard={false}
-                    />
+                    <Section title="Playlists" >
+                        <CardCollection 
+                            itemIds={playlistIds}
+                            collectionType={collectionTypes.playlists}
+                            includeCreatePlaylistCard={false}
+                        />
+                    </Section> 
                 </div>
             </main>
         )
     }
 }
+
+/*
+
+<Carousel 
+                        itemIds={playlistIds}
+                        title="Playlists"
+                        collectionType={collectionTypes.playlists}
+                        includeCreatePlaylistCard={false}
+                    />
+
+*/
 
 const mapStateToProps = (state, ownProps) => {
     const category = state.categories.categoryData[ownProps.categoryId];

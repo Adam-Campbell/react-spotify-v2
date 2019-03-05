@@ -65,7 +65,7 @@ const fetchNewReleases = (token, market) => async (dispatch) => {
         dispatch(storeNewReleases(
             normalizedData.entities.albums,
             normalizedData.result,
-            normalizedData.artists
+            normalizedData.entities.artists
         ));
     } catch (err) {
         throw new Error(err);

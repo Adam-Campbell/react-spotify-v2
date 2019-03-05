@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import VelocityTracker from './VelocityTracker';
-import CarouselCardCollection from '../CarouselCardCollection';
+import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';
 
 
@@ -17,7 +17,8 @@ export class Carousel extends Component {
             collectionTypes.playlists,
             collectionTypes.categories
         ]),
-        includeCreatePlaylistCard: PropTypes.bool.isRequired
+        includeCreatePlaylistCard: PropTypes.bool.isRequired,
+        includeAdditionalLabel: PropTypes.bool
     };
 
     state = {
@@ -51,6 +52,13 @@ export class Carousel extends Component {
         // In the event that there is still an animation frame saved in either of these variables, cancel it.
         cancelAnimationFrame(this.interactionUpdateRAF);
         cancelAnimationFrame(this.postSwipeRAF);
+    }
+
+    calculateContainerWidth = () => {
+        const numberOfItems = this.props.includeCreatePlaylistCard ? 
+                              this.props.itemIds.length + 1 :
+                              this.props.itemIds.length;
+        return numberOfItems * 260;  
     }
 
     /**
@@ -181,7 +189,7 @@ export class Carousel extends Component {
         const xDelta = clientX - startX;
         const newOffset = startOffset + xDelta;
         // now constrain the offset
-        const containerWidth = this.props.itemIds.length * 260;
+        const containerWidth = this.calculateContainerWidth();
         const { clientWidth } = document.documentElement;
         const lowerBound = -(containerWidth - clientWidth);
         
@@ -229,13 +237,13 @@ export class Carousel extends Component {
      * an interaction has finished, based off of the velocity of that interaction just before its end. 
      */
     createPostSwipeFrame = (timestamp, velocity) => {
-        if (Math.abs(velocity) >= 1) {
+        if (Math.abs(velocity) >= 1 && this.contentContainerRef.current) {
             const nextVelocity = velocity * 0.95;
             const prevTranslate = this.getTranslateValAsNum(
                 this.contentContainerRef.current.style.transform
             );
             const adjustedTranslate = prevTranslate + nextVelocity;
-            const containerWidth = this.props.itemIds.length * 260;
+            const containerWidth = this.calculateContainerWidth();
             const { clientWidth } = document.documentElement;
             const limit = -(containerWidth - clientWidth);
             const constrainedTranslate = Math.min(0, Math.max(adjustedTranslate, limit));
@@ -247,8 +255,14 @@ export class Carousel extends Component {
     }
 
     render() {
-        const { itemIds, title, collectionType, includeCreatePlaylistCard } = this.props;
-        const containerWidth = `${itemIds.length * 260}px`;
+        const { 
+            itemIds, 
+            title, 
+            collectionType, 
+            includeCreatePlaylistCard, 
+            includeAdditionalLabel 
+        } = this.props;
+        const containerWidth = `${this.calculateContainerWidth()}px`;
         return (
             <section className="carousel__section">
                 <h1 className="carousel__title">{title}</h1>
@@ -269,10 +283,12 @@ export class Carousel extends Component {
                         }}
                         ref={this.contentContainerRef}
                     >
-                        <CarouselCardCollection 
+                        <CardCollection 
                             itemIds={itemIds}
                             includeCreatePlaylistCard={includeCreatePlaylistCard}
                             collectionType={collectionType}
+                            isWithinCarousel={true}
+                            includeAdditionalLabel={includeAdditionalLabel}
                         />
                     </div>
                 </div>

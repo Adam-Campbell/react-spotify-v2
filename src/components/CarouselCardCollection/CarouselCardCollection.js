@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import CarouselCard from '../CarouselCard';
-import CreatePlaylistCard from '../CreatePlaylistCard';
+//import CarouselCard from '../CarouselCard';
+import { CarouselCard, CreatePlaylistCard } from '../Cards';
+//import CreatePlaylistCard from '../CreatePlaylistCard';
 import { collectionTypes } from '../../constants';
 
 export const getImageURL = (item, collectionType) => {
@@ -25,6 +26,7 @@ export const CarouselCardCollection = props => (
                 label={item.name}
                 itemId={item.id}
                 collectionType={props.collectionType}
+                
             />
         ))}
     </React.Fragment>
