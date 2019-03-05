@@ -27,7 +27,7 @@ export class Carousel extends Component {
         startX: null,
         // clientY at the start of current interaction
         startY: null,
-        // the numerical value from within the transfor: translateX inline style on the contentContainer node
+        // the numerical value from within the transform: translateX inline style on the contentContainer node
         // at the start of the current interaction.
         startOffset: null,
         // Used for touch events only, will either be equal to null, 'horizontal' or 'vertical'. Allows the 

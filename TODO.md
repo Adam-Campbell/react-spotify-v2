@@ -2,7 +2,7 @@
 
 - [DONE] improving the animations - when transitioned from a card, as well as the specific header animations, give the rest of the page a fade in animation. When a page is navigated to without transitioning from a card, just give the whole page including the header a fade in animation.
 
-- implementing a netflix style slider to hold the cards. Needs to support mouse and touch.
+- [DONE] implementing a netflix style slider to hold the cards. Needs to support mouse and touch.
 
 - [DONE except for lazy loading] implementing an image component that will be used to replace all images in the app. It will display a fallback svg in the event that there is no image url to use, and when there is one to use it will lazy load the image. If I use the intersetction observer API for lazy loading I will need to include a polyfill for IE. 
 
