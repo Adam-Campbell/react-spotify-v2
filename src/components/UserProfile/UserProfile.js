@@ -8,7 +8,6 @@ import Section from '../Section';
 import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
-import CarouselCardCollection from '../CarouselCardCollection';
 import Carousel from '../Carousel';
 
 class UserProfileContainer extends Component {

@@ -197,7 +197,7 @@ export class Carousel extends Component {
         // width of the client. In this case we just use 0 as our final offset value since there shouldn't be
         // any offset on the container container. If lowerBound is negative however, then the content container
         // is wider than the client, so we derive the value for finalOffset from the value of newOffset, 
-        // constrained to be in the range lowerBound <= finalOffset <= 0.
+        // constrained to be within the range lowerBound <= finalOffset <= 0.
         let finalOffset;
         if (Math.sign(lowerBound) !== -1) {
             finalOffset = 0;
@@ -296,4 +296,3 @@ export class Carousel extends Component {
         );
     }
 }
-

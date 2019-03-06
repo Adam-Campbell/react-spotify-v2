@@ -68,12 +68,6 @@ const mapStateToProps = (state, ownProps) => {
                 URLPath: '/artist/'
             };
 
-        // case collectionTypes.albums_:
-        //     return {
-        //         items: ownProps.itemIds.map(itemId => state.albums.albumData[itemId]),
-        //         URLPath: '/album/'
-        //     };
-
         case collectionTypes.albums:
             return {
                 items: ownProps.itemIds.map(itemId => {
