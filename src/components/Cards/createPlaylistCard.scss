@@ -1,16 +1,25 @@
 @import '../../scssVariables/index.scss';
 
 .create-playlist-card {
+    width: 100%;
     background: $brand;
     color: $white;
-    padding: 8px;
+    padding: 10px;
     border-radius: 4px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    &__outer {
+        width: 240px;
+        min-width: 240px;
+        min-height: 280px;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 4px;
+        display: flex;
+    }
     &__description-text {
         font-family: sans-serif;
     }

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Section from '../Section';
-import Card from '../Card';
+//import Card from '../Card';
+import { Card } from '../Cards';
 import { collectionTypes } from '../../constants';
 
 const SearchResults = props => {
@@ -37,6 +38,7 @@ const SearchResults = props => {
                                     label={album.name}
                                     collectionType={collectionTypes.albums}
                                     itemId={album.id}
+                                    additionalLabel={album.artists[0].name}
                                 />
                             </div>
                         ))}

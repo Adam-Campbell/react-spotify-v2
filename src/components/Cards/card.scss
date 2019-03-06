@@ -23,6 +23,16 @@
     &__label {
         font-family: sans-serif;
         color: $black;
-        font-size: 1rem;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    &__additional-label {
+        font-family: sans-serif;
+        color: $black;
+        font-size: 12px;
+        font-weight: 300;
+        margin-top: 4px;
+        margin-bottom: 4px;
     }
 }

@@ -4,23 +4,30 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import { withRouter } from 'react-router-dom';
 import { collectionTypes } from '../../constants';
-import SmartImage from '../SmartImage';
 
-export class Card extends Component {
-    imageRef = React.createRef();
+class DataPreFetcher extends Component {
 
     static propTypes = {
-        linkDestination: PropTypes.string.isRequired,
-        imageURL: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
+        itemId: PropTypes.string.isRequired, 
         collectionType: PropTypes.oneOf([
             collectionTypes.artists, 
             collectionTypes.albums, 
             collectionTypes.playlists,
             collectionTypes.categories
-        ]),
-        itemId: PropTypes.string
+        ]).isRequired,
+        linkDestination: PropTypes.string.isRequired,
+        // All of the below props are optional, and will be present only when component is enhanced with
+        // InteractionValidator.
+        shouldManageValidation: PropTypes.bool,
+        startMouseInteraction: PropTypes.func,
+        updateMouseInteraction: PropTypes.func,
+        startTouchInteraction: PropTypes.func,
+        updateTouchInteraction: PropTypes.func,
+        endInteraction: PropTypes.func,
+        isActive: PropTypes.bool
     }
+
+    imageRef = React.createRef();
 
     /**
      * This function simply returns the correct data fetching function based on the route that the card
@@ -50,8 +57,8 @@ export class Card extends Component {
      * transition, then ensures that the data for the route to be transitioned to has been fetched, then
      * finally redirects to the specified route. 
      */
-    handleClick = async (e) => {
-        e.preventDefault();
+    fetchAndRedirect = async () => {
+        //e.preventDefault();
         const { width, height, top, left, y } = this.imageRef.current.getBoundingClientRect();
         // Provides an alternative way of calculating top offset that helps mitigate some inconsistencies
         // in certain older browsers
@@ -65,22 +72,53 @@ export class Card extends Component {
         });
     }
 
+    handleInteractionEnd = () => {
+        const { shouldManageValidation, isActive, endInteraction } = this.props;
+        // If this component should not care about interaction validation, always call fetchAndRedirect
+        if (!shouldManageValidation) {
+            this.fetchAndRedirect();
+            // If this component should care about interaction validation, call fetchAndRedirect only if
+            // isActive is true, but always call endInteraction.
+        } else {
+            if (isActive) {
+                this.fetchAndRedirect();
+            }
+            endInteraction();
+        }
+    }
+
     render() {
-        return (
-            <a href={this.props.linkDestination} className="card" onClick={this.handleClick}>
-                <SmartImage 
-                    imageURL={this.props.imageURL}
-                    isArtist={this.props.collectionType === collectionTypes.artists}
-                    isFixedSize={false}
-                    containerRef={this.imageRef}
-                />
-                <p className="card__label">{this.props.label}</p>
-            </a>
-        )
+        const { 
+            shouldManageValidation, 
+            startMouseInteraction,
+            updateMouseInteraction,
+            startTouchInteraction,
+            updateTouchInteraction,
+            endInteraction,
+            isActive,
+            children 
+        } = this.props;
+        if (shouldManageValidation) {
+            return children({
+                handleMouseDown: startMouseInteraction,
+                handleMouseMove: updateMouseInteraction,
+                handleTouchStart: startTouchInteraction,
+                handleTouchMove: updateTouchInteraction,
+                handleMouseLeave: endInteraction,
+                handleInteractionEnd: this.handleInteractionEnd,
+                imageRef: this.imageRef,
+                isActive: isActive
+            });
+        } else {
+            return children({
+                handleInteractionEnd: this.handleInteractionEnd,
+                imageRef: this.imageRef
+            });
+        }
     }
 }
 
-export const ConnectedCard = withRouter(
+export default withRouter(
     connect(
         undefined, 
         {
@@ -90,5 +128,5 @@ export const ConnectedCard = withRouter(
             fetchPlaylist: ActionCreators.fetchPlaylist,
             fetchCategory: ActionCreators.fetchCategory
         }
-    )(Card)
+    )(DataPreFetcher)
 );

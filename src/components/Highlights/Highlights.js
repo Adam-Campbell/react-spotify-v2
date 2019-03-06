@@ -29,6 +29,7 @@ class Highlights extends Component {
                     title="New Releases"
                     collectionType={collectionTypes.albums}
                     includeCreatePlaylistCard={false}
+                    includeAdditionalLabel={true}
                 />
                 <Carousel 
                     itemIds={featuredPlaylists}
