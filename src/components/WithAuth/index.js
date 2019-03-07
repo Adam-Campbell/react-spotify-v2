@@ -2,49 +2,28 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { authURL } from '../../constants';
+import { Redirect } from 'react-router-dom';
 import * as ActionCreators from '../../actions';
 
 class WithAuth extends Component {
-    saveTokenToLocalStorage = (accessToken) => {
-        try {
-            const JSONAccessToken = JSON.stringify(accessToken);
-            localStorage.setItem('accessToken', JSONAccessToken);
-        } catch(err) {
-            console.log(err);
-        }
+    hasValidToken = () => {
+        const { accessToken, timestamp } = this.props;
+        return (accessToken || Date.now() - timestamp < 3600000);
     }
-
-    checkForAccessToken = () => {
-        if (window.location.hash) {
-            const accessToken = window.location.hash.replace(/.*access_token=([^&]+).*/, '$1');
-            const timestamp = Date.now();  
-            this.props.storeToken(accessToken, timestamp);
-            this.saveTokenToLocalStorage({
-                token: accessToken,
-                timestamp: timestamp
-            });
-            return true;
-        } else if (this.props.accessToken) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
 
     render() {
         const { children } = this.props;
-        if (this.checkForAccessToken()) {
-            return children();
+        if (this.hasValidToken()) {
+            return children()
         } else {
-            window.location = authURL;
-            return null;
+            return <Redirect to="/login" />
         }
     }
 }
 
 const mapStateToProps = (state) => ({
-    accessToken: state.accessToken.token
+    accessToken: state.accessToken.token,
+    timestamp: state.accessToken.timestamp
 });
 
 export default connect(

@@ -4,6 +4,7 @@ import axios from 'axios';
 import Search from './Search';
 import { debounce } from 'lodash';
 import { TimelineMax } from 'gsap';
+import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
 class SearchContainer extends Component {
 
@@ -80,4 +81,4 @@ const mapStateToProps = (state) => ({
     market: state.user.country
 });
 
-export const ConnectedSearchContainer = connect(mapStateToProps)(SearchContainer);
+export const ConnectedSearchContainer = withAuthAndUserInfo(connect(mapStateToProps)(SearchContainer));

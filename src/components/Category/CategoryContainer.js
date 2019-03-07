@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import Category from './Category';
+import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
 class CategoryContainer extends Component {
     componentDidMount() {
@@ -22,9 +23,9 @@ const mapStateToProps = (state, ownProps) => ({
     categoryObject: state.categories.categoryData[ownProps.category]
 });
 
-export const ConnectedCategoryContainer = connect(
+export const ConnectedCategoryContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
     {
         fetchCategory: ActionCreators.fetchCategory
     }
-)(CategoryContainer);
+)(CategoryContainer));

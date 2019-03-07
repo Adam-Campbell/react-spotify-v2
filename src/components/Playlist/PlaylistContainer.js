@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import Playlist from './Playlist';
+import withAuthAndUserInfo from '../withAuthAndUserInfo'
 
 class PlaylistContainer extends Component {
 
@@ -36,9 +37,9 @@ const mapStateToProps = (state, ownProps) => ({
     playlist: state.playlists.playlistData[ownProps.playlistId] 
 });
 
-export const ConnectedPlaylistContainer = connect(
+export const ConnectedPlaylistContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
     {
         fetchPlaylist: ActionCreators.fetchPlaylist
     }
-)(PlaylistContainer);
+)(PlaylistContainer));

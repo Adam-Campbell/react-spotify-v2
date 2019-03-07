@@ -1,19 +1,26 @@
 ## CURRENT TODOS
 
+- Include more thorough testing. 
+
+- Improve modal appearance
+
+- Improve general app appearance
+
+- Add pagination to certain track lists (ie playlists that include more than 50 tracks)
+
+- Look for any improvements that can be made to data layer. Take a look at utilising selectors when mapping state to props. Also consider seperating out relationship associations into seperate reducers. This includes things like the array of an artists top tracks, which are not part of the artist object itself, but I'm adding onto the artist object in the store currently, and this is happening seperately from fetching the main artist object. Instead I could have an artistTopTracks reducer which is a dictionary where each key is the artist id and the associated value is the array of top track ids. This would lead to me having more reducers to deal with but would make other logic simpler. 
+
 - [DONE] improving the animations - when transitioned from a card, as well as the specific header animations, give the rest of the page a fade in animation. When a page is navigated to without transitioning from a card, just give the whole page including the header a fade in animation.
 
 - [DONE] implementing a netflix style slider to hold the cards. Needs to support mouse and touch.
 
 - [DONE except for lazy loading] implementing an image component that will be used to replace all images in the app. It will display a fallback svg in the event that there is no image url to use, and when there is one to use it will lazy load the image. If I use the intersetction observer API for lazy loading I will need to include a polyfill for IE. 
 
-- I also need to include more thorough testing. 
-
-- The modals could probably be made to look a little better.
 
 - [DONE] Investigate storing an SCSS file for each component within the folder for that component and importing it within the index.js file for that folder, as opposed to just having a seperate SCSS folder holding all of the SCSS.
 
 
-- Investigate the warning message I'm getting when starting the app. I believe it is because I'm potentially dispatching an action within render (the checkForAccessToken method potentially dispatches an action). I should refactor this, and potentially use this as an opportunity to review the general auth flow. Regarding the warning, I think I should just check if the accessToken prop is there in render, if it is then I render the app, if not then I render null, but I don't redirect within the render method. In componentDidMount I will check for the access token in window hash, local storage etc, and if it isn't there then I will programatically redirect from within the componentDidMount method. 
+- [DONE] Investigate the warning message I'm getting when starting the app. I believe it is because I'm potentially dispatching an action within render (the checkForAccessToken method potentially dispatches an action). I should refactor this, and potentially use this as an opportunity to review the general auth flow. Regarding the warning, I think I should just check if the accessToken prop is there in render, if it is then I render the app, if not then I render null, but I don't redirect within the render method. In componentDidMount I will check for the access token in window hash, local storage etc, and if it isn't there then I will programatically redirect from within the componentDidMount method. 
 
 
 

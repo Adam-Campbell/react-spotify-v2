@@ -5,6 +5,7 @@ import CardCollection from '../CardCollection';
 import Section from '../Section';
 import { collectionTypes } from '../../constants';
 import Highlights from './Highlights';
+import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
 class HighlightsContainer extends Component {
 
@@ -24,9 +25,9 @@ const mapStateToProps = (state) => ({
     fullHighlightsFetched: state.highlights.fullHighlightsFetched
 });
 
-export const ConnectedHighlightsContainer = connect(
+export const ConnectedHighlightsContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
     {
         fetchHighlights: ActionCreators.fetchHighlights
     }
-)(HighlightsContainer);
+)(HighlightsContainer));
