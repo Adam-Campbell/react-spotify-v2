@@ -5,10 +5,10 @@ import * as ActionCreators from '../../actions';
 import UserProfileHeader from '../UserProfileHeader';
 import TrackCollection from '../TrackCollection';
 import Section from '../Section';
-import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
 import Carousel from '../Carousel';
+import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
 class UserProfileContainer extends Component {
 
@@ -64,9 +64,9 @@ const mapStateToProps = (state) => ({
     playlistIds: state.user.playlistIds
 });
 
-export const ConnectedUserProfile =  connect(
+export const ConnectedUserProfile =  withAuthAndUserInfo(connect(
     mapStateToProps,
     {
         fetchUser: ActionCreators.fetchUser
     }
-)(UserProfileContainer);
+)(UserProfileContainer));

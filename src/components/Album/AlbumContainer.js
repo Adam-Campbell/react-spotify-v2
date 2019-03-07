@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import Album from './Album';
+import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
 class AlbumContainer extends Component {
 
@@ -34,9 +35,9 @@ const mapStateToProps = (state, ownProps) => ({
     album: state.albums.albumData[ownProps.albumId]
 });
 
-export const ConnectedAlbumContainer = connect(
+export const ConnectedAlbumContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
     {
         fetchAlbum: ActionCreators.fetchAlbum
     }
-)(AlbumContainer);
+)(AlbumContainer));

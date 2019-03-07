@@ -23,10 +23,9 @@ const mapStateToProps = (state) => ({
     userId: state.user.id
 });
 
-
 export default connect(
     mapStateToProps,
     {
         fetchUser: ActionCreators.fetchUser
     }
-)(WithUserInfo)
+)(WithUserInfo);
