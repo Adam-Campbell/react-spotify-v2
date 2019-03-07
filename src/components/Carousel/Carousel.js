@@ -265,7 +265,7 @@ export class Carousel extends Component {
         const containerWidth = `${this.calculateContainerWidth()}px`;
         return (
             <section className="carousel__section">
-                <h1 className="carousel__title">{title}</h1>
+                <h1 className="carousel__title heading">{title}</h1>
                 <div 
                     className="carousel"
                     onMouseDown={this.handleMouseDown}

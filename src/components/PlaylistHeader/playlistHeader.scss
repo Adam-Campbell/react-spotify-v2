@@ -49,14 +49,14 @@
         transform-origin: left;
     }
     &__name-input {
-        font-family: sans-serif;
+        font-family: $font--heading;
         color: $black;
-        font-size: 1rem;
-        font-weight: 400;
-        background: $offWhite;
-        border-radius: 4px;
+        font-size: 2rem;
+        font-weight: 700;
         border: none;
-        padding: 8px;
+        border-bottom: solid 4px $black;
+        padding: 8px 0;
+        vertical-align: middle;
     }
     &__name-button {
         font-family: sans-serif;
@@ -68,6 +68,7 @@
         border: none;
         margin-left: 8px;
         padding: 8px;
+        vertical-align: middle;
     }
     &__image-button {
         font-family: sans-serif;

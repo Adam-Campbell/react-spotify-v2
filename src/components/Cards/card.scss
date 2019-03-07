@@ -21,16 +21,16 @@
         object-position: 50% 50%;
     }
     &__label {
-        font-family: sans-serif;
+        font-family: $font--body;
         color: $black;
         font-size: 16px;
         font-weight: 700;
         margin-bottom: 4px;
     }
     &__additional-label {
-        font-family: sans-serif;
+        font-family: $font--body;
         color: $black;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 300;
         margin-top: 4px;
         margin-bottom: 4px;

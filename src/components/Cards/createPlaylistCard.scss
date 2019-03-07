@@ -21,7 +21,8 @@
         display: flex;
     }
     &__description-text {
-        font-family: sans-serif;
+        font-family: $font--body;
+        font-weight: 700;
     }
     .fa-plus {
         font-size: 3rem;

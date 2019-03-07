@@ -21,18 +21,23 @@ class OwnedPlaylistHeader extends Component {
     }
 
     state = {
-        isEditingName: false
+        isEditingName: false,
+        currentTitleWidth: 0
     };
 
     enterNameEditingState = () => {
+        const { width } = this.props.titleRef.current.getBoundingClientRect();
+        console.log(width);
         this.setState({
-            isEditingName: true
+            isEditingName: true,
+            currentTitleWidth: width
         });
     };
 
     exitNameEditingState = () => {
         this.setState({
-            isEditingName: false
+            isEditingName: false,
+            currentTitleWidth: 0
         });
     }
 
@@ -72,6 +77,7 @@ class OwnedPlaylistHeader extends Component {
                             playlistName={playlistName} 
                             exitNameEditingState={this.exitNameEditingState} 
                             playlistId={this.props.playlistId}
+                            renderWidth={this.state.currentTitleWidth}
                         /> :
                         <React.Fragment>
                         <h1 

@@ -16,12 +16,12 @@ class UserProfileContainer extends Component {
     timeline = null;
 
     componentDidMount() {
-        if (this.pageContainerRef.current) {
-            this.timeline = new TimelineMax();
-            this.timeline.from(this.pageContainerRef.current, 0.6, {
-                opacity: 0
-            });
-        }
+        // if (this.pageContainerRef.current) {
+        //     this.timeline = new TimelineMax();
+        //     this.timeline.from(this.pageContainerRef.current, 0.6, {
+        //         opacity: 0
+        //     });
+        // }
     }
 
     render() {
@@ -29,7 +29,7 @@ class UserProfileContainer extends Component {
             return null;
         }
         return (
-            <main className="user-profile" ref={this.pageContainerRef}>
+            <main className="body-content-container" ref={this.pageContainerRef}>
                 <UserProfileHeader />
                 <Section title="Recently Played Tracks">
                     <TrackCollection 

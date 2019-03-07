@@ -7,6 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700|Montserrat:700" rel="stylesheet">
     <meta name="theme-color" content="#000000" />
     <!--
       manifest.json provides metadata used when your web app is added to the
@@ -38,39 +39,5 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
-    <script>
-      // window.onSpotifyWebPlaybackSDKReady = () => {
-      //   console.log('Spotify web playback SDK is ready');
-      //   const player = new Spotify.Player({
-      //     name: 'Reactify Player',
-      //     getOAuthToken: (cb) => {
-      //       let token;
-      //       if (window.location.hash) {
-      //         token = window.location.hash.replace(/.*access_token=([^&]+).*/, '$1');
-      //         return cb(token);
-      //       } else {
-      //         const JSONAccessToken = localStorage.getItem('accessToken');
-      //         if (JSONAccessToken) {
-      //           const accessToken = JSON.parse(JSONAccessToken);
-      //           token = accessToken.token;
-      //           return cb(token);
-      //         }
-      //       }
-      //       return null;
-      //     }
-      //   });
-      //   player.addListener('initialization_error', ({ message }) => { console.error(message); });
-      //   player.addListener('authentication_error', ({ message }) => { console.error(message); });
-      //   player.addListener('account_error', ({ message }) => { console.error(message); });
-      //   player.addListener('playback_error', ({ message }) => { console.error(message); });
-      //   player.addListener('player_state_changed', state => { console.log(state); });
-      //   player.addListener('ready', ({ device_id }) => {
-      //     console.log('Ready with Device ID', device_id);
-      //     window._REACTIFY_GLOBAL_DEVICE_ID_ = device_id;
-      //   });
-      //   player.connect();
-      //   window.player = player;
-      //}
-    </script>
   </body>
 </html>

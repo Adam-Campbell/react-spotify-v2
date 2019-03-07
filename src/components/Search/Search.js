@@ -5,7 +5,7 @@ import SearchResults from './SearchResults';
 import SearchFilterSwitch from './SearchFilterSwitch';
 
 const Search = props => (
-    <main className="search">
+    <main className="body-content-container">
         <SearchBox 
             searchTerm={props.searchTerm}
             updateSearchTerm={props.updateSearchTerm}

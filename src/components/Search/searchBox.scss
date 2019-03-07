@@ -1,17 +1,18 @@
 @import '../../scssVariables/index.scss';
 
 .search-box {
-    padding: 64px 32px 32px 32px;
+    padding: 20px;
     &__label {
-        font-family: sans-serif;
+        font-family: $font--body;
         color: $black;
-        font-size: 12px;
+        font-size: 14px;
+        font-weight: 300;
         margin-top: 8px;
         margin-bottom: 8px;
     }
     &__input {
         font-size: 40px;
-        font-family: sans-serif;
+        font-family: $font--heading;
         font-weight: 700;
         color: $black;
         border: none;

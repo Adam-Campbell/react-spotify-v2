@@ -23,12 +23,12 @@ class SearchContainer extends Component {
     }
 
     componentDidMount() {
-        if (this.underlineRef.current) {
-            this.timeline = new TimelineMax();
-            this.timeline.from(this.underlineRef.current, 0.6, {
-                scaleX: 0
-            });
-        }
+        // if (this.underlineRef.current) {
+        //     this.timeline = new TimelineMax();
+        //     this.timeline.from(this.underlineRef.current, 0.6, {
+        //         scaleX: 0
+        //     });
+        // }
     }
 
     updateSearchTerm = (newSearchTerm) => {
