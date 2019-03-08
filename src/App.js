@@ -1,20 +1,9 @@
 import React, { Component } from 'react';
-import WithAuth from './components/WithAuth';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import UserProfile from './components/UserProfile';
-import ArtistProfile from './components/ArtistProfile';
-import Album from './components/Album';
-import Playlist from './components/Playlist';
-import Highlights from './components/Highlights';
-import Category from './components/Category';
+import { BrowserRouter } from 'react-router-dom';
 import NavToggle from './components/NavToggle';
 import Nav from './components/Nav';
-import Search from './components/Search';
-import ScrollToTop from './components/ScrollToTop';
-import WithUserInfo from './components/WithUserInfo';
 import Modal from './components/Modal';
 import Player from './components/Player';
-import Login from './components/Login';
 import RouteManager from './components/RouteManager';
 
 class App extends Component {

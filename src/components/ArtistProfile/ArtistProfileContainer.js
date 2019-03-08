@@ -6,6 +6,11 @@ import ArtistProfile from './ArtistProfile';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
 class ArtistProfileContainer extends Component {
+
+    static propTypes = {
+        artistId: PropTypes.string.isRequired
+    };
+
     componentDidMount() {
         this.props.fetchArtist(this.props.artistId);
     }

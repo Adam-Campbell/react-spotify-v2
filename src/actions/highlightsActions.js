@@ -2,7 +2,6 @@ import * as actionTypes from '../actionTypes';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
 import { getUsersMarket } from './userActions';
-import { cloneDeep } from 'lodash';
 
 const fetchHighlightsRequest = () => ({
     type: actionTypes.FETCH_HIGHLIGHTS_REQUEST

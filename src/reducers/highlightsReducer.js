@@ -1,5 +1,4 @@
 import * as actionTypes from '../actionTypes';
-import { addOrMerge } from '../utils';
 
 const defaultState = {
     newReleases: [],

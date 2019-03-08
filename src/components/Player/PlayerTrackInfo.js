@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 const PlayerTrackInfo = props => (
@@ -11,10 +10,6 @@ const PlayerTrackInfo = props => (
         </div>
     </div>
 );
-
-// PlayerTrackInfo.propTypes = {
-//     trackId: PropTypes.string.isRequired
-// };
 
 const mapStateToProps = (state, ownProps) => {
     if (!state.player.trackId) {

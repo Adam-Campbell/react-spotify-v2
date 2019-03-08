@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Followers from '../Followers';
 import * as ActionCreators from '../../actions';
-import { constructTimeline } from '../../utils';
 import PlaylistNameInput from './PlaylistNameInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
