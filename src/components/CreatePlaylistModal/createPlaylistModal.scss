@@ -1,29 +1,37 @@
 @import '../../scssVariables/index.scss';
 
 .create-playlist-modal {
-    font-family: sans-serif;
-    color: $black;
     &__input {
         width: 100%;
-        border: solid 1px $black;
+        border: none;
+        border-bottom: solid 2px #ddd;
         border-radius: 4px;
         padding: 8px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        background-color: $offWhite;
+        color: $black;
+        font-family: $font--body;
+        font-weight: 400;
     }
     &__create-button {
+        font-family: $font--body;
         font-weight: 700;
         padding: 8px;
         border-radius: 4px;
         border: none;
+        border-bottom: solid 2px $brand--darkened;
         background: $brand;
         color: $white;
         cursor: pointer;
     }
     &__cancel-button {
+        font-family: $font--body;
         font-weight: 700;
         padding: 8px;
         border-radius: 4px;
         border: none;
+        border-bottom: solid 2px $warning--darkened;
         background: $warning;
         color: $white;
         margin-left: 8px;

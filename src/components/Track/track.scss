@@ -7,9 +7,10 @@
     align-items: center;
     cursor: pointer;
     color: $black;
-    font-family: sans-serif;
+    font-family: $font--body;
+    font-weight: 300;
     &:nth-child(2n) {
-        background: rgba(17,17,17,0.1);
+        background: $offWhite;
     }
     &.currently-playing {
         color: $brand;

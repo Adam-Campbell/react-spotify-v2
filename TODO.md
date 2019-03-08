@@ -2,9 +2,9 @@
 
 - Include more thorough testing. 
 
-- Improve modal appearance
+- [DONE] Improve modal appearance
 
-- Improve general app appearance
+- [DONE] Improve general app appearance
 
 - Add pagination to certain track lists (ie playlists that include more than 50 tracks)
 

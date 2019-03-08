@@ -3,7 +3,6 @@
 .playlist-header {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     padding-top: 32px;
     font-family: sans-serif;
     color: $black;
@@ -14,7 +13,7 @@
     @media (min-width: 1000px) {
         flex-direction: column;
         align-items: flex-start;
-        width: 320px;
+        width: 350px;
     }
     &__image {
         width: 250px;
@@ -23,12 +22,12 @@
         object-position: 50% 50%;
     }
     &__text-container {
+        margin-top: 20px;
         @media (min-width: 768px) {
             margin-left: 32px;
         }
         @media(min-width: 1000px) {
             margin-left: 0;
-            margin-top: 16px;
         }
     }
     &__name {
@@ -49,36 +48,13 @@
         transform-origin: left;
     }
     &__name-input {
-        font-family: sans-serif;
+        font-family: $font--heading;
         color: $black;
-        font-size: 1rem;
-        font-weight: 400;
-        background: $offWhite;
-        border-radius: 4px;
-        border: none;
-        padding: 8px;
-    }
-    &__name-button {
-        font-family: sans-serif;
+        font-size: 2.25rem;
         font-weight: 700;
-        font-size: 14px;
-        background: $brand;
-        color: $offWhite;
-        border-radius: 4px;
         border: none;
-        margin-left: 8px;
-        padding: 8px;
-    }
-    &__image-button {
-        font-family: sans-serif;
-        font-weight: 700;
-        font-size: 14px;
-        background: $brand;
-        color: $offWhite;
-        border-radius: 4px;
-        border: none;
-        margin-top: 8px;
-        padding: 8px;
-        cursor: pointer;
+        border-bottom: solid 4px $black;
+        padding: 8px 0;
+        vertical-align: middle;
     }
 }

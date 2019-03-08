@@ -21,47 +21,47 @@ class Album extends Component {
     timeline = null;
 
     componentDidMount() {
-        const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        const { top, left } = this.imageRef.current.getBoundingClientRect();
-        constructTimeline(this.timeline, {
-            hasTransition,
-            image: this.imageRef.current,
-            title: this.titleRef.current,
-            underline: this.underlineRef.current,
-            headerAdditional: this.linkContainerRef.current,
-            mainContent: this.mainContentContainerRef.current,
-            fullPage: this.pageContainerRef.current,
-            prevImageWidth: imageWidth,
-            prevImageHeight: imageHeight,
-            prevImageTop: imageY,
-            prevImageLeft: imageX,
-            imageTop: top,
-            imageLeft: left
-        }); 
-        this.props.purgeTransitionImageRect(); 
+        // const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+        // const { top, left } = this.imageRef.current.getBoundingClientRect();
+        // constructTimeline(this.timeline, {
+        //     hasTransition,
+        //     image: this.imageRef.current,
+        //     title: this.titleRef.current,
+        //     underline: this.underlineRef.current,
+        //     headerAdditional: this.linkContainerRef.current,
+        //     mainContent: this.mainContentContainerRef.current,
+        //     fullPage: this.pageContainerRef.current,
+        //     prevImageWidth: imageWidth,
+        //     prevImageHeight: imageHeight,
+        //     prevImageTop: imageY,
+        //     prevImageLeft: imageX,
+        //     imageTop: top,
+        //     imageLeft: left
+        // }); 
+        // this.props.purgeTransitionImageRect(); 
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.albumId !== this.props.albumId) {
-            const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-            const { top, left } = this.imageRef.current.getBoundingClientRect();
-            constructTimeline(this.timeline, {
-                hasTransition,
-                image: this.imageRef.current,
-                title: this.titleRef.current,
-                underline: this.underlineRef.current,
-                headerAdditional: this.linkContainerRef.current,
-                mainContent: this.mainContentContainerRef.current,
-                fullPage: this.pageContainerRef.current,
-                prevImageWidth: imageWidth,
-                prevImageHeight: imageHeight,
-                prevImageTop: imageY,
-                prevImageLeft: imageX,
-                imageTop: top,
-                imageLeft: left
-            }); 
-            this.props.purgeTransitionImageRect(); 
-        }
+        // if (prevProps.albumId !== this.props.albumId) {
+        //     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+        //     const { top, left } = this.imageRef.current.getBoundingClientRect();
+        //     constructTimeline(this.timeline, {
+        //         hasTransition,
+        //         image: this.imageRef.current,
+        //         title: this.titleRef.current,
+        //         underline: this.underlineRef.current,
+        //         headerAdditional: this.linkContainerRef.current,
+        //         mainContent: this.mainContentContainerRef.current,
+        //         fullPage: this.pageContainerRef.current,
+        //         prevImageWidth: imageWidth,
+        //         prevImageHeight: imageHeight,
+        //         prevImageTop: imageY,
+        //         prevImageLeft: imageX,
+        //         imageTop: top,
+        //         imageLeft: left
+        //     }); 
+        //     this.props.purgeTransitionImageRect(); 
+        // }
     }
 
     render() {

@@ -12,18 +12,18 @@ class Highlights extends Component {
     timeline = null;
 
     componentDidMount() {
-        if (this.pageContainerRef.current) {
-            this.timeline = new TimelineMax();
-            this.timeline.from(this.pageContainerRef.current, 0.6, {
-                opacity: 0
-            });
-        }
+        // if (this.pageContainerRef.current) {
+        //     this.timeline = new TimelineMax();
+        //     this.timeline.from(this.pageContainerRef.current, 0.6, {
+        //         opacity: 0
+        //     });
+        // }
     }
 
     render() {
         const { newReleases, featuredPlaylists, categories } = this.props;
         return (
-            <main className="highlights" ref={this.pageContainerRef}>
+            <main className="body-content-container" ref={this.pageContainerRef}>
                 <Carousel 
                     itemIds={newReleases}
                     title="New Releases"

@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
 import SmartImage from '../SmartImage';
+import Button from '../Button';
 
 class OwnedPlaylistHeader extends Component {
 
@@ -21,25 +22,31 @@ class OwnedPlaylistHeader extends Component {
     }
 
     state = {
-        isEditingName: false
+        isEditingName: false,
+        currentTitleWidth: 0
     };
 
     enterNameEditingState = () => {
+        const { width } = this.props.titleRef.current.getBoundingClientRect();
+        console.log(width);
         this.setState({
-            isEditingName: true
+            isEditingName: true,
+            currentTitleWidth: width
         });
     };
 
     exitNameEditingState = () => {
         this.setState({
-            isEditingName: false
+            isEditingName: false,
+            currentTitleWidth: 0
         });
     }
 
     handleClick = () => {
         if (this.state.isEditingName) {
             this.setState({
-                isEditingName: false
+                isEditingName: false,
+                currentTitleWidth: 0
             });
         }
     }
@@ -55,16 +62,19 @@ class OwnedPlaylistHeader extends Component {
         const { imageURL, playlistName, ownerName, playlistFollowerCount } = this.props;
         return (
             <header className="playlist-header" onClick={this.handleClick}>
-                <SmartImage 
-                    imageURL={imageURL}
-                    isArtist={false}
-                    isFixedSize={true}
-                    containerRef={this.props.imageRef}
-                />
-                <button
-                    className="playlist-header__image-button"
-                    onClick={this.openUploadImageModal}
-                >Upload Image</button>
+                <div>
+                    <SmartImage 
+                        imageURL={imageURL}
+                        isArtist={false}
+                        isFixedSize={true}
+                        containerRef={this.props.imageRef}
+                    />
+                    <Button 
+                        handleClick={this.openUploadImageModal}
+                        text="Upload Image"
+                        additionalStyles={{ marginTop: '8px' }}
+                    />
+                </div>
                 <div className="playlist-header__text-container">
                     {
                         this.state.isEditingName ?
@@ -72,10 +82,11 @@ class OwnedPlaylistHeader extends Component {
                             playlistName={playlistName} 
                             exitNameEditingState={this.exitNameEditingState} 
                             playlistId={this.props.playlistId}
+                            renderWidth={this.state.currentTitleWidth}
                         /> :
                         <React.Fragment>
                         <h1 
-                            className="playlist-header__name heading" 
+                            className="playlist-header__name heading heading--large" 
                             ref={this.props.titleRef}
                             onClick={this.enterNameEditingState}
                         >

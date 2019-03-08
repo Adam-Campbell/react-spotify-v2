@@ -32,7 +32,7 @@ class Category extends Component {
         const { categoryId, playlistIds } = this.props;
 
         return (
-            <main className="category">
+            <main className="body-content-container">
                 <CategoryHeader 
                     categoryId={categoryId}
                     imageRef={this.imageRef}

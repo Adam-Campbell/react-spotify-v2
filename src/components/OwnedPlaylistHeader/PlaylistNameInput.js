@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
+import Button from '../Button';
 
 class PlaylistNameInput extends Component {
 
     static propTypes = {
         playlistName: PropTypes.string.isRequired,
         exitNameEditingState: PropTypes.func.isRequired,
-        playlistId: PropTypes.string.isRequired
+        playlistId: PropTypes.string.isRequired,
+        renderWidth: PropTypes.number
     };
 
     state = {
@@ -46,11 +48,12 @@ class PlaylistNameInput extends Component {
                     className="playlist-header__name-input"
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => this.updateEditedPlaylistName(e.target.value)}
+                    style={{ width: this.props.renderWidth }}
                 ></input>
-                <button
-                    className="playlist-header__name-button"
-                    onClick={this.handleSave}
-                >Save</button>
+                <Button 
+                    text="Save"
+                    handleClick={this.handleSave}
+                />
             </div>
         )
     }

@@ -33,7 +33,7 @@ class App extends Component {
     return (
       <BrowserRouter>
         <React.Fragment>
-          <ScrollToTop>
+          
             <div className="app-container">
               <div className="nav-container">
                 {this.state.navIsOpen && <Nav toggleNav={this.toggleNav} />}
@@ -47,7 +47,7 @@ class App extends Component {
               </div>
               <Player navIsOpen={this.state.navIsOpen} />
             </div>
-          </ScrollToTop>
+          
           <Modal />
         </React.Fragment>
       </BrowserRouter>

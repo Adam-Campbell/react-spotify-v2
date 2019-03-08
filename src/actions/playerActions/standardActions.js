@@ -160,5 +160,5 @@ export const standardSetShuffle = () => (dispatch, getState) => {
     }
 
     const shuffledContextTrackIds = getShuffledTrackIds(trackId, contextTrackIds);
-    dispatch(standardSelectTrackPlainAction(true, shuffledContextTrackIds));
+    dispatch(standardSetShufflePlainAction(true, shuffledContextTrackIds));
 }

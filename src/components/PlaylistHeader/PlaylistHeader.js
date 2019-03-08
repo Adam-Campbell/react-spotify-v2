@@ -14,7 +14,7 @@ const PlaylistHeader = props => (
             containerRef={props.imageRef}
         />
         <div className="playlist-header__text-container">
-            <h1 className="heading" ref={props.titleRef}>{props.playlistName}</h1>
+            <h1 className="heading heading--large" ref={props.titleRef}>{props.playlistName}</h1>
             <span className="playlist-header__underline" ref={props.underlineRef}></span>
             <div ref={props.followersContainerRef}>
                 <p className="playlist__owner">A playlist by {props.ownerName}</p>

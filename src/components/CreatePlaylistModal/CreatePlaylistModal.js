@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
+import Button from '../Button';
 
 class CreatePlaylistModal extends Component {
 
@@ -32,7 +33,28 @@ class CreatePlaylistModal extends Component {
                     value={this.state.playlistName}
                     onChange={(e) => this.updatePlaylistName(e.target.value)}
                 ></input>
-                <button 
+                <Button 
+                    text="CreatePlaylist"
+                    handleClick={() => {
+                        this.props.createPlaylist(this.state.playlistName)
+                        this.props.closeModal();
+                    }}
+                />
+                <Button 
+                    text="Cancel"
+                    isWarning={true}
+                    handleClick={this.props.closeModal}
+                    additionalStyles={{ marginLeft: '8px' }}
+                />
+            </div>
+        );
+    }
+}
+
+
+/*
+
+<button 
                     className="create-playlist-modal__create-button"
                     onClick={() => {
                         this.props.createPlaylist(this.state.playlistName)
@@ -43,10 +65,8 @@ class CreatePlaylistModal extends Component {
                     className="create-playlist-modal__cancel-button" 
                     onClick={this.props.closeModal}
                 >Cancel</button>
-            </div>
-        );
-    }
-}
+
+*/
 
 export const ConnectedCreatePlaylistModal = connect(
     undefined, 

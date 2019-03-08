@@ -1,8 +1,13 @@
+@import '../scssVariables/index.scss';
+
 .heading {
     color: $black;
-    font-family: sans-serif;
+    font-family: $font--heading;
     font-weight: 700;
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin-top: 8px;
     margin-bottom: 8px;
+    &.heading--large {
+        font-size: 2.25rem;
+    }
 }

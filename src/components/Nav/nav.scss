@@ -26,7 +26,7 @@
         }
     }
     &__link {
-        font-family: sans-serif;
+        font-family: $font--body;
         font-weight: 700;
         padding: 12px 8px;
         display: block;
@@ -39,7 +39,7 @@
             margin-right: 16px;
         } 
         &:hover {
-            background: rgba(17,17,17,0.1);
+            background: $grey;
         }
     }
 }

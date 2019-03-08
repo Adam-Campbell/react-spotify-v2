@@ -14,12 +14,17 @@ const ArtistProfileHeader = props => (
             containerRef={props.imageRef}
         />
         <div className="artist-profile-header__text-container">
-            <h1 
-                className="artist-profile-header__name heading" 
-                ref={props.titleRef} 
-            >{props.name}</h1>
-            <span className="artist-profile-header__underline" ref={props.underlineRef} ></span>
-            <div ref={props.followersContainerRef}>
+            <div>
+                <h1 
+                    className="heading heading--large" 
+                    ref={props.titleRef} 
+                >{props.name}</h1>
+                <span className="artist-profile-header__underline" ref={props.underlineRef} ></span>
+            </div>
+            <div 
+                className="artist-profile-header__followers-container"
+                ref={props.followersContainerRef}
+            >
                 <Followers 
                     followerCount={props.followerCount} 
                     isFollowing={props.isFollowing}

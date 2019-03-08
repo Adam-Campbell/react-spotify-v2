@@ -14,7 +14,7 @@
     @media (min-width: 1000px) {
         flex-direction: column;
         align-items: flex-start;
-        width: 320px;
+        width: 350px;
     }
     &__image {
         width: 250px;
@@ -23,10 +23,13 @@
         object-position: 50% 50%;
     }
     &__text-container {
+        margin-top: 20px;
         @media (min-width: 768px) {
+            margin-top: 0;
             margin-left: 32px;
         }
         @media(min-width: 1000px) {
+            margin-top: 20px;
             margin-left: 0;
         }
     }
@@ -39,6 +42,9 @@
         transform-origin: left;
     }
     &__artist-link {
+        font-family: $font--body;
+        font-weight: 700;
+        font-size: 16px;
         text-decoration: none;
         color: $black;
         &:hover {
@@ -47,6 +53,10 @@
         }
     }
     &__release-date {
+        font-family: $font--body;
+        font-weight: 300;
+        font-size: 13px;
+        color: $black;
         margin-top: 4px;
         margin-bottom: 4px;
     }

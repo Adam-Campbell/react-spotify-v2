@@ -5,7 +5,7 @@ import Followers from '../Followers';
 const UserProfileHeader = props => (
     <header className="user-profile-header">
         <img className="user-profile-header__image" alt="" src={props.userImageURL} />
-        <h1 className="heading">{props.userDisplayName}</h1>
+        <h1 className="heading heading--large">{props.userDisplayName}</h1>
         <Followers followerCount={props.userFollowerCount} />
     </header>
 );

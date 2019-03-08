@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import Button from '../Button';
 
 class UploadImageModal extends Component {
 
@@ -94,10 +95,12 @@ class UploadImageModal extends Component {
                     <FontAwesomeIcon icon={faUpload}/>
                     <span>Choose an image</span>
                 </label>
-                <button
-                    className="upload-image-modal__button"
-                    onClick={this.props.closeModal}
-                >Cancel</button>
+                <Button 
+                    text="Cancel"
+                    handleClick={this.props.closeModal}
+                    isWarning={true}
+                    additionalStyles={{ marginLeft: '8px' }}
+                />
             </div>
         )
     }
