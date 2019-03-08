@@ -13,7 +13,7 @@ const AlbumHeader = props => (
             containerRef={props.imageRef}
         />
         <div className="album-header__text-container">
-            <h1 className="album-header__name heading" ref={props.titleRef} >{props.albumName}</h1>
+            <h1 className="heading heading--large" ref={props.titleRef} >{props.albumName}</h1>
             <span className="album-header__underline" ref={props.underlineRef} ></span>
             <div ref={props.linkContainerRef} >
                 <Link 

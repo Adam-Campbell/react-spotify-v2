@@ -68,7 +68,7 @@ class Album extends Component {
         const { tracks, id, uri } = this.props.album;
         return (
             <main 
-                className="body-content-container"
+                className="album"
                 ref={this.pageContainerRef}
             >
                 <AlbumHeader 

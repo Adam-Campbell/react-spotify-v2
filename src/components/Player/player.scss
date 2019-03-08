@@ -11,7 +11,7 @@
     }
     &__inner-container {
         background: $offWhite;
-        border-top: solid 2px #ddd;
+        border-top: solid 2px $grey;
         display: flex;
         flex-direction: column;
         justify-content: center;

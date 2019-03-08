@@ -13,7 +13,7 @@ const CategoryHeader = props => (
         />
         <div className="category-header__title-container">
             <h1 
-                className="heading"
+                className="heading heading--large"
                 ref={props.titleRef}
             >{props.name}</h1>
             <span 

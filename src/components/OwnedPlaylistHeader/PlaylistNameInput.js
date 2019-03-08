@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
+import Button from '../Button';
 
 class PlaylistNameInput extends Component {
 
@@ -49,10 +50,10 @@ class PlaylistNameInput extends Component {
                     onChange={(e) => this.updateEditedPlaylistName(e.target.value)}
                     style={{ width: this.props.renderWidth }}
                 ></input>
-                <button
-                    className="playlist-header__name-button"
-                    onClick={this.handleSave}
-                >Save</button>
+                <Button 
+                    text="Save"
+                    handleClick={this.handleSave}
+                />
             </div>
         )
     }

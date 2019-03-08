@@ -41,17 +41,4 @@
         color: $black;
         margin-left: 16px;
     }
-    &__button {
-        font-family: $font--body;
-        font-size: 14px;
-        font-weight: 700;
-        padding: 8px;
-        color: $white;
-        background: $warning;
-        border-radius: 4px;
-        border: none;
-        border-bottom: solid 2px $warning--darkened;
-        margin-left: 8px;
-        cursor: pointer;
-    }
 }

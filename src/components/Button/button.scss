@@ -1,0 +1,25 @@
+@import '../../scssVariables/index.scss';
+
+.button {
+    font-family: $font--body;
+    font-weight: 700;
+    font-size: 13px;
+    color: $white;
+    padding: 8px;
+    background: $brand;
+    border-radius: 4px;
+    border: none;
+    border-bottom: solid 2px $brand--darkened;
+    transition: background ease-out 0.2s;
+    cursor: pointer;
+    &.active {
+        background: $brand--darkened;
+    }
+    &.button--warning {
+        background: $warning;
+        border-bottom: solid 2px $warning--darkened;
+        &.active {
+            background: $warning--darkened;
+        }
+    }
+}

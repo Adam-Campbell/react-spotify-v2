@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
+import Button from '../Button';
 
 const AddToPlaylistModal = props => (
     <div className="add-to-playlist-modal">
@@ -25,10 +26,11 @@ const AddToPlaylistModal = props => (
                 </li>
             ))}
         </ul>
-        <button 
-            className="add-to-playlist-modal__button"
-            onClick={props.closeModal} 
-        >Cancel</button>
+        <Button 
+            text="Cancel"
+            handleClick={props.closeModal}
+            isWarning={true}
+        />
     </div>
 );
 

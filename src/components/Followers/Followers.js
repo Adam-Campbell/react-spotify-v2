@@ -2,15 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import Button from '../Button';
 
 export const Followers = props => (
     <div className="followers">
         <FontAwesomeIcon icon={faUsers} />
-        <p>{props.followerCount} followers</p>
+        <p 
+            className="followers__count"
+        >
+            {props.followerCount} followers
+        </p>
         {props.showButton && (
-            <button
-                onClick={props.handleClick}
-            >{props.isFollowing ? 'Unfollow' : 'Follow'}</button>
+            <Button 
+                handleClick={props.handleClick}
+                isWarning={false}
+                text={props.isFollowing ? 'Unfollow' : 'Follow'}
+                additionalStyles={{ marginLeft: '8px' }}
+            />
         )}
     </div>
 );
