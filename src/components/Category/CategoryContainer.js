@@ -6,6 +6,11 @@ import Category from './Category';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
 class CategoryContainer extends Component {
+
+    static propTypes = {
+        category: PropTypes.string.isRequired
+    };
+
     componentDidMount() {
         this.props.fetchCategory(this.props.category);
     }

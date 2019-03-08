@@ -5,7 +5,6 @@ import * as ActionCreators from '../../actions';
 import ArtistProfileHeader from '../ArtistProfileHeader';
 import Section from '../Section';
 import TrackCollection from '../TrackCollection';
-import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';
 import { constructTimeline } from '../../utils';
 import Carousel from '../Carousel';

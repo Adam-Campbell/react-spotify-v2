@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import CardCollection from '../CardCollection';
-import Section from '../Section';
 import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
 import Carousel from '../Carousel';

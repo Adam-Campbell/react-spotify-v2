@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import VelocityTracker from './VelocityTracker';
 import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';

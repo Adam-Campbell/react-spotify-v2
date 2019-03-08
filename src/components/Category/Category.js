@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import CategoryHeader from '../CategoryHeader';
-import Carousel from '../Carousel';
 import { collectionTypes } from '../../constants';
 import Section from '../Section';
 import CardCollection from '../CardCollection';

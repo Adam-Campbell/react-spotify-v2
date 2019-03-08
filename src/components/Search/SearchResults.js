@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Section from '../Section';
-//import Card from '../Card';
 import { Card } from '../Cards';
 import { collectionTypes } from '../../constants';
 
