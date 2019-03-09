@@ -4,18 +4,29 @@
     font-family: $font--body;
     font-weight: 700;
     font-size: 13px;
-    color: $white;
     padding: 8px;
-    background: $brand;
     border-radius: 4px;
     border: none;
-    border-bottom: solid 2px $brand--darkened;
     transition: background ease-out 0.2s;
     cursor: pointer;
-    &.active {
-        background: $brand--darkened;
+    &.button--standard {
+        color: $white;
+        background: $brand;
+        border-bottom: solid 2px $brand--darkened;
+        &.active {
+            background: $brand--darkened;
+        }
+    }
+    &.button--alternate {
+        color: $black;
+        background: $offWhite;
+        border-bottom: solid 2px $grey;
+        &.active {
+            background: $grey;
+        }
     }
     &.button--warning {
+        color: $white;
         background: $warning;
         border-bottom: solid 2px $warning--darkened;
         &.active {

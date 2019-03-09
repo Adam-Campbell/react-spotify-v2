@@ -5,6 +5,7 @@ import * as ActionCreators from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import Button from '../Button';
+import { buttonThemes } from '../../constants';
 
 class UploadImageModal extends Component {
 
@@ -98,7 +99,7 @@ class UploadImageModal extends Component {
                 <Button 
                     text="Cancel"
                     handleClick={this.props.closeModal}
-                    isWarning={true}
+                    theme={buttonThemes.warning}
                     additionalStyles={{ marginLeft: '8px' }}
                 />
             </div>

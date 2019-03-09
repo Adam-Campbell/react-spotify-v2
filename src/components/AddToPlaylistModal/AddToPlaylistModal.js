@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import Button from '../Button';
+import { buttonThemes } from '../../constants';
 
 const AddToPlaylistModal = props => (
     <div className="add-to-playlist-modal">
@@ -29,7 +30,7 @@ const AddToPlaylistModal = props => (
         <Button 
             text="Cancel"
             handleClick={props.closeModal}
-            isWarning={true}
+            theme={buttonThemes.warning}
         />
     </div>
 );

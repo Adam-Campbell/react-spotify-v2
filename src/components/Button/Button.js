@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { buttonThemes } from '../../constants';
 
 
 export class Button extends Component {
     static propTypes = {
         text: PropTypes.string.isRequired,
         handleClick: PropTypes.func.isRequired,
-        isWarning: PropTypes.bool,
-        additionalStyles: PropTypes.object
-    }
+        additionalStyles: PropTypes.object,
+        theme: PropTypes.oneOf([
+            buttonThemes.standard,
+            buttonThemes.warning,
+            buttonThemes.alternate
+        ])
+    };
 
     static defaultProps = {
-        additionalStyles: {}
-    }
+        additionalStyles: {},
+        theme: buttonThemes.standard
+    };
 
     state = {
         isHovered: false
@@ -31,11 +37,11 @@ export class Button extends Component {
     }
 
     render() {
-        const { text, isWarning, handleClick, additionalStyles } = this.props;
+        const { text, theme, handleClick, additionalStyles } = this.props;
         const { isHovered } = this.state;
         return (
             <button
-                className={`button ${isWarning && 'button--warning'} ${isHovered && 'active'}`}
+                className={`button ${theme} ${isHovered && 'active'}`}
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.handleMouseLeave}
                 onClick={handleClick}
