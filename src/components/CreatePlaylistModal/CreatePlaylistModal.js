@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import Button from '../Button';
+import { buttonThemes } from '../../constants';
 
 class CreatePlaylistModal extends Component {
 
@@ -34,7 +35,7 @@ class CreatePlaylistModal extends Component {
                     onChange={(e) => this.updatePlaylistName(e.target.value)}
                 ></input>
                 <Button 
-                    text="CreatePlaylist"
+                    text="Create Playlist"
                     handleClick={() => {
                         this.props.createPlaylist(this.state.playlistName)
                         this.props.closeModal();
@@ -42,7 +43,7 @@ class CreatePlaylistModal extends Component {
                 />
                 <Button 
                     text="Cancel"
-                    isWarning={true}
+                    theme={buttonThemes.warning}
                     handleClick={this.props.closeModal}
                     additionalStyles={{ marginLeft: '8px' }}
                 />
@@ -50,23 +51,6 @@ class CreatePlaylistModal extends Component {
         );
     }
 }
-
-
-/*
-
-<button 
-                    className="create-playlist-modal__create-button"
-                    onClick={() => {
-                        this.props.createPlaylist(this.state.playlistName)
-                        this.props.closeModal();
-                    }}
-                >Create Playlist</button>
-                <button 
-                    className="create-playlist-modal__cancel-button" 
-                    onClick={this.props.closeModal}
-                >Cancel</button>
-
-*/
 
 export const ConnectedCreatePlaylistModal = connect(
     undefined, 

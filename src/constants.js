@@ -46,3 +46,9 @@ export const modalTypes = {
     createPlaylist: 'CREATE_PLAYLIST',
     addToPlaylist: 'ADD_TO_PLAYLIST'
 };
+
+export const buttonThemes = {
+    standard: 'button--standard',
+    warning: 'button--warning',
+    alternate: 'button--alternate'
+};

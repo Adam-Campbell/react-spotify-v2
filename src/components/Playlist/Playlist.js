@@ -6,6 +6,8 @@ import PlaylistHeader from '../PlaylistHeader';
 import OwnedPlaylistHeader from '../OwnedPlaylistHeader';
 import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
+import PaginatedTrackCollection from '../PaginatedTrackCollection';
+import PaginationControls from '../PaginationControls';
 
 class Playlist extends Component {
 
@@ -94,17 +96,39 @@ class Playlist extends Component {
                     className="playlist__tracks-container"
                     ref={this.mainContentContainerRef}
                 >
-                    <TrackCollection 
-                        trackIds={tracks} 
-                        contextId={this.props.playlistId}
-                        contextURI={uri}
-                        includeRemoveTrackButton={isOwner} 
-                    />
+                    <PaginatedTrackCollection itemIds={tracks}>
+                        {({ itemIds, setPage, numberOfPages, currentPage }) => (
+                            <React.Fragment>
+                                <TrackCollection 
+                                    trackIds={itemIds}
+                                    contextId={this.props.playlistId}
+                                    contextURI={uri}
+                                    includeRemoveTrackButton={isOwner}
+                                />
+                                <PaginationControls 
+                                    numberOfPages={numberOfPages}
+                                    currentPage={currentPage}
+                                    setPage={setPage}
+                                />
+                            </React.Fragment>
+                        )}
+                    </PaginatedTrackCollection>
                 </section>
             </main>
         );
     }
 }
+
+/*
+
+<TrackCollection 
+                        trackIds={tracks} 
+                        contextId={this.props.playlistId}
+                        contextURI={uri}
+                        includeRemoveTrackButton={isOwner} 
+                    />
+
+*/
 
 const mapStateToProps = (state, ownProps) => ({
     playlist: state.playlists.playlistData[ownProps.playlistId],
