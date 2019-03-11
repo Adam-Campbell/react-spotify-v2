@@ -42,7 +42,7 @@ export class Button extends Component {
         const { isHovered } = this.state;
         return (
             <button
-                className={`button ${theme} ${isHovered && 'active'}`}
+                className={`button ${theme} ${isHovered ? 'active' : ''}`}
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.handleMouseLeave}
                 onClick={handleClick}
