@@ -1,0 +1,75 @@
+@import '../../scssVariables/index.scss';
+
+.landing-header {
+    padding: 60px 40px;
+    min-height: 400px;
+    background: linear-gradient(150deg, $brand 25%, #07dada);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    &__tagline {
+        font-family: $font--body;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 1.4;
+        color: $white;
+    }
+    .fa-spotify {
+        font-size: 80px;
+        color: $white;
+    }
+}
+
+.app-feature {
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    &.app-feature--1 {
+        background-color: $white;
+    }
+    &.app-feature--2 {
+        background-color: $offWhite;
+    }
+    &.app-feature--3 {
+        background-color: $grey;
+    }
+    &__description {
+        font-family: $font--body;
+        color: $black;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+    &__heading-underline {
+        display: inline-block;
+        width: 100%;
+        height: 4px;
+        background: $black;
+    }
+}
+
+.landing-footer {
+    padding: 60px 40px;
+    background: linear-gradient(150deg,  #07dada, $brand 75%,);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    &__link {
+        font-family: $font--body;
+        font-weight: 700;
+        font-size: 16px;
+        color: $white;
+        text-decoration: underline;
+        &:hover {
+            color: $black;
+        }
+    }
+    .fa-github {
+        color: $white;
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+}

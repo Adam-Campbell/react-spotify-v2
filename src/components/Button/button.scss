@@ -25,6 +25,14 @@
             background: $grey;
         }
     }
+    &.button--white {
+        color: $black;
+        background: $white;
+        border-bottom: solid 2px $offWhite;
+        &.active {
+            background: $offWhite;
+        }
+    }
     &.button--warning {
         color: $white;
         background: $warning;

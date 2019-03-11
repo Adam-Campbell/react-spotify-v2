@@ -11,7 +11,8 @@ export class Button extends Component {
         theme: PropTypes.oneOf([
             buttonThemes.standard,
             buttonThemes.warning,
-            buttonThemes.alternate
+            buttonThemes.alternate,
+            buttonThemes.white
         ])
     };
 
