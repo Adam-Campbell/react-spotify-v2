@@ -14,7 +14,7 @@ class WithAuth extends Component {
         if (this.hasValidToken()) {
             return children()
         } else {
-            return <Redirect to="/login" />
+            return <Redirect to="/" />
         }
     }
 }

@@ -98,7 +98,8 @@ class Player extends Component {
                 className={
                     `player
                     ${isFullScreen ? 'full-screen-player' : ''} 
-                    ${navIsOpen ? 'nav-open' : ''}`
+                    ${navIsOpen ? 'nav-open' : ''}
+                    ${isActive ? 'show-player' : ''}`
                 }
             >
                 <div className={`player__inner-container ${isActive ? 'show-player' : ''}`}>

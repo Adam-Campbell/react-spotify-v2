@@ -50,5 +50,6 @@ export const modalTypes = {
 export const buttonThemes = {
     standard: 'button--standard',
     warning: 'button--warning',
-    alternate: 'button--alternate'
+    alternate: 'button--alternate',
+    white: 'button--white'
 };
