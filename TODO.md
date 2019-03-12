@@ -2,6 +2,51 @@
 
 - Include more thorough testing. 
 
+Testing progress:
+
+[DONE] AddToPlaylistModal
+[PARTIAL] Album
+[DONE] AlbumHeader
+[PARTIAL] ArtistProfile
+[DONE] ArtistProfileHeader
+[DONE] Auth
+[DONE] Button
+[DONE] CardCollection
+[PARTIAL] Cards
+Carousel
+Category
+CategoryHeader
+CreatePlaylistModal
+Followers
+Highlights
+Landing
+Nav
+NavToggle
+OwnedPlaylistHeader
+PaginatedTrackCollection
+PaginationControls
+Player
+Playlist
+PlaylistHeader
+RouteManager
+ScrollToTop
+Search
+Section
+SmartImage
+Track
+TrackCollection
+UploadImageModal
+UserProfile
+UserProfileHeader
+WithAuth
+withAuthAndUserInfo
+WithUserInfo
+
+
+
+
+
+
 - [DONE] Improve modal appearance
 
 - [DONE] Improve general app appearance

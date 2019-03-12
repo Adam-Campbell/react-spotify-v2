@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import SmartImage from '../SmartImage';
 
-const AlbumHeader = props => (
+export const AlbumHeader = props => (
     <header className="album-header">
         <SmartImage 
             imageURL={props.imageURL}

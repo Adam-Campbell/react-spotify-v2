@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
+import CDIcon from '../../cd-icon.jpg';
 
-const AddToPlaylistModal = props => (
+export const AddToPlaylistModal = props => (
     <div className="add-to-playlist-modal">
         <h1 className="heading">Add to playlist</h1>
         <ul className="add-to-playlist-modal__list">
@@ -18,12 +19,12 @@ const AddToPlaylistModal = props => (
                         props.closeModal();
                     }}
                 >
-                  <img 
-                    className="add-to-playlist-modal__item-image" 
-                    src={playlist.images.length ? playlist.images[0].url : ''} 
-                    alt="" 
-                />  
-                  <p className="add-to-playlist-modal__item-text">{playlist.name}</p>
+                    <img 
+                        className="add-to-playlist-modal__item-image" 
+                        src={playlist.images.length ? playlist.images[0].url : CDIcon} 
+                        alt="" 
+                    />  
+                    <p className="add-to-playlist-modal__item-text">{playlist.name}</p>
                 </li>
             ))}
         </ul>

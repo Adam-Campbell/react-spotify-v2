@@ -15,7 +15,6 @@ export const Followers = props => (
         {props.showButton && (
             <Button 
                 handleClick={props.handleClick}
-                isWarning={false}
                 text={props.isFollowing ? 'Unfollow' : 'Follow'}
                 additionalStyles={{ marginLeft: '8px' }}
             />
