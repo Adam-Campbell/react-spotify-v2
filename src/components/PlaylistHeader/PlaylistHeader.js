@@ -5,7 +5,7 @@ import Followers from '../Followers';
 import * as ActionCreators from '../../actions';
 import SmartImage from '../SmartImage';
 
-const PlaylistHeader = props => (
+export const PlaylistHeader = props => (
     <header className="playlist-header">
         <SmartImage 
             imageURL={props.imageURL}

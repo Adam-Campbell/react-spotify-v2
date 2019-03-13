@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Track, convertMsToMinSec } from './';
+import { Track, convertMsToMinSec } from './Track';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
@@ -129,3 +129,4 @@ describe('Track', () => {
     });
 
 });
+
