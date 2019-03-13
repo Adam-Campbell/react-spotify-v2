@@ -5,7 +5,7 @@ import * as ActionCreators from '../../actions';
 import Album from './Album';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 
-class AlbumContainer extends Component {
+export class AlbumContainer extends Component {
 
     static propTypes = {
         albumId: PropTypes.string.isRequired

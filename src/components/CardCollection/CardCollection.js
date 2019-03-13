@@ -12,7 +12,7 @@ export const getImageURL = (item, collectionType) => {
     }
 }
 
-const CardCollection = (props) => (
+export const CardCollection = (props) => (
     props.isWithinCarousel ? (
         <React.Fragment>
             {props.includeCreatePlaylistCard && <CreatePlaylistCard />}

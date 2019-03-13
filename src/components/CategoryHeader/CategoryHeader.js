@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SmartImage from '../SmartImage';
 
-const CategoryHeader = props => (
+export const CategoryHeader = props => (
     <header className="category-header" >
         <SmartImage 
             imageURL={props.imageURL}

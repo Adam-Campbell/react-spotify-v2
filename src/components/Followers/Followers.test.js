@@ -1,8 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Followers } from './';
+import { Followers } from './Followers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import Button from '../Button';
 
 const mockedHandleClick = jest.fn();
 
@@ -16,7 +17,7 @@ test('renders an icon and a paragraph element showing the amount of followers', 
         />
     );
     expect(wrapper.contains(<FontAwesomeIcon icon={faUsers} />)).toBe(true);
-    expect(wrapper.contains(<p>9000 followers</p>)).toBe(true);
+    expect(wrapper.contains(<p className="followers__count">9000 followers</p>)).toBe(true);
 });
 
 test('render a button when the showButton prop is true', () => {
@@ -28,7 +29,7 @@ test('render a button when the showButton prop is true', () => {
             handleClick={mockedHandleClick}
         />
     );
-    expect(wrapper.find('button')).toHaveLength(1);
+    expect(wrapper.find(Button)).toHaveLength(1);
 });
 
 test('render appropriate text in the button depending on whether the user is following', () => {
@@ -40,8 +41,7 @@ test('render appropriate text in the button depending on whether the user is fol
             handleClick={mockedHandleClick}
         />
     );
-    expect(withoutFollowing.contains(<button onClick={mockedHandleClick}>Follow</button>)).toBe(true);
-    expect(withoutFollowing.contains(<button onClick={mockedHandleClick}>Unfollow</button>)).toBe(false);
+    expect(withoutFollowing.find(Button).props().text).toBe('Follow');
 
     const withFollowing = shallow(
         <Followers 
@@ -51,11 +51,10 @@ test('render appropriate text in the button depending on whether the user is fol
             handleClick={mockedHandleClick}
         />
     );
-    expect(withFollowing.contains(<button onClick={mockedHandleClick}>Follow</button>)).toBe(false);
-    expect(withFollowing.contains(<button onClick={mockedHandleClick}>Unfollow</button>)).toBe(true);
+    expect(withFollowing.find(Button).props().text).toBe('Unfollow');
 });
 
-test('the handleClick function is called when the button is clicked', () => {
+test('the handleClick method is called when the Button is clicked', () => {
     const wrapper = shallow(
         <Followers 
             followerCount={9000}
@@ -64,6 +63,6 @@ test('the handleClick function is called when the button is clicked', () => {
             handleClick={mockedHandleClick}
         />
     );
-    wrapper.find('button').simulate('click');
+    wrapper.find(Button).shallow().find('button').simulate('click');
     expect(mockedHandleClick).toHaveBeenCalledTimes(1);
 });

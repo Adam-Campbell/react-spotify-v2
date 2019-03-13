@@ -27,7 +27,6 @@ class OwnedPlaylistHeader extends Component {
 
     enterNameEditingState = () => {
         const { width } = this.props.titleRef.current.getBoundingClientRect();
-        console.log(width);
         this.setState({
             isEditingName: true,
             currentTitleWidth: width

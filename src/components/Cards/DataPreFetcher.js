@@ -5,7 +5,7 @@ import * as ActionCreators from '../../actions';
 import { withRouter } from 'react-router-dom';
 import { collectionTypes } from '../../constants';
 
-class DataPreFetcher extends Component {
+export class DataPreFetcher extends Component {
 
     static propTypes = {
         itemId: PropTypes.string.isRequired, 

@@ -6,7 +6,7 @@ import AlbumHeader from '../AlbumHeader';
 import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
 
-class Album extends Component {
+export class Album extends Component {
 
     staticPropTypes = {
         albumId: PropTypes.string.isRequired

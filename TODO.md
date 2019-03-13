@@ -1,12 +1,12 @@
 ## CURRENT TODOS
 
-- Include more thorough testing. 
+- [DONE] Include more thorough testing. 
 
 - [DONE] Improve modal appearance
 
 - [DONE] Improve general app appearance
 
-- Add pagination to certain track lists (ie playlists that include more than 50 tracks)
+- [DONE] Add pagination to certain track lists (ie playlists that include more than 50 tracks)
 
 - Look for any improvements that can be made to data layer. Take a look at utilising selectors when mapping state to props. Also consider seperating out relationship associations into seperate reducers. This includes things like the array of an artists top tracks, which are not part of the artist object itself, but I'm adding onto the artist object in the store currently, and this is happening seperately from fetching the main artist object. Instead I could have an artistTopTracks reducer which is a dictionary where each key is the artist id and the associated value is the array of top track ids. This would lead to me having more reducers to deal with but would make other logic simpler. 
 

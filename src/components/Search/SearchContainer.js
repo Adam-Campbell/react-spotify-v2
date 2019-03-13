@@ -51,7 +51,6 @@ class SearchContainer extends Component {
                 'Authorization': `Bearer ${token}`
             }
         });
-        console.log(response);
         this.setState({
             artists: response.data.artists.items,
             albums: response.data.albums.items,

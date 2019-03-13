@@ -4,7 +4,7 @@ import * as ActionCreators from '../../actions';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
 
-class CreatePlaylistModal extends Component {
+export class CreatePlaylistModal extends Component {
 
     state = {
         playlistName: ''
@@ -19,7 +19,9 @@ class CreatePlaylistModal extends Component {
     }
 
     componentDidMount() {
-        this.inputRef.current.focus();
+        if (this.inputRef.current) {
+            this.inputRef.current.focus();
+        }
     }
 
     render() {
