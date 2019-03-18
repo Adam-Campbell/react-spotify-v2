@@ -43,7 +43,8 @@ const makeReqWithContext = (token, deviceId, contextURI, trackURI) => {
 const makeReqWithURIList = (token, deviceId, contextId, contextType, trackURI, state) => {
     let allTrackURIs;
     if (contextType === 'artist') {
-        allTrackURIs = state.artists.artistData[contextId].topTrackIds.map(id => state.tracks[id].uri);
+        //allTrackURIs = state.artists.artistData[contextId].topTrackIds.map(id => state.tracks[id].uri);
+        allTrackURIs = state.artistsTopTracks[contextId].map(id => state.tracks[id].uri);
     } else if (contextType === 'user') {
         allTrackURIs = state.user.recentTracksIds.map(id => state.tracks[id].uri);
     }

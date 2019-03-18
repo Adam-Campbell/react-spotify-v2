@@ -155,10 +155,14 @@ export const fetchArtist = (artistId) => async (dispatch, getState) => {
     dispatch(fetchArtistRequest(artistId));
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
-    const artist = getState().artists.artistData[artistId];
+    //const artist = getState().artists.artistData[artistId];
     // Abort the fetch if the full data for this artist is already in the store, and it was
     // fetched within the last hour
-    if (artist && artist.fullProfileFetched && Date.now() - artist.lastFetchedAt <= 3600000) {
+    // if (artist && artist.fullProfileFetched && Date.now() - artist.lastFetchedAt <= 3600000) {
+    //     return dispatch(fetchArtistAbort(artistId));
+    // }
+    const artistFetchedAt = getState().artistsFetchedAt[artistId];
+    if (artistFetchedAt && Date.now() - artistFetchedAt <= 3600000) {
         return dispatch(fetchArtistAbort(artistId));
     }
     return Promise.all([

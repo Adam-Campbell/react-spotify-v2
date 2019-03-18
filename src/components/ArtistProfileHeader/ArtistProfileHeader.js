@@ -48,7 +48,8 @@ ArtistProfileHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const artist = state.artists.artistData[ownProps.artistId];
+    //const artist = state.artists.artistData[ownProps.artistId];
+    const artist = state.artistEntities[ownProps.artistId];
     return {
         imageURL: artist.images.length ? artist.images[0].url : '',
         name: artist.name,

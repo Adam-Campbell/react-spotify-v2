@@ -22,7 +22,10 @@ export class AlbumContainer extends Component {
     }
 
     render() {
-        if (!this.props.album || !this.props.album.fullAlbumFetched) {
+        // if (!this.props.album || !this.props.album.fullAlbumFetched) {
+        //     return null;
+        // }
+        if (!this.props.albumFetchedAt) {
             return null;
         }
         return (
@@ -32,7 +35,8 @@ export class AlbumContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    album: state.albums.albumData[ownProps.albumId]
+    //album: state.albums.albumData[ownProps.albumId],
+    albumFetchedAt: state.albumFetchedAt[ownProps.albumId]
 });
 
 export const ConnectedAlbumContainer = withAuthAndUserInfo(connect(

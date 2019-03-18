@@ -68,16 +68,22 @@ class Playlist extends Component {
     }
 
     render() {
-        const isOwner = this.props.playlist.owner.id === this.props.currentUserId;
-        const { tracks, uri } = this.props.playlist;
+        //const isOwner = this.props.playlist.owner.id === this.props.currentUserId;
+        //const { tracks, uri } = this.props.playlist;
+        const {
+            playlistId,
+            playlistURI,
+            playlistTrackIds,
+            isPlaylistOwner
+        } = this.props;
         return (
             <main 
                 className="playlist"
                 ref={this.pageContainerRef}
             >
-                {isOwner ? (
+                {isPlaylistOwner ? (
                     <OwnedPlaylistHeader 
-                        playlistId={this.props.playlistId}
+                        playlistId={playlistId}
                         imageRef={this.imageRef}
                         titleRef={this.titleRef}
                         underlineRef={this.underlineRef}
@@ -85,7 +91,7 @@ class Playlist extends Component {
                     />
                 ) : (
                     <PlaylistHeader 
-                        playlistId={this.props.playlistId} 
+                        playlistId={playlistId} 
                         imageRef={this.imageRef}
                         titleRef={this.titleRef}
                         underlineRef={this.underlineRef}
@@ -96,14 +102,14 @@ class Playlist extends Component {
                     className="playlist__tracks-container"
                     ref={this.mainContentContainerRef}
                 >
-                    <PaginatedTrackCollection itemIds={tracks}>
+                    <PaginatedTrackCollection itemIds={playlistTrackIds}>
                         {({ itemIds, setPage, numberOfPages, currentPage }) => (
                             <React.Fragment>
                                 <TrackCollection 
                                     trackIds={itemIds}
                                     contextId={this.props.playlistId}
-                                    contextURI={uri}
-                                    includeRemoveTrackButton={isOwner}
+                                    contextURI={playlistURI}
+                                    includeRemoveTrackButton={isPlaylistOwner}
                                 />
                                 <PaginationControls 
                                     numberOfPages={numberOfPages}
@@ -131,8 +137,10 @@ class Playlist extends Component {
 */
 
 const mapStateToProps = (state, ownProps) => ({
-    playlist: state.playlists.playlistData[ownProps.playlistId],
-    currentUserId: state.user.id,
+    //playlist: state.playlists.playlistData[ownProps.playlistId],
+    playlistTrackIds: state.playlistTracks[ownProps.playlistId],
+    playlistURI: state.playlistEntities[ownProps.playlistId].uri,
+    isPlaylistOwner: state.playlistEntities[ownProps.playlistId].owner.id === state.user.id,
     imageWidth: state.transitions.imageWidth,
     imageHeight: state.transitions.imageHeight,
     imageX: state.transitions.imageX, 

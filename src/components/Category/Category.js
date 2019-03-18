@@ -28,7 +28,7 @@ class Category extends Component {
 
     render() {
 
-        const { categoryId, playlistIds } = this.props;
+        const { categoryId, categoryPlaylistIds } = this.props;
 
         return (
             <main className="body-content-container">
@@ -41,7 +41,7 @@ class Category extends Component {
                 <div ref={this.mainContainerRef}>
                     <Section title="Playlists" >
                         <CardCollection 
-                            itemIds={playlistIds}
+                            itemIds={categoryPlaylistIds}
                             collectionType={collectionTypes.playlists}
                             includeCreatePlaylistCard={false}
                         />
@@ -63,11 +63,8 @@ class Category extends Component {
 
 */
 
-const mapStateToProps = (state, ownProps) => {
-    const category = state.categories.categoryData[ownProps.categoryId];
-    return {
-        playlistIds: category.playlistIds
-    };
-};
+const mapStateToProps = (state, ownProps) => ({
+    categoryPlaylistIds: state.categoryPlaylists[ownProps.categoryId]
+});
 
 export default connect(mapStateToProps)(Category);

@@ -42,7 +42,8 @@ AddToPlaylistModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    usersPlaylists: state.user.playlistIds.map(playlistId => state.playlists.playlistData[playlistId])
+    //usersPlaylists: state.user.playlistIds.map(playlistId => state.playlists.playlistData[playlistId])
+    usersPlaylists: state.user.playlistIds.map(playlistId => state.playlistEntities[playlistId])
 });
 
 export const ConnectedAddToPlaylistModal = connect(

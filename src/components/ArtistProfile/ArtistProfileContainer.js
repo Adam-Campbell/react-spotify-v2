@@ -22,7 +22,7 @@ class ArtistProfileContainer extends Component {
     }
 
     render() {
-        if (!this.props.artist || !this.props.artist.fullProfileFetched) {
+        if (!this.props.artistFetchedAt) {
             return null;
         }
         return (
@@ -32,7 +32,7 @@ class ArtistProfileContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    artist: state.artists.artistData[ownProps.artistId]
+    artistFetchedAt: state.artistsFetchedAt[ownProps.artistId]
 });
 
 export const ConnectedArtistProfileContainer = withAuthAndUserInfo(connect(

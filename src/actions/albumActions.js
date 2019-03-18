@@ -34,10 +34,12 @@ const fetchAlbumAbort = (albumId) => ({
     }
 });
 
-const storeAlbum = (albumObject, trackObjects, artistObjects) => ({
+const storeAlbum = (albumObject, albumId, albumsTrackIds, trackObjects, artistObjects) => ({
     type: actionTypes.STORE_ALBUM,
     payload: {
         albumObject,
+        albumId,
+        albumsTrackIds,
         trackObjects,
         artistObjects
     }
@@ -77,8 +79,14 @@ const fetchAlbumInfo = (token, albumId, market) => async (dispatch) => {
             }
         );
         const normalizedData = normalize(response.data, albumSchema);
+        console.log(normalizedData);
+        const albumObject = normalizedData.entities.albums[albumId];
+        const albumsTrackIds = albumObject.tracks;
+        delete albumObject.tracks;
         dispatch(storeAlbum(
-            normalizedData.entities.albums,
+            albumObject,
+            albumId, 
+            albumsTrackIds,
             normalizedData.entities.tracks,
             normalizedData.entities.artists
         ));
@@ -91,8 +99,12 @@ export const fetchAlbum = (albumId) => async (dispatch, getState) => {
     dispatch(fetchAlbumRequest(albumId));
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
-    const album = getState().albums.albumData[albumId];
-    if (album && album.fullAlbumFetched) {
+    // const album = getState().albums.albumData[albumId];
+    // if (album && album.fullAlbumFetched) {
+    //     return dispatch(fetchAlbumAbort(albumId));
+    // }
+    const albumFetchedAt = getState().albumFetchedAt[albumId];
+    if (albumFetchedAt) {
         return dispatch(fetchAlbumAbort(albumId));
     }
     return dispatch(fetchAlbumInfo(token, albumId, market))

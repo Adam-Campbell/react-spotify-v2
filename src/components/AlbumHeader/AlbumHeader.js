@@ -37,8 +37,10 @@ AlbumHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const album = state.albums.albumData[ownProps.albumId];
-    const artist = state.artists.artistData[album.artists[0]];
+    //const album = state.albums.albumData[ownProps.albumId];
+    const album = state.albumEntities[ownProps.albumId];
+    //const artist = state.artists.artistData[album.artists[0]];
+    const artist = state.artistEntities[album.artists[0]];
     return {
         artistName: artist.name,
         artistId: artist.id,

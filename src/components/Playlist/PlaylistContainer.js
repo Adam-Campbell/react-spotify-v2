@@ -22,19 +22,20 @@ class PlaylistContainer extends Component {
     }
 
     render() {
-
-        if (!this.props.playlist || !this.props.playlist.fullPlaylistFetched) {
+        const { playlistId, playlistFetchedAt } = this.props;
+        if (!playlistFetchedAt) {
             return null;
         }
         return (
-            <Playlist playlistId={this.props.playlistId} />
+            <Playlist playlistId={playlistId} />
         );
         
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    playlist: state.playlists.playlistData[ownProps.playlistId] 
+    //playlist: state.playlists.playlistData[ownProps.playlistId] 
+    playlistFetchedAt: state.playlistFetchedAt[ownProps.playlistId]
 });
 
 export const ConnectedPlaylistContainer = withAuthAndUserInfo(connect(

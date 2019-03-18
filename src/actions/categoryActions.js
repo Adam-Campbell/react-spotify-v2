@@ -119,8 +119,12 @@ const fetchCategoriesPlaylists = (categoryId, token) => async (dispatch) => {
 export const fetchCategory = (categoryId) => (dispatch, getState) => {
     dispatch(fetchCategoryRequest());
     const token = getState().accessToken.token;
-    const category = getState().categories.categoryData[categoryId];
-    if (category && category.fullCategoryFetched && Date.now() - category.lastFetchedAt <= 3600000) {
+    //const category = getState().categories.categoryData[categoryId];
+    // if (category && category.fullCategoryFetched && Date.now() - category.lastFetchedAt <= 3600000) {
+    //     return dispatch(fetchCategoryAbort(categoryId));
+    // }
+    const categoryFetchedAt = getState().categoryFetchedAt[categoryId];
+    if (categoryFetchedAt && Date.now() - categoryFetchedAt <= 3600000) {
         return dispatch(fetchCategoryAbort(categoryId));
     }
     return Promise.all([

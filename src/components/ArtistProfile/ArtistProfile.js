@@ -101,10 +101,18 @@ class ArtistProfile extends Component {
     }
 
     render() {
-        const { topTrackIds, relatedArtistIds, uri } = this.props.artist;
+        const { 
+            artistsAlbumIds, 
+            artistsTopTrackIds, 
+            artistsRelatedArtistIds, 
+            albums, 
+            artistId, 
+            artistURI 
+        } = this.props;
+        // const { topTrackIds, relatedArtistIds, uri } = this.props.artist;
         const { albumIds, singleIds } = sortSinglesFromAlbums(
-                                            this.props.artist.albumIds, 
-                                            this.props.albums
+                                            artistsAlbumIds, 
+                                            albums
                                         );
         return (
             <main 
@@ -112,7 +120,7 @@ class ArtistProfile extends Component {
                 ref={this.pageContainerRef}
             >
                 <ArtistProfileHeader 
-                    artistId={this.props.artistId}
+                    artistId={artistId}
                     imageRef={this.imageRef}
                     titleRef={this.titleRef}
                     underlineRef={this.underlineRef}
@@ -121,9 +129,9 @@ class ArtistProfile extends Component {
                 <div ref={this.mainContentContainerRef}>
                     <Section title="Popular Tracks">
                         <TrackCollection 
-                            trackIds={topTrackIds.slice(0,5)}
-                            contextURI={uri}
-                            contextId={this.props.artistId}
+                            trackIds={artistsTopTrackIds.slice(0,5)}
+                            contextURI={artistURI}
+                            contextId={artistId}
                         />
                     </Section>
                     <Carousel 
@@ -139,7 +147,7 @@ class ArtistProfile extends Component {
                         includeCreatePlaylistCard={false}
                     />
                     <Carousel 
-                        itemIds={relatedArtistIds}
+                        itemIds={artistsRelatedArtistIds}
                         title="Related Artists"
                         collectionType={collectionTypes.artists}
                         includeCreatePlaylistCard={false}
@@ -170,8 +178,14 @@ class ArtistProfile extends Component {
 */
 
 const mapStateToProps = (state, ownProps) => ({
-    artist: state.artists.artistData[ownProps.artistId],
-    albums: state.albums.albumData,
+    //artist: state.artists.artistData[ownProps.artistId],
+    //artist: state.artistEntities[ownProps.artistId],
+    artistURI: state.artistEntities[ownProps.artistId].uri,
+    artistsAlbumIds: state.artistAlbums[ownProps.artistId],
+    artistsTopTrackIds: state.artistTopTracks[ownProps.artistId],
+    artistsRelatedArtistIds: state.artistRelatedArtists[ownProps.artistId],
+    //albums: state.albums.albumData,
+    albums: state.albumEntities,
     imageWidth: state.transitions.imageWidth,
     imageHeight: state.transitions.imageHeight,
     imageX: state.transitions.imageX, 

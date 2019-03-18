@@ -65,14 +65,15 @@ export class Album extends Component {
     }
 
     render() {
-        const { tracks, id, uri } = this.props.album;
+        //const { tracks, id, uri } = this.props.album;
+        const { albumId, albumURI, albumTrackIds } = this.props;
         return (
             <main 
                 className="album"
                 ref={this.pageContainerRef}
             >
                 <AlbumHeader 
-                    albumId={this.props.albumId}
+                    albumId={albumId}
                     imageRef={this.imageRef}
                     titleRef={this.titleRef}
                     underlineRef={this.underlineRef}
@@ -83,10 +84,10 @@ export class Album extends Component {
                     ref={this.mainContentContainerRef}
                 >
                     <TrackCollection 
-                        trackIds={tracks}
+                        trackIds={albumTrackIds}
                         useAlbumLayout={true}
-                        contextId={id}
-                        contextURI={uri}
+                        contextId={albumId}
+                        contextURI={albumURI}
                     />
                 </section>
             </main>
@@ -95,7 +96,9 @@ export class Album extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    album: state.albums.albumData[ownProps.albumId],
+    //album: state.albums.albumData[ownProps.albumId],
+    albumURI: state.albumEntities[ownProps.albumId].uri,
+    albumTrackIds: state.albumTracks[ownProps.albumId],
     imageWidth: state.transitions.imageWidth,
     imageHeight: state.transitions.imageHeight,
     imageX: state.transitions.imageX, 

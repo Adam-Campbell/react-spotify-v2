@@ -20,8 +20,10 @@ const mapStateToProps = (state, ownProps) => {
         }
     }
     const track = state.tracks[state.player.trackId];
-    const album = state.albums.albumData[track.album];
-    const artist = state.artists.artistData[track.artists[0]];
+    //const album = state.albums.albumData[track.album];
+    const album = state.albumEntities[track.album];
+    //const artist = state.artists.artistData[track.artists[0]];
+    const artist = state.artistEntities[track.artists[0]];
     return {
         imageURL: album.images.length ? album.images[0].url : '',
         trackName: track.name,

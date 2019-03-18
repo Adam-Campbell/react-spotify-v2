@@ -42,10 +42,11 @@ const fetchPlaylistRequest = (playlistId) => ({
     }
 });
 
-const fetchPlaylistSuccess = (playlistId) => ({
+const fetchPlaylistSuccess = (playlistId, timestamp) => ({
     type: actionTypes.FETCH_PLAYLIST_SUCCESS,
     payload: {
-        playlistId
+        playlistId,
+        timestamp
     }
 });
 
@@ -64,11 +65,12 @@ const fetchPlaylistAbort = (playlistId) => ({
     }
 });
 
-const storePlaylist = (playlistObject, playlistId, trackObjects, artistObjects, albumObjects) => ({
+const storePlaylist = (playlistObject, playlistId, playlistTrackIds, trackObjects, artistObjects, albumObjects) => ({
     type: actionTypes.STORE_PLAYLIST,
     payload: {
         playlistObject,
         playlistId, 
+        playlistTrackIds,
         trackObjects,
         artistObjects, 
         albumObjects
@@ -155,9 +157,13 @@ const makePlaylistDataRequests = async (token, playlistId, market) => {
 export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const market = getState().user.country;
-    const playlist = getState().playlists.playlistData[playlistId];
     const currentUserId = getState().user.id;
-    if (playlist && playlist.fullPlaylistFetched && Date.now() - playlist.lastFetchedAt <= 3600000) {
+    // const playlist = getState().playlists.playlistData[playlistId];
+    // if (playlist && playlist.fullPlaylistFetched && Date.now() - playlist.lastFetchedAt <= 3600000) {
+    //     return dispatch(fetchPlaylistAbort(playlistId));
+    // }
+    const playlistFetchedAt = getState().playlistFetchedAt[playlistId];
+    if (playlistFetchedAt && Date.now() - playlistFetchedAt <= 3600000) {
         return dispatch(fetchPlaylistAbort(playlistId));
     }
     try {
@@ -215,9 +221,8 @@ export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
 
     // combine all of the results from normalizing the requests so that they can be dispatched to the store.
     const playlistObject = normalizedPlaylistData.entities.playlists[playlistId];
-    playlistObject.tracks = [ ...playlistObject.tracks, ...normalizedTrackData.trackIds ];
-    playlistObject.fullPlaylistFetched = true;
-    playlistObject.lastFetchedAt = Date.now();
+    const playlistTrackIds = [ ...playlistObject.tracks, ...normalizedTrackData.trackIds ];
+    delete playlistObject.tracks;
     const allTrackObjects = {
         ...normalizedPlaylistData.entities.tracks,
         ...normalizedTrackData.tracks
@@ -234,11 +239,13 @@ export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
     dispatch(storePlaylist(
         playlistObject,
         playlistId,
+        playlistTrackIds,
         allTrackObjects,
         allArtistObjects,
         allAlbumObjects
     ));
-    dispatch(fetchPlaylistSuccess(playlistId));
+    const timestamp = Date.now();
+    dispatch(fetchPlaylistSuccess(playlistId, timestamp));
     } catch (err) {
         dispatch(fetchPlaylistFailed(err, playlistId));
     }

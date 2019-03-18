@@ -114,12 +114,13 @@ class OwnedPlaylistHeader extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const playlist = state.playlists.playlistData[ownProps.playlistId];
+    //const playlist = state.playlists.playlistData[ownProps.playlistId];
+    const playlist = state.playlistEntities[ownProps.playlistId];
     return {
         imageURL: playlist.images.length ? playlist.images[0].url : '',
         playlistName: playlist.name,
         ownerName: playlist.owner.display_name,
-        isFollowing: playlist.isFollowing,
+        isFollowing: state.userFollowingPlaylist[ownProps.playlistId],
         playlistFollowerCount: playlist.followers.total
     }
 };
