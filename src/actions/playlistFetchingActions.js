@@ -35,10 +35,11 @@ fetchPlaylist
 
 
 
-const fetchPlaylistRequest = (playlistId) => ({
+const fetchPlaylistRequest = (playlistId, loadingRequired) => ({
     type: actionTypes.FETCH_PLAYLIST_REQUEST,
     payload: {
-        playlistId
+        playlistId,
+        loadingRequired
     }
 });
 
@@ -154,18 +155,15 @@ const makePlaylistDataRequests = async (token, playlistId, market) => {
  * normalizes this data, and dispatches it to the store. 
  * @param {*} playlistId 
  */
-export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
+export const fetchPlaylist = (playlistId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const market = getState().user.country;
     const currentUserId = getState().user.id;
-    // const playlist = getState().playlists.playlistData[playlistId];
-    // if (playlist && playlist.fullPlaylistFetched && Date.now() - playlist.lastFetchedAt <= 3600000) {
-    //     return dispatch(fetchPlaylistAbort(playlistId));
-    // }
     const playlistFetchedAt = getState().playlists.timestamps[playlistId];
     if (playlistFetchedAt && Date.now() - playlistFetchedAt <= 3600000) {
         return dispatch(fetchPlaylistAbort(playlistId));
     }
+    dispatch(fetchPlaylistRequest(playlistId, !isPrefetched));
     try {
     dispatch(checkIfFollowing(token, playlistId, currentUserId))
     const allRequests = await makePlaylistDataRequests(token, playlistId, market);

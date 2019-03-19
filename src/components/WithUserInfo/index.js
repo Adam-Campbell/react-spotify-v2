@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
+import Loader from '../Loader';
 
 class WithUserInfo extends Component {
 
     componentDidMount() {
-        if (!this.props.userId) {
+        if (!this.props.hasFetched) {
             this.props.fetchUser();
         }
     }
 
     render() {
-        const { children } = this.props;
-        if (!this.props.userId) {
-            return <p>Fetching user info</p>;
+        const { hasFetched, children } = this.props;
+        if (!hasFetched) {
+            return <Loader />
         }
         return children();
     }
 }
 
 const mapStateToProps = (state) => ({
-    userId: state.user.id
+    hasFetched: state.user.fullProfileFetched
 });
 
 export default connect(

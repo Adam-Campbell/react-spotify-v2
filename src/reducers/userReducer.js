@@ -16,11 +16,18 @@ const defaultState = {
     topArtistsIds: [],
     recentTracksIds: [],
     playlistIds: [],
-    followedArtistIds: []
+    followedArtistIds: [],
+    fullProfileFetched: false
 };
 
 const user = (state=defaultState, action) => {
     switch (action.type) {
+
+        case actionTypes.FETCH_USER_SUCCESS:
+            return {
+                ...state,
+                fullProfileFetched: true
+            };
 
         case actionTypes.STORE_USERS_PROFILE:
             return {

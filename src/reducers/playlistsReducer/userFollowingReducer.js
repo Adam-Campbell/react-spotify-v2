@@ -2,7 +2,7 @@ import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const userFollowing = (state=defaultState, action) => {
+const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_PLAYLIST_FOLLOW_STATUS:
@@ -28,4 +28,4 @@ const userFollowing = (state=defaultState, action) => {
     }
 };
 
-export default userFollowing;
+export default reducer;

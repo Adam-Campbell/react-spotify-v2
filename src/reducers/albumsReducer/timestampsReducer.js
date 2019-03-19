@@ -2,7 +2,7 @@ import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const timestamps = (state=defaultState, action) => {
+const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.FETCH_ALBUM_SUCCESS:
@@ -16,4 +16,4 @@ const timestamps = (state=defaultState, action) => {
     }
 };
 
-export default timestamps;
+export default reducer;

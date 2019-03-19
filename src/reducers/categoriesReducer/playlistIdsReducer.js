@@ -2,7 +2,7 @@ import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const playlistIds = (state=defaultState, action) => {
+const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_CATEGORIES_PLAYLISTS:
@@ -16,4 +16,4 @@ const playlistIds = (state=defaultState, action) => {
     }
 };
 
-export default playlistIds;
+export default reducer;

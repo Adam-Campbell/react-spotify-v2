@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import Album from './Album';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
 
 export class AlbumContainer extends Component {
 
@@ -22,7 +23,12 @@ export class AlbumContainer extends Component {
     }
 
     render() {
-        const { albumId, timestamp } = this.props;
+        const { albumId, timestamp, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader />;
+        }
+
         if (!timestamp) {
             return null;
         }
@@ -33,7 +39,8 @@ export class AlbumContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.albums.timestamps[ownProps.albumId]
+    timestamp: state.albums.timestamps[ownProps.albumId],
+    isLoading: state.ui.loadingStatus.albumView
 });
 
 export const ConnectedAlbumContainer = withAuthAndUserInfo(connect(

@@ -10,17 +10,9 @@ import accessToken from './accessTokenReducer';
 import user from './userReducer';
 import highlights from './highlightsReducer';
 import player from './playerReducer';
-// ui
-import transitions from './transitionsReducer';
 import modal from './modalReducer';
-
-
-
-// not using currently
-
-//import entityMetaData from './entityMetaDataReducer';
-//import uiStatus from './uiStatusReducer';
-
+// ui
+import ui from './uiReducer';
 
 export default combineReducers({
     artists,
@@ -32,6 +24,6 @@ export default combineReducers({
     user,
     highlights,
     player,
-    transitions,
-    modal
+    modal,
+    ui
 });

@@ -2,7 +2,7 @@ import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const trackIds = (state=defaultState, action) => {
+const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_ALBUM:
@@ -16,4 +16,4 @@ const trackIds = (state=defaultState, action) => {
     }
 };
 
-export default trackIds;
+export default reducer;

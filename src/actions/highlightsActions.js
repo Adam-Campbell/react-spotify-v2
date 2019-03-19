@@ -110,13 +110,13 @@ const fetchCategories = (token, market) => async (dispatch) => {
 }
 
 export const fetchHighlights = () => async (dispatch, getState) => {
-    dispatch(fetchHighlightsRequest());
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
     const highlights = getState().highlights;
     if (highlights.fullHighlightsFetched && Date.now() - highlights.lastFetchedAt <= 3600000) {
         return dispatch(fetchHighlightsAbort());
     }
+    dispatch(fetchHighlightsRequest());
     Promise.all([
         dispatch(fetchNewReleases(token, market)),
         dispatch(fetchFeaturedPlaylists(token, market)),

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import Category from './Category';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
 
 class CategoryContainer extends Component {
 
@@ -20,7 +21,12 @@ class CategoryContainer extends Component {
         // if (!categoryObject || !categoryObject.fullCategoryFetched) {
         //     return null;
         // }
-        const { category, timestamp } = this.props;
+        const { category, timestamp, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader />;
+        }
+
         if (!timestamp) {
             return null;
         }
@@ -29,7 +35,8 @@ class CategoryContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.categories.timestamps[ownProps.category]
+    timestamp: state.categories.timestamps[ownProps.category],
+    isLoading: state.ui.loadingStatus.categoryView
 });
 
 export const ConnectedCategoryContainer = withAuthAndUserInfo(connect(

@@ -3,10 +3,11 @@ import { normalize, schema } from 'normalizr';
 import axios from 'axios';
 import { getUsersMarket } from './userActions';
 
-const fetchArtistRequest = (artistId) => ({
+const fetchArtistRequest = (artistId, loadingRequired) => ({
     type: actionTypes.FETCH_ARTIST_REQUEST,
     payload: {
-        artistId
+        artistId,
+        loadingRequired
     }
 });
 
@@ -151,20 +152,14 @@ const fetchArtistsAlbums = (token, artistId, market) => async (dispatch) => {
     }
 }
 
-export const fetchArtist = (artistId) => async (dispatch, getState) => {
-    dispatch(fetchArtistRequest(artistId));
+export const fetchArtist = (artistId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
-    //const artist = getState().artists.artistData[artistId];
-    // Abort the fetch if the full data for this artist is already in the store, and it was
-    // fetched within the last hour
-    // if (artist && artist.fullProfileFetched && Date.now() - artist.lastFetchedAt <= 3600000) {
-    //     return dispatch(fetchArtistAbort(artistId));
-    // }
     const artistFetchedAt = getState().artists.timestamps[artistId];
     if (artistFetchedAt && Date.now() - artistFetchedAt <= 3600000) {
         return dispatch(fetchArtistAbort(artistId));
     }
+    dispatch(fetchArtistRequest(artistId, !isPrefetched));
     return Promise.all([
         dispatch(fetchArtistsInfo(token, artistId)),
         dispatch(fetchArtistsTopTracks(token, artistId, market)),

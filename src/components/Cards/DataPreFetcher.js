@@ -65,7 +65,7 @@ export class DataPreFetcher extends Component {
         //const adjustedTop = y ? y : top - window.pageYOffset;
         this.props.storeTransitionImageRect(width, height, left, top);
         const fetchingFunction = this.getFetchingFunction(this.props.collectionType);
-        await fetchingFunction(this.props.itemId);
+        await fetchingFunction(this.props.itemId, true);
         window.scrollTo(0,0);
         this.props.history.push({
             pathname: this.props.linkDestination

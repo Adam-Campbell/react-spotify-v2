@@ -141,11 +141,11 @@ const mapStateToProps = (state, ownProps) => ({
     playlistTrackIds: state.playlists.trackIds[ownProps.playlistId],
     playlistURI: state.playlists.entities[ownProps.playlistId].uri,
     isPlaylistOwner: state.playlists.entities[ownProps.playlistId].owner.id === state.user.id,
-    imageWidth: state.transitions.imageWidth,
-    imageHeight: state.transitions.imageHeight,
-    imageX: state.transitions.imageX, 
-    imageY: state.transitions.imageY,
-    hasTransition: state.transitions.hasTransition
+    imageWidth: state.ui.transitionData.imageWidth,
+    imageHeight: state.ui.transitionData.imageHeight,
+    imageX: state.ui.transitionData.imageX, 
+    imageY: state.ui.transitionData.imageY,
+    hasTransition: state.ui.transitionData.hasTransition
 });
 
 export default connect(

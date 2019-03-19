@@ -3,7 +3,7 @@ import { addOrMerge } from '../../utils';
 
 const defaultState = {};
 
-const entities = (state=defaultState, action) => {
+const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_USERS_PLAYLISTS:
@@ -49,4 +49,4 @@ const entities = (state=defaultState, action) => {
     }
 };
 
-export default entities;
+export default reducer;

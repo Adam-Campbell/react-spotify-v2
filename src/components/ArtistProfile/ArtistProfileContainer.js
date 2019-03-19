@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import ArtistProfile from './ArtistProfile';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
 
 class ArtistProfileContainer extends Component {
 
@@ -22,7 +23,12 @@ class ArtistProfileContainer extends Component {
     }
 
     render() {
-        const { artistId, timestamp } = this.props;
+        const { artistId, timestamp, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader />;
+        }
+
         if (!timestamp) {
             return null;
         }
@@ -33,7 +39,8 @@ class ArtistProfileContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.artists.timestamps[ownProps.artistId]
+    timestamp: state.artists.timestamps[ownProps.artistId],
+    isLoading: state.ui.loadingStatus.artistProfile
 });
 
 export const ConnectedArtistProfileContainer = withAuthAndUserInfo(connect(

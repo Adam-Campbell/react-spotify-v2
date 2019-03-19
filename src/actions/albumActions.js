@@ -4,10 +4,11 @@ import axios from 'axios';
 import { getUsersMarket } from './userActions';
 import { cloneDeep } from 'lodash';
 
-const fetchAlbumRequest = (albumId) => ({
+const fetchAlbumRequest = (albumId, loadingRequired) => ({
     type: actionTypes.FETCH_ALBUM_REQUEST,
     payload: {
-        albumId
+        albumId,
+        loadingRequired
     } 
 });
 
@@ -95,18 +96,14 @@ const fetchAlbumInfo = (token, albumId, market) => async (dispatch) => {
     }
 }
 
-export const fetchAlbum = (albumId) => async (dispatch, getState) => {
-    dispatch(fetchAlbumRequest(albumId));
+export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const market = getState().user.country || await dispatch(getUsersMarket(token));
-    // const album = getState().albums.albumData[albumId];
-    // if (album && album.fullAlbumFetched) {
-    //     return dispatch(fetchAlbumAbort(albumId));
-    // }
     const albumFetchedAt = getState().albums.timestamps[albumId];
     if (albumFetchedAt) {
         return dispatch(fetchAlbumAbort(albumId));
     }
+    dispatch(fetchAlbumRequest(albumId, !isPrefetched));
     return dispatch(fetchAlbumInfo(token, albumId, market))
     .then(() => {
         const timestamp = Date.now();

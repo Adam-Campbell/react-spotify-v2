@@ -186,11 +186,11 @@ const mapStateToProps = (state, ownProps) => ({
     artistsTopTrackIds: state.artists.topTrackIds[ownProps.artistId],
     artistsRelatedArtistIds: state.artists.relatedArtistIds[ownProps.artistId],
     albums: state.albums.entities,
-    imageWidth: state.transitions.imageWidth,
-    imageHeight: state.transitions.imageHeight,
-    imageX: state.transitions.imageX, 
-    imageY: state.transitions.imageY,
-    hasTransition: state.transitions.hasTransition
+    imageWidth: state.ui.transitionData.imageWidth,
+    imageHeight: state.ui.transitionData.imageHeight,
+    imageX: state.ui.transitionData.imageX, 
+    imageY: state.ui.transitionData.imageY,
+    hasTransition: state.ui.transitionData.hasTransition
 });
 
 export default connect(

@@ -2,7 +2,7 @@ import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const artistsTopTracks = (state=defaultState, action) => {
+const reducer = (state=defaultState, action) => {
     switch (action.type) {
         case actionTypes.STORE_ARTISTS_TOP_TRACKS:
             return {
@@ -15,4 +15,4 @@ const artistsTopTracks = (state=defaultState, action) => {
     }
 };
 
-export default artistsTopTracks;
+export default reducer;

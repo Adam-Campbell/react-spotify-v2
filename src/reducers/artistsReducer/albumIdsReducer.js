@@ -2,7 +2,7 @@ import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const albumIds = (state=defaultState, action) => {
+const reducer = (state=defaultState, action) => {
     switch (action.type) {
         case actionTypes.STORE_ARTISTS_ALBUMS:
             return {
@@ -15,4 +15,4 @@ const albumIds = (state=defaultState, action) => {
     }
 };
 
-export default albumIds;
+export default reducer;

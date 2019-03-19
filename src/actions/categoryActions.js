@@ -2,10 +2,11 @@ import * as actionTypes from '../actionTypes';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
 
-const fetchCategoryRequest = (categoryId) => ({
+const fetchCategoryRequest = (categoryId, loadingRequired) => ({
     type: actionTypes.FETCH_CATEGORY_REQUEST,
     payload: {
-        categoryId
+        categoryId,
+        loadingRequired
     }
 });
 
@@ -116,17 +117,13 @@ const fetchCategoriesPlaylists = (categoryId, token) => async (dispatch) => {
 // }
 
 
-export const fetchCategory = (categoryId) => (dispatch, getState) => {
-    dispatch(fetchCategoryRequest());
+export const fetchCategory = (categoryId, isPrefetched=false) => (dispatch, getState) => {
     const token = getState().accessToken.token;
-    //const category = getState().categories.categoryData[categoryId];
-    // if (category && category.fullCategoryFetched && Date.now() - category.lastFetchedAt <= 3600000) {
-    //     return dispatch(fetchCategoryAbort(categoryId));
-    // }
     const categoryFetchedAt = getState().categories.timestamps[categoryId];
     if (categoryFetchedAt && Date.now() - categoryFetchedAt <= 3600000) {
         return dispatch(fetchCategoryAbort(categoryId));
     }
+    dispatch(fetchCategoryRequest(categoryId, !isPrefetched));
     return Promise.all([
         dispatch(fetchCategoryInfo(categoryId, token)),
         dispatch(fetchCategoriesPlaylists(categoryId, token))

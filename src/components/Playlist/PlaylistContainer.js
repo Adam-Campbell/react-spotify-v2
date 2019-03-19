@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as ActionCreators from '../../actions';
 import Playlist from './Playlist';
-import withAuthAndUserInfo from '../withAuthAndUserInfo'
+import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
 
 class PlaylistContainer extends Component {
 
@@ -22,7 +23,12 @@ class PlaylistContainer extends Component {
     }
 
     render() {
-        const { playlistId, timestamp } = this.props;
+        const { playlistId, timestamp, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader />;
+        }
+
         if (!timestamp) {
             return null;
         }
@@ -34,7 +40,8 @@ class PlaylistContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.playlists.timestamps[ownProps.playlistId]
+    timestamp: state.playlists.timestamps[ownProps.playlistId],
+    isLoading: state.ui.loadingStatus.playlistView
 });
 
 export const ConnectedPlaylistContainer = withAuthAndUserInfo(connect(
