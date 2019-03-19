@@ -1,8 +1,8 @@
-import * as actionTypes from '../actionTypes';
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const artistsRelatedArtists = (state=defaultState, action) => {
+const relatedArtistIds = (state=defaultState, action) => {
     switch (action.type) {
         case actionTypes.STORE_ARTISTS_RELATED_ARTISTS:
             return {
@@ -15,4 +15,4 @@ const artistsRelatedArtists = (state=defaultState, action) => {
     }
 };
 
-export default artistsRelatedArtists;
+export default relatedArtistIds;

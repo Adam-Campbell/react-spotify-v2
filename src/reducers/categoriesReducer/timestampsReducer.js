@@ -1,8 +1,8 @@
-import * as actionTypes from '../actionTypes';
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const categoryFetchedAt = (state=defaultState, action) => {
+const timestamps = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.FETCH_CATEGORY_SUCCESS:
@@ -16,4 +16,4 @@ const categoryFetchedAt = (state=defaultState, action) => {
     }
 };
 
-export default categoryFetchedAt;
+export default timestamps;

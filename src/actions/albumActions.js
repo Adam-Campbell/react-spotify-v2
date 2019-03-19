@@ -103,7 +103,7 @@ export const fetchAlbum = (albumId) => async (dispatch, getState) => {
     // if (album && album.fullAlbumFetched) {
     //     return dispatch(fetchAlbumAbort(albumId));
     // }
-    const albumFetchedAt = getState().albumFetchedAt[albumId];
+    const albumFetchedAt = getState().albums.timestamps[albumId];
     if (albumFetchedAt) {
         return dispatch(fetchAlbumAbort(albumId));
     }

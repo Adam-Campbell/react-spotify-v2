@@ -22,17 +22,18 @@ class ArtistProfileContainer extends Component {
     }
 
     render() {
-        if (!this.props.artistFetchedAt) {
+        const { artistId, timestamp } = this.props;
+        if (!timestamp) {
             return null;
         }
         return (
-            <ArtistProfile artistId={this.props.artistId} />
+            <ArtistProfile artistId={artistId} />
         );
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    artistFetchedAt: state.artistsFetchedAt[ownProps.artistId]
+    timestamp: state.artists.timestamps[ownProps.artistId]
 });
 
 export const ConnectedArtistProfileContainer = withAuthAndUserInfo(connect(

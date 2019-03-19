@@ -162,7 +162,7 @@ export const fetchPlaylist = (playlistId) => async (dispatch, getState) => {
     // if (playlist && playlist.fullPlaylistFetched && Date.now() - playlist.lastFetchedAt <= 3600000) {
     //     return dispatch(fetchPlaylistAbort(playlistId));
     // }
-    const playlistFetchedAt = getState().playlistFetchedAt[playlistId];
+    const playlistFetchedAt = getState().playlists.timestamps[playlistId];
     if (playlistFetchedAt && Date.now() - playlistFetchedAt <= 3600000) {
         return dispatch(fetchPlaylistAbort(playlistId));
     }

@@ -1,9 +1,9 @@
-import * as actionTypes from '../actionTypes';
-import { addOrMerge } from '../utils';
+import * as actionTypes from '../../actionTypes';
+import { addOrMerge } from '../../utils';
 
 const defaultState = {};
 
-const playlistEntities = (state=defaultState, action) => {
+const entities = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_USERS_PLAYLISTS:
@@ -49,4 +49,4 @@ const playlistEntities = (state=defaultState, action) => {
     }
 };
 
-export default playlistEntities;
+export default entities;

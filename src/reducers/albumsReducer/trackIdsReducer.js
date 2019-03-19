@@ -1,9 +1,8 @@
-import * as actionTypes from '../actionTypes';
-import { addOrMerge } from '../utils'
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const albumTracks = (state=defaultState, action) => {
+const trackIds = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_ALBUM:
@@ -17,4 +16,4 @@ const albumTracks = (state=defaultState, action) => {
     }
 };
 
-export default albumTracks;
+export default trackIds;

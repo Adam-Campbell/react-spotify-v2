@@ -123,7 +123,7 @@ export const fetchCategory = (categoryId) => (dispatch, getState) => {
     // if (category && category.fullCategoryFetched && Date.now() - category.lastFetchedAt <= 3600000) {
     //     return dispatch(fetchCategoryAbort(categoryId));
     // }
-    const categoryFetchedAt = getState().categoryFetchedAt[categoryId];
+    const categoryFetchedAt = getState().categories.timestamps[categoryId];
     if (categoryFetchedAt && Date.now() - categoryFetchedAt <= 3600000) {
         return dispatch(fetchCategoryAbort(categoryId));
     }

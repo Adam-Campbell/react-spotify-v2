@@ -32,8 +32,7 @@ CategoryHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    //const category = state.categories.categoryData[ownProps.categoryId];
-    const category = state.categoryEntities[ownProps.categoryId];
+    const category = state.categories.entities[ownProps.categoryId];
     return {
         name: category.name,
         imageURL: category.icons.length ? category.icons[0].url : ''

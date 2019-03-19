@@ -1,9 +1,9 @@
-import * as actionTypes from '../actionTypes';
-import { addOrMerge } from '../utils';
+import * as actionTypes from '../../actionTypes';
+import { addOrMerge } from '../../utils';
 
 const defaultState = {};
 
-const categoryEntities = (state=defaultState, action) => {
+const entities = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_CATEGORIES:
@@ -17,4 +17,4 @@ const categoryEntities = (state=defaultState, action) => {
     }
 };
 
-export default categoryEntities;
+export default entities;

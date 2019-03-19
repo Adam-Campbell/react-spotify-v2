@@ -11,7 +11,8 @@ class HighlightsContainer extends Component {
     }
 
     render() {
-        if (!this.props.fullHighlightsFetched) {
+        const { fullHighlightsFetched } = this.props;
+        if (!fullHighlightsFetched) {
             return null;
         }
         return <Highlights />;
@@ -19,7 +20,7 @@ class HighlightsContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    fullHighlightsFetched: state.highlights.fullHighlightsFetched
+    fullHighlightsFetched: state.highlights.fullHighlightsFetched,
 });
 
 export const ConnectedHighlightsContainer = withAuthAndUserInfo(connect(

@@ -1,8 +1,8 @@
-import * as actionTypes from '../actionTypes';
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const userFollowingPlaylist = (state=defaultState, action) => {
+const userFollowing = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_PLAYLIST_FOLLOW_STATUS:
@@ -28,4 +28,4 @@ const userFollowingPlaylist = (state=defaultState, action) => {
     }
 };
 
-export default userFollowingPlaylist;
+export default userFollowing;

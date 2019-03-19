@@ -138,9 +138,9 @@ class Playlist extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     //playlist: state.playlists.playlistData[ownProps.playlistId],
-    playlistTrackIds: state.playlistTracks[ownProps.playlistId],
-    playlistURI: state.playlistEntities[ownProps.playlistId].uri,
-    isPlaylistOwner: state.playlistEntities[ownProps.playlistId].owner.id === state.user.id,
+    playlistTrackIds: state.playlists.trackIds[ownProps.playlistId],
+    playlistURI: state.playlists.entities[ownProps.playlistId].uri,
+    isPlaylistOwner: state.playlists.entities[ownProps.playlistId].owner.id === state.user.id,
     imageWidth: state.transitions.imageWidth,
     imageHeight: state.transitions.imageHeight,
     imageX: state.transitions.imageX, 

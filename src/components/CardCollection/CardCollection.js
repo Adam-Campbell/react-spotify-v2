@@ -65,7 +65,7 @@ const mapStateToProps = (state, ownProps) => {
         case collectionTypes.artists:
             return {
                 //items: ownProps.itemIds.map(itemId => state.artists.artistData[itemId]),
-                items: ownProps.itemIds.map(itemId => state.artistEntities[itemId]),
+                items: ownProps.itemIds.map(itemId => state.artists.entities[itemId]),
                 URLPath: '/artist/'
             };
 
@@ -73,13 +73,13 @@ const mapStateToProps = (state, ownProps) => {
             return {
                 items: ownProps.itemIds.map(itemId => {
                     //const albumObject = state.albums.albumData[itemId];
-                    const albumObject = state.albumEntities[itemId];
+                    const albumObject = state.albums.entities[itemId];
                     if (ownProps.includeAdditionalLabel) {
                         const albumArtistId = albumObject.artists[0];
                         return {
                             ...albumObject,
                             //additional: state.artists.artistData[albumArtistId].name
-                            additional: state.artistEntities[albumArtistId].name
+                            additional: state.artists.entities[albumArtistId].name
                         }
                     } else {
                         return albumObject;
@@ -92,14 +92,14 @@ const mapStateToProps = (state, ownProps) => {
         case collectionTypes.playlists:
             return {
                 //items: ownProps.itemIds.map(itemId => state.playlists.playlistData[itemId]),
-                items: ownProps.itemIds.map(itemId => state.playlistEntities[itemId]),
+                items: ownProps.itemIds.map(itemId => state.playlists.entities[itemId]),
                 URLPath: '/playlist/'
             };
 
         case collectionTypes.categories:
             return {
                 //items: ownProps.itemIds.map(itemId => state.categories.categoryData[itemId]),
-                items: ownProps.itemIds.map(itemId => state.categoryEntities[itemId]),
+                items: ownProps.itemIds.map(itemId => state.categories.entities[itemId]),
                 URLPath: '/category/'
             };
 

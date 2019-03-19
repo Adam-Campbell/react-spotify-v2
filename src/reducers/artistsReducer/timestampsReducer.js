@@ -1,8 +1,8 @@
-import * as actionTypes from '../actionTypes';
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const artistFetchedAt = (state=defaultState, action) => {
+const timestamps = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.FETCH_ARTIST_SUCCESS:
@@ -16,4 +16,4 @@ const artistFetchedAt = (state=defaultState, action) => {
     }
 };
 
-export default artistFetchedAt;
+export default timestamps;

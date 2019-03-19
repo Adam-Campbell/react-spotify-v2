@@ -1,9 +1,8 @@
-import * as actionTypes from '../actionTypes';
-import { addOrMerge } from '../utils';
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const categoryPlaylists = (state=defaultState, action) => {
+const playlistIds = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.STORE_CATEGORIES_PLAYLISTS:
@@ -17,4 +16,4 @@ const categoryPlaylists = (state=defaultState, action) => {
     }
 };
 
-export default categoryPlaylists;
+export default playlistIds;

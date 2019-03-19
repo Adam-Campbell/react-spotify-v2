@@ -1,9 +1,8 @@
-import * as actionTypes from '../actionTypes';
-import { addOrMerge } from '../utils'
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {};
 
-const albumFetchedAt = (state=defaultState, action) => {
+const timestamps = (state=defaultState, action) => {
     switch (action.type) {
 
         case actionTypes.FETCH_ALBUM_SUCCESS:
@@ -17,4 +16,4 @@ const albumFetchedAt = (state=defaultState, action) => {
     }
 };
 
-export default albumFetchedAt;
+export default timestamps;

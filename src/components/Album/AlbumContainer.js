@@ -22,21 +22,18 @@ export class AlbumContainer extends Component {
     }
 
     render() {
-        // if (!this.props.album || !this.props.album.fullAlbumFetched) {
-        //     return null;
-        // }
-        if (!this.props.albumFetchedAt) {
+        const { albumId, timestamp } = this.props;
+        if (!timestamp) {
             return null;
         }
         return (
-            <Album albumId={this.props.albumId} />
+            <Album albumId={albumId} />
         );
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    //album: state.albums.albumData[ownProps.albumId],
-    albumFetchedAt: state.albumFetchedAt[ownProps.albumId]
+    timestamp: state.albums.timestamps[ownProps.albumId]
 });
 
 export const ConnectedAlbumContainer = withAuthAndUserInfo(connect(

@@ -20,17 +20,16 @@ class CategoryContainer extends Component {
         // if (!categoryObject || !categoryObject.fullCategoryFetched) {
         //     return null;
         // }
-        const { categoryFetchedAt } = this.props;
-        if (!categoryFetchedAt) {
+        const { category, timestamp } = this.props;
+        if (!timestamp) {
             return null;
         }
-        return <Category categoryId={this.props.category} />
+        return <Category categoryId={category} />
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    //categoryObject: state.categories.categoryData[ownProps.category],
-    categoryFetchedAt: state.categoryFetchedAt[ownProps.category]
+    timestamp: state.categories.timestamps[ownProps.category]
 });
 
 export const ConnectedCategoryContainer = withAuthAndUserInfo(connect(

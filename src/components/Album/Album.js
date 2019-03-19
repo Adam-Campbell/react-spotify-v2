@@ -97,8 +97,8 @@ export class Album extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     //album: state.albums.albumData[ownProps.albumId],
-    albumURI: state.albumEntities[ownProps.albumId].uri,
-    albumTrackIds: state.albumTracks[ownProps.albumId],
+    albumURI: state.albums.entities[ownProps.albumId].uri,
+    albumTrackIds: state.albums.trackIds[ownProps.albumId],
     imageWidth: state.transitions.imageWidth,
     imageHeight: state.transitions.imageHeight,
     imageX: state.transitions.imageX, 

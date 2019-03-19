@@ -22,8 +22,8 @@ class PlaylistContainer extends Component {
     }
 
     render() {
-        const { playlistId, playlistFetchedAt } = this.props;
-        if (!playlistFetchedAt) {
+        const { playlistId, timestamp } = this.props;
+        if (!timestamp) {
             return null;
         }
         return (
@@ -34,8 +34,7 @@ class PlaylistContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    //playlist: state.playlists.playlistData[ownProps.playlistId] 
-    playlistFetchedAt: state.playlistFetchedAt[ownProps.playlistId]
+    timestamp: state.playlists.timestamps[ownProps.playlistId]
 });
 
 export const ConnectedPlaylistContainer = withAuthAndUserInfo(connect(

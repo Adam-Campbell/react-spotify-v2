@@ -161,7 +161,7 @@ export const fetchArtist = (artistId) => async (dispatch, getState) => {
     // if (artist && artist.fullProfileFetched && Date.now() - artist.lastFetchedAt <= 3600000) {
     //     return dispatch(fetchArtistAbort(artistId));
     // }
-    const artistFetchedAt = getState().artistsFetchedAt[artistId];
+    const artistFetchedAt = getState().artists.timestamps[artistId];
     if (artistFetchedAt && Date.now() - artistFetchedAt <= 3600000) {
         return dispatch(fetchArtistAbort(artistId));
     }

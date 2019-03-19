@@ -83,10 +83,7 @@ Track.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     const track = state.tracks[ownProps.trackId];
-    //const album = state.albums.albumData[track.album];
-    const album = state.albumEntities[track.album];
-    // const currentTrack = state.player.trackId;
-    // const currentContext = state.player.contextURI;
+    const album = state.albums.entities[track.album];
     const isCurrentlySelected = state.player.trackId === ownProps.trackId && 
                                state.player.contextURI === ownProps.contextURI;
     return {

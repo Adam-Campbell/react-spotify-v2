@@ -52,19 +52,8 @@ class Category extends Component {
     }
 }
 
-/*
-
-<Carousel 
-                        itemIds={playlistIds}
-                        title="Playlists"
-                        collectionType={collectionTypes.playlists}
-                        includeCreatePlaylistCard={false}
-                    />
-
-*/
-
 const mapStateToProps = (state, ownProps) => ({
-    categoryPlaylistIds: state.categoryPlaylists[ownProps.categoryId]
+    categoryPlaylistIds: state.categories.playlistIdss[ownProps.categoryId]
 });
 
 export default connect(mapStateToProps)(Category);

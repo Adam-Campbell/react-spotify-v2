@@ -9,6 +9,9 @@ import { collectionTypes } from '../../constants';
 import { constructTimeline } from '../../utils';
 import Carousel from '../Carousel';
 
+// Refactor this component so that the albumIds are sorted into albums and singles in the 
+// mapStateToProps function, that way the album data doesn't need to be passed into the component at all.
+
 const sortSinglesFromAlbums = (allIds, albumData) => {
     const albumIds = [];
     const singleIds = [];
@@ -178,14 +181,11 @@ class ArtistProfile extends Component {
 */
 
 const mapStateToProps = (state, ownProps) => ({
-    //artist: state.artists.artistData[ownProps.artistId],
-    //artist: state.artistEntities[ownProps.artistId],
-    artistURI: state.artistEntities[ownProps.artistId].uri,
-    artistsAlbumIds: state.artistAlbums[ownProps.artistId],
-    artistsTopTrackIds: state.artistTopTracks[ownProps.artistId],
-    artistsRelatedArtistIds: state.artistRelatedArtists[ownProps.artistId],
-    //albums: state.albums.albumData,
-    albums: state.albumEntities,
+    artistURI: state.artists.entities[ownProps.artistId].uri,
+    artistsAlbumIds: state.artists.albumIds[ownProps.artistId],
+    artistsTopTrackIds: state.artists.topTrackIds[ownProps.artistId],
+    artistsRelatedArtistIds: state.artists.relatedArtistIds[ownProps.artistId],
+    albums: state.albums.entities,
     imageWidth: state.transitions.imageWidth,
     imageHeight: state.transitions.imageHeight,
     imageX: state.transitions.imageX, 
