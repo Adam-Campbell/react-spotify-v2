@@ -6,6 +6,7 @@
     width: 100%;
     min-height: 100%;
     padding: 8px;
+    position: relative;
     &__image-container {
         position: relative;
         width: 100%;
@@ -34,5 +35,15 @@
         font-weight: 300;
         margin-top: 4px;
         margin-bottom: 4px;
+    }
+    &__loader {
+        font-family: $font--body;
+        color: $brand;
+        font-weight: 700;
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
     }
 }

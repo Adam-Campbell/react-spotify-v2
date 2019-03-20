@@ -25,7 +25,6 @@ class UserProfileContainer extends Component {
     }
 
     render() {
-        
         const { 
             userId, 
             userURI, 

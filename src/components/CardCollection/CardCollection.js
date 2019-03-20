@@ -12,8 +12,9 @@ export const getImageURL = (item, collectionType) => {
     }
 }
 
-export const CardCollection = (props) => (
-    props.isWithinCarousel ? (
+export const CardCollection = (props) => {
+    //console.log('CardCollection render method called');
+    return props.isWithinCarousel ? (
         <React.Fragment>
             {props.includeCreatePlaylistCard && <CreatePlaylistCard />}
             {props.items.map((item, index) => (
@@ -39,13 +40,13 @@ export const CardCollection = (props) => (
                         label={item.name}
                         itemId={item.id}
                         collectionType={props.collectionType}
-                        additionalLabel={props.additional}
+                        additionalLabel={item.additional}
                     />
                 </div>
             ))}
         </div>
     )
-);
+};
 
 CardCollection.propTypes = {
     itemIds: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -64,7 +65,6 @@ const mapStateToProps = (state, ownProps) => {
     switch (ownProps.collectionType) {
         case collectionTypes.artists:
             return {
-                //items: ownProps.itemIds.map(itemId => state.artists.artistData[itemId]),
                 items: ownProps.itemIds.map(itemId => state.artists.entities[itemId]),
                 URLPath: '/artist/'
             };
@@ -72,13 +72,11 @@ const mapStateToProps = (state, ownProps) => {
         case collectionTypes.albums:
             return {
                 items: ownProps.itemIds.map(itemId => {
-                    //const albumObject = state.albums.albumData[itemId];
                     const albumObject = state.albums.entities[itemId];
                     if (ownProps.includeAdditionalLabel) {
                         const albumArtistId = albumObject.artists[0];
                         return {
                             ...albumObject,
-                            //additional: state.artists.artistData[albumArtistId].name
                             additional: state.artists.entities[albumArtistId].name
                         }
                     } else {
@@ -91,14 +89,12 @@ const mapStateToProps = (state, ownProps) => {
 
         case collectionTypes.playlists:
             return {
-                //items: ownProps.itemIds.map(itemId => state.playlists.playlistData[itemId]),
                 items: ownProps.itemIds.map(itemId => state.playlists.entities[itemId]),
                 URLPath: '/playlist/'
             };
 
         case collectionTypes.categories:
             return {
-                //items: ownProps.itemIds.map(itemId => state.categories.categoryData[itemId]),
                 items: ownProps.itemIds.map(itemId => state.categories.entities[itemId]),
                 URLPath: '/category/'
             };
@@ -111,4 +107,8 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
+
 export const ConnectedCardCollection = connect(mapStateToProps)(CardCollection);
+
+
+

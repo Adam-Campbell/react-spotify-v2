@@ -27,6 +27,10 @@ export class DataPreFetcher extends Component {
         isActive: PropTypes.bool
     }
 
+    state = {
+        isFetching: false
+    }
+
     imageRef = React.createRef();
 
     /**
@@ -59,6 +63,9 @@ export class DataPreFetcher extends Component {
      */
     fetchAndRedirect = async () => {
         //e.preventDefault();
+        this.setState({
+            isFetching: true
+        });
         const { width, height, top, left, y } = this.imageRef.current.getBoundingClientRect();
         // Provides an alternative way of calculating top offset that helps mitigate some inconsistencies
         // in certain older browsers
@@ -66,10 +73,13 @@ export class DataPreFetcher extends Component {
         this.props.storeTransitionImageRect(width, height, left, top);
         const fetchingFunction = this.getFetchingFunction(this.props.collectionType);
         await fetchingFunction(this.props.itemId, true);
-        window.scrollTo(0,0);
-        this.props.history.push({
-            pathname: this.props.linkDestination
+        this.setState({
+            isFetching: false
         });
+        // window.scrollTo(0, 0);
+        // this.props.history.push({
+        //     pathname: this.props.linkDestination
+        // });
     }
 
     handleInteractionEnd = () => {
@@ -107,12 +117,14 @@ export class DataPreFetcher extends Component {
                 handleMouseLeave: endInteraction,
                 handleInteractionEnd: this.handleInteractionEnd,
                 imageRef: this.imageRef,
-                isActive: isActive
+                isActive: isActive,
+                isFetching: this.state.isFetching
             });
         } else {
             return children({
                 handleInteractionEnd: this.handleInteractionEnd,
-                imageRef: this.imageRef
+                imageRef: this.imageRef,
+                isFetching: this.state.isFetching
             });
         }
     }
@@ -123,7 +135,7 @@ export default withRouter(
         undefined, 
         {
             storeTransitionImageRect: ActionCreators.storeTransitionImageRect,
-            fetchArtist: ActionCreators.fetchArtist,
+            fetchArtist: ActionCreators.newFetchArtist,
             fetchAlbum: ActionCreators.fetchAlbum,
             fetchPlaylist: ActionCreators.fetchPlaylist,
             fetchCategory: ActionCreators.fetchCategory

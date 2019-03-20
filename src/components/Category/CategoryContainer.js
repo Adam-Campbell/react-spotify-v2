@@ -17,10 +17,7 @@ class CategoryContainer extends Component {
     }
 
     render() {
-        // const { categoryObject } = this.props;
-        // if (!categoryObject || !categoryObject.fullCategoryFetched) {
-        //     return null;
-        // }
+        
         const { category, timestamp, isLoading } = this.props;
 
         if (isLoading) {

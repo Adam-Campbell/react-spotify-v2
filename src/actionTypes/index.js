@@ -9,3 +9,4 @@ export * from './transitionActionTypes';
 export * from './followActionTypes';
 export * from './modalActionTypes';
 export * from './playerActionTypes';
+export * from './entityActionTypes';

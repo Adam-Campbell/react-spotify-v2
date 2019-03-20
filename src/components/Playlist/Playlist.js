@@ -25,7 +25,7 @@ class Playlist extends Component {
 
     componentDidMount() {
         // const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        // const { top, left } = this.imageRef.current.getBoundingClientRect();
+        // const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         // constructTimeline(this.timeline, {
         //     hasTransition,
         //     image: this.imageRef.current,
@@ -38,8 +38,10 @@ class Playlist extends Component {
         //     prevImageHeight: imageHeight,
         //     prevImageTop: imageY,
         //     prevImageLeft: imageX,
-        //     imageTop: top,
-        //     imageLeft: left
+        //     currImageWidth: width,
+        //     currImageHeight: height,
+        //     currImageTop: top,
+        //     currImageLeft: left
         // });
         // this.props.purgeTransitionImageRect();
     }
@@ -47,7 +49,7 @@ class Playlist extends Component {
     componentDidUpdate(prevProps) {
         // if (prevProps.playlistId !== this.props.playlistId) {
         //     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        //     const { top, left } = this.imageRef.current.getBoundingClientRect();
+        //     const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         //     constructTimeline(this.timeline, {
         //         hasTransition,
         //         image: this.imageRef.current,
@@ -60,8 +62,10 @@ class Playlist extends Component {
         //         prevImageHeight: imageHeight,
         //         prevImageTop: imageY,
         //         prevImageLeft: imageX,
-        //         imageTop: top,
-        //         imageLeft: left
+        //         currImageWidth: width,
+        //         currImageHeight: height,
+        //         currImageTop: top,
+        //         currImageLeft: left
         //     });
         //     this.props.purgeTransitionImageRect();
         // }
@@ -107,7 +111,7 @@ class Playlist extends Component {
                             <React.Fragment>
                                 <TrackCollection 
                                     trackIds={itemIds}
-                                    contextId={this.props.playlistId}
+                                    contextId={playlistId}
                                     contextURI={playlistURI}
                                     includeRemoveTrackButton={isPlaylistOwner}
                                 />
@@ -125,19 +129,7 @@ class Playlist extends Component {
     }
 }
 
-/*
-
-<TrackCollection 
-                        trackIds={tracks} 
-                        contextId={this.props.playlistId}
-                        contextURI={uri}
-                        includeRemoveTrackButton={isOwner} 
-                    />
-
-*/
-
 const mapStateToProps = (state, ownProps) => ({
-    //playlist: state.playlists.playlistData[ownProps.playlistId],
     playlistTrackIds: state.playlists.trackIds[ownProps.playlistId],
     playlistURI: state.playlists.entities[ownProps.playlistId].uri,
     isPlaylistOwner: state.playlists.entities[ownProps.playlistId].owner.id === state.user.id,

@@ -11,7 +11,7 @@ export const Card = ({ linkDestination, label, additionalLabel, imageURL, itemId
         collectionType={collectionType}
         linkDestination={linkDestination}
     >
-        {({ handleInteractionEnd, imageRef }) => (
+        {({ handleInteractionEnd, imageRef, isFetching }) => (
             <a 
                 href={linkDestination} 
                 className="card" 
@@ -28,6 +28,7 @@ export const Card = ({ linkDestination, label, additionalLabel, imageURL, itemId
                 />
                 <p className="card__label">{label}</p>
                 {additionalLabel && <p className="card__additional-label">{additionalLabel}</p>}
+                {isFetching && <p className="card__loader">Loading...</p>}
             </a>
         )}
     </DataPreFetcher>

@@ -22,7 +22,7 @@ export class Album extends Component {
 
     componentDidMount() {
         // const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        // const { top, left } = this.imageRef.current.getBoundingClientRect();
+        // const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         // constructTimeline(this.timeline, {
         //     hasTransition,
         //     image: this.imageRef.current,
@@ -35,8 +35,10 @@ export class Album extends Component {
         //     prevImageHeight: imageHeight,
         //     prevImageTop: imageY,
         //     prevImageLeft: imageX,
-        //     imageTop: top,
-        //     imageLeft: left
+        //     currImageWidth: width,
+        //     currImageHeight: height,
+        //     currImageTop: top,
+        //     currImageLeft: left
         // }); 
         // this.props.purgeTransitionImageRect(); 
     }
@@ -44,7 +46,7 @@ export class Album extends Component {
     componentDidUpdate(prevProps) {
         // if (prevProps.albumId !== this.props.albumId) {
         //     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        //     const { top, left } = this.imageRef.current.getBoundingClientRect();
+        //     const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         //     constructTimeline(this.timeline, {
         //         hasTransition,
         //         image: this.imageRef.current,
@@ -57,8 +59,10 @@ export class Album extends Component {
         //         prevImageHeight: imageHeight,
         //         prevImageTop: imageY,
         //         prevImageLeft: imageX,
-        //         imageTop: top,
-        //         imageLeft: left
+        //         currImageWidth: width,
+        //         currImageHeight: height,
+        //         currImageTop: top,
+        //         currImageLeft: left
         //     }); 
         //     this.props.purgeTransitionImageRect(); 
         // }

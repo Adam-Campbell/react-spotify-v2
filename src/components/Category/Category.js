@@ -6,14 +6,6 @@ import { collectionTypes } from '../../constants';
 import Section from '../Section';
 import CardCollection from '../CardCollection';
 
-/* 
-
-Todo - add transition animations for this route. Can't use the generic constructTimeline function, since it 
-doesn't have some of the elements required. I either need to just handle any transitions manually within this 
-component, or alter the constructTimeline function to handle this case. 
-
-*/
-
 class Category extends Component {
 
     static propTypes = {
@@ -48,12 +40,12 @@ class Category extends Component {
                     </Section> 
                 </div>
             </main>
-        )
+        );
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    categoryPlaylistIds: state.categories.playlistIdss[ownProps.categoryId]
+    categoryPlaylistIds: state.categories.playlistIds[ownProps.categoryId]
 });
 
 export default connect(mapStateToProps)(Category);

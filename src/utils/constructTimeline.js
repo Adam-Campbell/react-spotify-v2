@@ -15,8 +15,10 @@ import { TimelineMax } from 'gsap';
  * @param {?Number} options.prevImageHeight - the height of the image that was clicked pre-route-change
  * @param {?Number} options.prevImageTop - the top offset of the image that was clicked pre-route-change
  * @param {?Number} options.prevImageLeft - the left offset of the image that was clicked pre-route-change
- * @param {Number} options.imageTop - the top offset of the image that has rendered post-route-change
- * @param {Number} options.imageLeft - the left offset of the image that has rendered post-route-change
+ * @param {Number} options.currImageWidth - the width of the image that has rendered post-route-change
+ * @param {Number} options.currImageHeight - the height of the image that has rendered post-route-change
+ * @param {Number} options.currImageTop - the top offset of the image that has rendered post-route-change
+ * @param {Number} options.currImageLeft - the left offset of the image that has rendered post-route-change
  * @param {Boolean} options.hasTransition - a boolean indicating whether a transition needs to be animated
  */
 export const constructTimeline = (timeline, options) => {
@@ -31,8 +33,10 @@ export const constructTimeline = (timeline, options) => {
         prevImageHeight, 
         prevImageTop,
         prevImageLeft,
-        imageTop,
-        imageLeft,
+        currImageHeight,
+        currImageWidth,
+        currImageTop,
+        currImageLeft,
         hasTransition
     } = options;
 
@@ -55,15 +59,20 @@ export const constructTimeline = (timeline, options) => {
     if (hasTransition) {
         // Now calculate the deltaX and deltaY based off of the prev and current image positions. This is the
         // initial transform that the img DOM node needs to animate from.
-        const deltaX = prevImageLeft - imageLeft;
-        const deltaY = prevImageTop - imageTop;
+        const deltaX = prevImageLeft - currImageLeft;
+        const deltaY = prevImageTop - currImageTop;
+
+        // Calculate the factor that the new image has to scale up or down by to match the size of the 
+        // previous image   old / new
+        const deltaScaleX = prevImageWidth / currImageWidth;
+        const deltaScaleY = prevImageHeight / currImageHeight;
 
         // Now construct the timeline
         timeline.from(image, 0.3, {
-            width: prevImageWidth,
-            height: prevImageHeight,
             x: deltaX,
-            y: deltaY
+            y: deltaY,
+            scaleX: deltaScaleX,
+            scaleY: deltaScaleY
         })
         .from(title, 0.4, {
             opacity: 0

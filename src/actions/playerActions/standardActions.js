@@ -40,7 +40,7 @@ const getContextTrackIds = (contextURI, contextId, state) => {
             return [ ...state.albums.trackIds[contextId] ];
         
         case 'playlist':
-            return [ ...state.playlists.trackIdss[contextId] ];
+            return [ ...state.playlists.trackIds[contextId] ];
 
         case 'artist':
             return [ ...state.artists.topTrackIds[contextId] ];

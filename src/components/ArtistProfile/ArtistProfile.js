@@ -28,23 +28,6 @@ const sortSinglesFromAlbums = (allIds, albumData) => {
     };
 };
 
-const _sortSinglesFromAlbums = (allIds, albumData) => {
-    allIds.reduce((acc, id) => {
-        return albumData[id].album_type === 'single' ?
-                {
-                    albumIds: [ ...acc.albumIds ],
-                    singleIds: [ ...acc.singleIds, id ]
-                } :
-                {
-                    albumIds: [ ...acc.albumIds, id ],
-                    singleIds: [ ...acc.singleIds ]
-                }
-    }, {
-      albumIds: [],
-      singleIds: []  
-    });
-};
-
 class ArtistProfile extends Component {
 
     static propTypes = {
@@ -61,7 +44,7 @@ class ArtistProfile extends Component {
 
     componentDidMount() {
         // const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        // const { top, left } = this.imageRef.current.getBoundingClientRect();
+        // const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         // constructTimeline(this.timeline, {
         //     hasTransition,
         //     image: this.imageRef.current,
@@ -74,8 +57,10 @@ class ArtistProfile extends Component {
         //     prevImageHeight: imageHeight,
         //     prevImageTop: imageY,
         //     prevImageLeft: imageX,
-        //     imageTop: top,
-        //     imageLeft: left
+        //     currImageWidth: width,
+        //     currImageHeight: height,
+        //     currImageTop: top,
+        //     currImageLeft: left
         // }); 
         // this.props.purgeTransitionImageRect(); 
     }
@@ -83,7 +68,7 @@ class ArtistProfile extends Component {
     componentDidUpdate(prevProps) {
         // if (prevProps.artistId !== this.props.artistId) {
         //     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        //     const { top, left } = this.imageRef.current.getBoundingClientRect();
+        //     const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         //     constructTimeline(this.timeline, {
         //         hasTransition,
         //         image: this.imageRef.current,
@@ -96,8 +81,10 @@ class ArtistProfile extends Component {
         //         prevImageHeight: imageHeight,
         //         prevImageTop: imageY,
         //         prevImageLeft: imageX,
-        //         imageTop: top,
-        //         imageLeft: left
+        //         currImageWidth: width,
+        //         currImageHeight: height,
+        //         currImageTop: top,
+        //         currImageLeft: left
         //     }); 
         //     this.props.purgeTransitionImageRect(); 
         // }
@@ -112,11 +99,7 @@ class ArtistProfile extends Component {
             artistId, 
             artistURI 
         } = this.props;
-        // const { topTrackIds, relatedArtistIds, uri } = this.props.artist;
-        const { albumIds, singleIds } = sortSinglesFromAlbums(
-                                            artistsAlbumIds, 
-                                            albums
-                                        );
+        const { albumIds, singleIds } = sortSinglesFromAlbums(artistsAlbumIds, albums);
         return (
             <main 
                 className="body-content-container"
@@ -160,25 +143,6 @@ class ArtistProfile extends Component {
         );
     }
 }
-
-/*
-
-<Section title="Music">
-                        <CardCollection 
-                            itemIds={albumIds}
-                            collectionType={collectionTypes.albums}
-                        />
-                    </Section>
-
-                    <Section title="Related Artists">
-                        <CardCollection 
-                            itemIds={relatedArtistIds}
-                            collectionType={collectionTypes.artists}
-                        />
-                    </Section>
-
-
-*/
 
 const mapStateToProps = (state, ownProps) => ({
     artistURI: state.artists.entities[ownProps.artistId].uri,
