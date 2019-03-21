@@ -1,39 +1,8 @@
 import * as actionTypes from '../actionTypes';
+import { storePlaylists, storeTracks, storeAlbums, storeArtists } from './entityActions';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
 import { cloneDeep } from 'lodash';
-
-/*
-
-PLAYLIST FETCHING EXPLANATION
-------------------------------
-
-In order to fetch a playlist plus all of its tracks, multiple requests (potentially) have to be made.
-The main endpoint for retreiving the playlist object will also retreive the first 100 tracks, any 
-additional tracks have to be fetched seperately in groups of 100 (max) at a time. 
-
-However the initial request to get the playlist object must be made first in order for us to know how many
-tracks the playlist has. 
-
-Functions:
-
-makePlaylistDataRequests
-    - Makes initial request to retreive the playlist object
-    - Once the playlist object has been received, it checks how many tracks the playlist has
-    - If it has more than 100, it makes the necessary requests to retreive all tracks, 100 tracks at a time
-    - These requests are made concurrently for faster execution
-    - Once all requests have completed, it returns all of the data gathered in the previous steps
-
-fetchPlaylist
-    - Calls the makePlaylistDataRequests function, and awaits the result
-    - Once the data has been returned, processes the data: 
-        - Normalizes the data seperating out all nested entities
-        - Takes any additional trackIds from the subsequent API calls and appends them to the tracks
-          array on the playlist object, ensuring that the original order of the tracks is preserved 
-
-*/
-
-
 
 const fetchPlaylistRequest = (playlistId, loadingRequired) => ({
     type: actionTypes.FETCH_PLAYLIST_REQUEST,
@@ -66,27 +35,24 @@ const fetchPlaylistAbort = (playlistId) => ({
     }
 });
 
-const storePlaylist = (playlistObject, playlistId, playlistTrackIds, trackObjects, artistObjects, albumObjects) => ({
-    type: actionTypes.STORE_PLAYLIST,
+const storeUserFollowingPlaylist = (isFollowing, playlistId) => ({
+    type: actionTypes.STORE_USER_FOLLOWING_PLAYLIST,
     payload: {
-        playlistObject,
-        playlistId, 
-        playlistTrackIds,
-        trackObjects,
-        artistObjects, 
-        albumObjects
+        isFollowing,
+        playlistId
     }
 });
 
-const storePlaylistFollowStatus = (playlistId, isFollowing) => ({
-    type: actionTypes.STORE_PLAYLIST_FOLLOW_STATUS,
+export const storePlaylistTrackIds = (playlistTrackIds, ownerId) => ({
+    type: actionTypes.STORE_PLAYLIST_TRACK_IDS,
     payload: {
-        playlistId,
-        isFollowing
+        playlistTrackIds,
+        ownerId
     }
 });
 
 const checkIfFollowing = (token, playlistId, currentUserId) => async (dispatch) => {
+    console.log('checkIfFollowing was called');
     try {
         const response = await axios.get(
             `https://api.spotify.com/v1/playlists/${playlistId}/followers/contains?ids=${currentUserId}`, {
@@ -94,10 +60,7 @@ const checkIfFollowing = (token, playlistId, currentUserId) => async (dispatch) 
                 'Authorization': `Bearer ${token}`
             }
         });
-        dispatch(storePlaylistFollowStatus(
-            playlistId,
-            response.data[0]
-        ));
+        return response.data[0];
     } catch (err) {
         throw new Error(err);
     }
@@ -114,6 +77,7 @@ const checkIfFollowing = (token, playlistId, currentUserId) => async (dispatch) 
  * @param {*} market 
  */
 const makePlaylistDataRequests = async (token, playlistId, market) => {
+    console.log('makePlaylistDataRequests was called');
     const promiseArray = [];
     let escapeHatch = 1;
     try {
@@ -142,36 +106,13 @@ const makePlaylistDataRequests = async (token, playlistId, market) => {
             offset += 100;
             escapeHatch++;
         }
-        const result = await Promise.all([...promiseArray]);
-        return result;
+        return Promise.all(promiseArray);
     } catch (err) {
         throw new Error(err);
     }
 }
 
-
-/**
- * This function calls fetchPlaylistData to get all of the data for this playlist. It then processes and
- * normalizes this data, and dispatches it to the store. 
- * @param {*} playlistId 
- */
-export const fetchPlaylist = (playlistId, isPrefetched=false) => async (dispatch, getState) => {
-    const token = getState().accessToken.token;
-    const market = getState().user.country;
-    const currentUserId = getState().user.id;
-    const playlistFetchedAt = getState().playlists.timestamps[playlistId];
-    if (playlistFetchedAt && Date.now() - playlistFetchedAt <= 3600000) {
-        return dispatch(fetchPlaylistAbort(playlistId));
-    }
-    dispatch(fetchPlaylistRequest(playlistId, !isPrefetched));
-    try {
-    dispatch(checkIfFollowing(token, playlistId, currentUserId))
-    const allRequests = await makePlaylistDataRequests(token, playlistId, market);
-    const playlistRequest = allRequests.shift();
-    const additionalTrackRequests = allRequests;
-
-    // normalize the playlistRequest
-
+const formatData = (resolvedPromiseArr, playlistId) => {
     const artistSchema = new schema.Entity('artists');
     const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
     const trackSchema = new schema.Entity('tracks', { artists: [artistSchema], album: albumSchema });
@@ -188,27 +129,18 @@ export const fetchPlaylist = (playlistId, isPrefetched=false) => async (dispatch
             }
         }
     );
-    const normalizedPlaylistData = normalize(playlistRequest.data, playlistSchema);
+    const [ isFollowing, [ playlistInfoResponse, ...additionalTrackResponses ] ] = resolvedPromiseArr;
+    const normalizedPlaylistData = normalize(playlistInfoResponse.data, playlistSchema);
 
     // normalize the additional tracks requests
-    const normalizedTrackData = additionalTrackRequests.reduce((acc, req) => {
+    const normalizedTrackData = additionalTrackResponses.reduce((acc, req) => {
         const formattedData = req.data.items.map(item => item.track);
         const norm = normalize(formattedData, [trackSchema]);
-        
         return {
             trackIds: [...acc.trackIds, ...norm.result],
-            tracks: {
-                ...acc.tracks,
-                ...norm.entities.tracks
-            },
-            artists: {
-                ...acc.artists,
-                ...norm.entities.artists
-            },
-            albums: {
-                ...acc.albums,
-                ...norm.entities.albums
-            }
+            tracks: { ...acc.tracks, ...norm.entities.tracks },
+            artists: { ...acc.artists, ...norm.entities.artists },
+            albums: { ...acc.albums, ...norm.entities.albums }
         }
     }, {
         trackIds: [],
@@ -216,34 +148,58 @@ export const fetchPlaylist = (playlistId, isPrefetched=false) => async (dispatch
         albums: {},
         tracks: {}
     });
-
-    // combine all of the results from normalizing the requests so that they can be dispatched to the store.
-    const playlistObject = normalizedPlaylistData.entities.playlists[playlistId];
-    const playlistTrackIds = [ ...playlistObject.tracks, ...normalizedTrackData.trackIds ];
-    delete playlistObject.tracks;
-    const allTrackObjects = {
-        ...normalizedPlaylistData.entities.tracks,
-        ...normalizedTrackData.tracks
-    };
-    const allAlbumObjects = {
-        ...normalizedPlaylistData.entities.albums,
-        ...normalizedTrackData.albums
-    };
-    const allArtistObjects = {
-        ...normalizedPlaylistData.entities.artists,
-        ...normalizedTrackData.artists
-    }
-    
-    dispatch(storePlaylist(
-        playlistObject,
-        playlistId,
+    const playlistEntity = normalizedPlaylistData.entities.playlists[playlistId];
+    const playlistTrackIds = [ ...playlistEntity.tracks, ...normalizedTrackData.trackIds ];
+    delete playlistEntity.tracks;
+    return {
+        playlistEntity,
         playlistTrackIds,
-        allTrackObjects,
-        allArtistObjects,
-        allAlbumObjects
-    ));
-    const timestamp = Date.now();
-    dispatch(fetchPlaylistSuccess(playlistId, timestamp));
+        isFollowing,
+        trackEntities: {
+            ...normalizedPlaylistData.entities.tracks,
+            ...normalizedTrackData.tracks
+        },
+        albumEntities: {
+            ...normalizedPlaylistData.entities.albums,
+            ...normalizedTrackData.albums
+        },
+        artistEntities: {
+            ...normalizedPlaylistData.entities.artists,
+            ...normalizedTrackData.artists
+        }
+    };
+};
+
+
+export const fetchPlaylist = (playlistId, isPrefetched=false) => async (dispatch, getState) => {
+    const token = getState().accessToken.token;
+    const market = getState().user.country;
+    const currentUserId = getState().user.id;
+    const playlistFetchedAt = getState().playlists.timestamps[playlistId];
+    if (playlistFetchedAt && Date.now() - playlistFetchedAt <= 3600000) {
+        return dispatch(fetchPlaylistAbort(playlistId));
+    }
+    dispatch(fetchPlaylistRequest(playlistId, !isPrefetched));
+    try {
+        const results = await Promise.all([
+            dispatch(checkIfFollowing(token, playlistId, currentUserId)),
+            makePlaylistDataRequests(token, playlistId, market)
+        ]);
+        const {
+            playlistEntity, 
+            playlistTrackIds,
+            isFollowing,
+            trackEntities,
+            albumEntities,
+            artistEntities
+        } = formatData(results, playlistId);
+        dispatch(storePlaylists({ [playlistId]: playlistEntity }));
+        dispatch(storeUserFollowingPlaylist(isFollowing, playlistId));
+        dispatch(storePlaylistTrackIds(playlistTrackIds, playlistId));
+        dispatch(storeTracks(trackEntities));
+        dispatch(storeAlbums(albumEntities));
+        dispatch(storeArtists(artistEntities));
+        dispatch(fetchPlaylistSuccess(playlistId, Date.now()));
     } catch (err) {
         dispatch(fetchPlaylistFailed(err, playlistId));
     }

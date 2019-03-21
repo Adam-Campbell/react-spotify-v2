@@ -6,17 +6,8 @@ const defaultState = {};
 const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
-        case actionTypes.STORE_USERS_PLAYLISTS:
-            return addOrMerge(state, action.payload.playlistObjects);
-
-        case actionTypes.STORE_PLAYLIST:
-            return addOrMerge(state, action.payload.playlistObject, action.payload.playlistId);
-
-        case actionTypes.STORE_FEATURED_PLAYLISTS:
-            return addOrMerge(state, action.payload.playlistObjects);
-
-        case actionTypes.STORE_CATEGORIES_PLAYLISTS:
-            return addOrMerge(state, action.payload.playlistObjects);
+        case actionTypes.STORE_PLAYLISTS:
+            return addOrMerge(state, action.payload.playlistEntities);
 
         case actionTypes.UPDATE_PLAYLIST_NAME_SUCCESS:
             return {

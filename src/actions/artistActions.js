@@ -1,11 +1,11 @@
 import * as actionTypes from '../actionTypes';
+import { storeArtists, storeAlbums, storeTracks } from './entityActions';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
-import { getUsersMarket } from './userActions';
 
 const fetchArtistRequest = (artistId, loadingRequired) => ({
     type: actionTypes.FETCH_ARTIST_REQUEST,
-    payload: {
+    payload: { 
         artistId,
         loadingRequired
     }
@@ -19,71 +19,62 @@ const fetchArtistSuccess = (artistId, timestamp) => ({
     }
 });
 
+const fetchArtistAbort = (artistId) => ({
+    type: actionTypes.FETCH_ARTIST_ABORT,
+    payload: { 
+        artistId 
+    }
+});
+
 const fetchArtistFailed = (error, artistId) => ({
     type: actionTypes.FETCH_ARTIST_FAILED,
     payload: {
-        error, 
+        error,
         artistId
     }
 });
 
-const fetchArtistAbort = (artistId) => ({
-    type: actionTypes.FETCH_ARTIST_ABORT,
+const storeArtistTopTrackIds = (trackIds, ownerId) => ({
+    type: actionTypes.STORE_ARTIST_TOP_TRACK_IDS,
     payload: {
-        artistId
-    }
-});
-
-const storeArtistsProfile = (artistProfileObject, artistId) => ({
-    type: actionTypes.STORE_ARTISTS_PROFILE,
-    payload: {
-        artistProfileObject,
-        artistId
-    }
-});
-
-const storeArtistsTopTracks = (trackObjects, trackIds, artistId, artistObjects, albumObjects) => ({
-    type: actionTypes.STORE_ARTISTS_TOP_TRACKS,
-    payload: {
-        trackObjects,
         trackIds,
-        artistId, 
-        artistObjects,
-        albumObjects
+        ownerId
     }
 });
 
-const storeArtistsRelatedArtists = (relatedArtistObjects, relatedArtistIds, artistId) => ({
-    type: actionTypes.STORE_ARTISTS_RELATED_ARTISTS,
+const storeArtistAlbumIds = (albumIds, ownerId) => ({
+    type: actionTypes.STORE_ARTIST_ALBUM_IDS,
     payload: {
-        relatedArtistObjects,
-        relatedArtistIds,
-        artistId
-    }
-});
-
-const storeArtistsAlbums = (albumObjects, albumIds, artistId, artistObjects) => ({
-    type: actionTypes.STORE_ARTISTS_ALBUMS,
-    payload: {
-        albumObjects,
         albumIds,
-        artistId, 
-        artistObjects
+        ownerId
     }
 });
 
-const fetchArtistsInfo = (token, artistId) => async (dispatch) => {
+const storeArtistRelatedArtistIds = (relatedArtistIds, ownerId) => ({
+    type: actionTypes.STORE_ARTIST_RELATED_ARTIST_IDS,
+    payload: {
+        relatedArtistIds,
+        ownerId
+    }
+});
+
+const artistSchema = new schema.Entity('artists');
+const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
+const trackSchema = new schema.Entity('tracks', { album: albumSchema, artists: [artistSchema] });
+
+
+const fetchArtistProfile = (token, artistId) => async (dispatch) => {
     try {
         const response = await axios.get(`https://api.spotify.com/v1/artists/${artistId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        dispatch(storeArtistsProfile(response.data, artistId));
+        return response.data;
     } catch (err) {
         throw new Error(err);
     }
-}
+};
 
 const fetchArtistsTopTracks = (token, artistId, market) => async (dispatch) => {
     try {
@@ -93,22 +84,11 @@ const fetchArtistsTopTracks = (token, artistId, market) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const artistSchema = new schema.Entity('artists');
-        const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-        const trackSchema = new schema.Entity('tracks', { album: albumSchema, artists: [artistSchema] });
-        const normalizedData = normalize(response.data.tracks, [trackSchema]);
-        dispatch(storeArtistsTopTracks(
-            normalizedData.entities.tracks,
-            normalizedData.result,
-            artistId,
-            normalizedData.entities.artists,
-            normalizedData.entities.albums
-        ));
+        return normalize(response.data.tracks, [trackSchema]);
     } catch (err) {
         throw new Error(err);
     }
-}
-
+};
 
 const fetchArtistsRelatedArtists = (token, artistId) => async (dispatch) => {
     try {
@@ -118,13 +98,7 @@ const fetchArtistsRelatedArtists = (token, artistId) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const artistSchema = new schema.Entity('artists');
-        const normalizedData = normalize(response.data.artists, [artistSchema]);
-        dispatch(storeArtistsRelatedArtists(
-            normalizedData.entities.artists,
-            normalizedData.result,
-            artistId
-        ));
+        return normalize(response.data.artists, [artistSchema]);
     } catch (err) {
         throw new Error(err);
     }
@@ -138,39 +112,163 @@ const fetchArtistsAlbums = (token, artistId, market) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const artistSchema = new schema.Entity('artists');
-        const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-        const normalizedData = normalize(response.data.items, [albumSchema]);
-        dispatch(storeArtistsAlbums(
-            normalizedData.entities.albums,
-            normalizedData.result,
-            artistId,
-            normalizedData.entities.artists
-        ));
+        return normalize(response.data.items, [albumSchema]);
     } catch (err) {
         throw new Error(err);
     }
 }
 
+
+const destructureData = (resolvedPromiseArr, artistId) => {
+    const [
+        profileData, 
+        { 
+            entities: {
+                artists: topTrack_artistEntities,
+                albums: topTrack_albumEntities,
+                tracks: topTrack_trackEntities
+            },
+            result: topTrackIds
+        }, 
+        {
+            entities: {
+                artists: relatedArtist_artistEntities
+            },
+            result: relatedArtistIds
+        }, 
+        {
+            entities: {
+                artists: album_artistEntities,
+                albums: album_albumEntities
+            },
+            result: albumIds
+        }
+    ] = resolvedPromiseArr;
+
+    return {
+        artistEntities: {
+            ...album_artistEntities,
+            ...relatedArtist_artistEntities,
+            ...topTrack_artistEntities,
+            [artistId]: profileData
+        },
+        albumEntities: {
+            ...topTrack_albumEntities,
+            ...album_albumEntities
+        },
+        trackEntities: topTrack_trackEntities,
+        topTrackIds,
+        relatedArtistIds,
+        albumIds
+    };
+}
+
 export const fetchArtist = (artistId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
-    const market = getState().user.country || await dispatch(getUsersMarket(token));
+    const market = getState().user.country;
     const artistFetchedAt = getState().artists.timestamps[artistId];
     if (artistFetchedAt && Date.now() - artistFetchedAt <= 3600000) {
         return dispatch(fetchArtistAbort(artistId));
     }
     dispatch(fetchArtistRequest(artistId, !isPrefetched));
-    return Promise.all([
-        dispatch(fetchArtistsInfo(token, artistId)),
+    try {
+        const results = await Promise.all([
+            dispatch(fetchArtistProfile(token, artistId)),
+            dispatch(fetchArtistsTopTracks(token, artistId, market)),
+            dispatch(fetchArtistsRelatedArtists(token, artistId)),
+            dispatch(fetchArtistsAlbums(token, artistId, market))
+        ]);
+        const { 
+            artistEntities, 
+            albumEntities, 
+            trackEntities, 
+            topTrackIds,
+            relatedArtistIds,
+            albumIds
+        } = destructureData(results, artistId);
+        dispatch(storeArtists(artistEntities));
+        dispatch(storeAlbums(albumEntities));
+        dispatch(storeTracks(trackEntities));
+        dispatch(storeArtistTopTrackIds(topTrackIds, artistId));
+        dispatch(storeArtistAlbumIds(albumIds, artistId));
+        dispatch(storeArtistRelatedArtistIds(relatedArtistIds, artistId));
+        dispatch(fetchArtistSuccess(artistId, Date.now()));
+    } catch (err) {
+        dispatch(fetchArtistFailed(err, artistId));
+    }  
+}
+
+
+
+
+
+/*
+
+const [
+        profileData, 
+        { 
+            entities: {
+                artists: topTrack_artistEntities,
+                albums: topTrack_albumEntities,
+                tracks: topTrack_trackEntities
+            },
+            result: topTrackIds
+        }, 
+        {
+            entities: {
+                artists: relatedArtist_artistEntities
+            },
+            result: relatedArtistIds
+        }, 
+        {
+            entities: {
+                artists: album_artistEntities,
+                albums: album_albumEntities
+            },
+            result: albumIds
+        }
+    ] = await Promise.all([
+        dispatch(fetchArtistProfile(token, artistId)),
         dispatch(fetchArtistsTopTracks(token, artistId, market)),
         dispatch(fetchArtistsRelatedArtists(token, artistId)),
         dispatch(fetchArtistsAlbums(token, artistId, market))
-    ])
-    .then(() => {
-        const timestamp = Date.now();
-        dispatch(fetchArtistSuccess(artistId, timestamp));
-    }, (err) => {
-        dispatch(fetchArtistFailed(artistId, err));
-    })
+    ]);
+    
+    const allArtistEntities = {
+        ...album_artistEntities,
+        ...relatedArtist_artistEntities,
+        ...topTrack_artistEntities,
+        [artistId]: profileData
+    };
+    const allAlbumEntities = {
+        ...topTrack_albumEntities,
+        ...album_albumEntities
+    };
+    const allTrackEntities = {
+        ...topTrack_trackEntities
+    };
+    const completeData = {
+        artistEntities: allArtistEntities,
+        albumEntities: allAlbumEntities,
+        trackEntities: allTrackEntities,
+        topTrackIds,
+        relatedArtistIds,
+        albumIds
+    };
+    console.log(completeData);
+    dispatch(storeArtists(allArtistEntities));
+    dispatch(storeAlbums(allAlbumEntities));
+    dispatch(storeTracks(allTrackEntities));
 
-}
+
+
+*/
+
+
+
+
+
+
+
+
+

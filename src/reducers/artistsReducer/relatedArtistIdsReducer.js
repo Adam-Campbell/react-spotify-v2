@@ -4,10 +4,11 @@ const defaultState = {};
 
 const reducer = (state=defaultState, action) => {
     switch (action.type) {
-        case actionTypes.STORE_ARTISTS_RELATED_ARTISTS:
+
+        case actionTypes.STORE_ARTIST_RELATED_ARTIST_IDS:
             return {
                 ...state,
-                [action.payload.artistId]: action.payload.relatedArtistIds
+                [action.payload.ownerId]: action.payload.relatedArtistIds
             };
 
         default:

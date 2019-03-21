@@ -4,10 +4,11 @@ const defaultState = {};
 
 const reducer = (state=defaultState, action) => {
     switch (action.type) {
-        case actionTypes.STORE_ARTISTS_TOP_TRACKS:
+
+        case actionTypes.STORE_ARTIST_TOP_TRACK_IDS:
             return {
                 ...state,
-                [action.payload.artistId]: action.payload.trackIds
+                [action.payload.ownerId]: action.payload.trackIds
             };
 
         default:

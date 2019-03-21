@@ -5,10 +5,10 @@ const defaultState = {};
 const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
-        case actionTypes.STORE_PLAYLIST:
+        case actionTypes.STORE_PLAYLIST_TRACK_IDS:
             return {
                 ...state,
-                [action.payload.playlistId]: action.payload.playlistTrackIds
+                [action.payload.ownerId]: action.payload.playlistTrackIds
             };
 
         case actionTypes.ADD_TRACK_TO_PLAYLIST_SUCCESS:

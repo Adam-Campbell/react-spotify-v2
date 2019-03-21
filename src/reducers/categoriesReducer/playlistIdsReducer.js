@@ -5,10 +5,10 @@ const defaultState = {};
 const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
-        case actionTypes.STORE_CATEGORIES_PLAYLISTS:
+        case actionTypes.STORE_CATEGORY_PLAYLIST_IDS:
             return {
                 ...state,
-                [action.payload.categoryId]: action.payload.playlistIds
+                [action.payload.ownerId]: action.payload.playlistIds
             };
 
         default:

@@ -5,7 +5,7 @@ const defaultState = {};
 const reducer = (state=defaultState, action) => {
     switch (action.type) {
 
-        case actionTypes.STORE_PLAYLIST_FOLLOW_STATUS:
+        case actionTypes.STORE_USER_FOLLOWING_PLAYLIST:
             return {
                 ...state, 
                 [action.payload.playlistId]: action.payload.isFollowing

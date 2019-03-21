@@ -1,4 +1,5 @@
 import * as actionTypes from '../actionTypes';
+import { storeCategories, storePlaylists } from './entityActions';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
 
@@ -18,11 +19,11 @@ const fetchCategorySuccess = (categoryId, timestamp) => ({
     }
 });
 
-const fetchCategoryFailed = (categoryId, error) => ({
+const fetchCategoryFailed = (error, categoryId) => ({
     type: actionTypes.FETCH_CATEGORY_FAILED,
     payload: {
-        categoryId,
-        error
+        error,
+        categoryId
     }
 });
 
@@ -33,22 +34,14 @@ const fetchCategoryAbort = (categoryId) => ({
     }
 });
 
-const storeCategoryInfo = (categoryObject, categoryId) => ({
-    type: actionTypes.STORE_CATEGORY_INFO,
+const storeCategoryPlaylistIds = (playlistIds, ownerId) => ({
+    type: actionTypes.STORE_CATEGORY_PLAYLIST_IDS,
     payload: {
-        categoryObject, 
-        categoryId
+        playlistIds,
+        ownerId
     }
 });
 
-const storeCategoriesPlaylists = (playlistObjects, playlistIds, categoryId) => ({
-    type: actionTypes.STORE_CATEGORIES_PLAYLISTS,
-    payload: {
-        playlistObjects,
-        playlistIds,
-        categoryId
-    }
-});
 
 const fetchCategoryInfo = (categoryId, token) => async (dispatch) => {
     try {
@@ -58,10 +51,10 @@ const fetchCategoryInfo = (categoryId, token) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        dispatch(storeCategoryInfo(
-            response.data,
-            response.data.id
-        ));
+        // return {
+        //     [response.data.id]: response.data
+        // };
+        return response.data;
     } catch (err) {
         throw new Error(err);
     }
@@ -76,62 +69,52 @@ const fetchCategoriesPlaylists = (categoryId, token) => async (dispatch) => {
             }
         });
         const playlistSchema = new schema.Entity('playlists');
-        const normalizedData = normalize(response.data.playlists.items, [playlistSchema]);
-        dispatch(storeCategoriesPlaylists(
-            normalizedData.entities.playlists,
-            normalizedData.result,
-            categoryId
-        ));
+        return normalize(response.data.playlists.items, [playlistSchema]);
     } catch (err) {
         throw new Error(err);
     }
 }
 
+const destructureData = (resolvedPromiseArr) => {
+    const [
+        categoryEntity,
+        {
+            entities: {
+                playlists: playlistEntities 
+            },
+            result: categoryPlaylistIds
+        }
+    ] = resolvedPromiseArr;
+    return {
+        categoryEntity,
+        playlistEntities,
+        categoryPlaylistIds
+    };
+};
 
-// export const _fetchCategoriesPlaylists = (categoryId) => async (dispatch, getState) => {
-//     dispatch(fetchCategoriesPlaylistsRequest(categoryId));
-//     const token = getState().accessToken.token;
-//     const category = getState().categories.categoryData[categoryId];
-//     if (category && category.fullCategoryFetched && Date.now() - category.lastFetchedAt <= 3600000) {
-//         return dispatch(fetchCategoriesPlaylistsAbort(categoryId));
-//     }
-//     try {
-//         const response = await axios.get(
-//             `https://api.spotify.com/v1/browse/categories/${categoryId}/playlists?limit=50`, {
-//             headers: {
-//                 'Authorization': `Bearer ${token}`
-//             }
-//         });
-//         const playlistSchema = new schema.Entity('playlists');
-//         const normalizedData = normalize(response.data.playlists.items, [playlistSchema]);
-//         dispatch(storeCategoriesPlaylists(
-//             normalizedData.entities.playlists,
-//             normalizedData.result,
-//             categoryId
-//         ));
-//         const timestamp = Date.now();
-//         dispatch(fetchCategoriesPlaylistsSuccess(categoryId, timestamp));
-//     } catch (err) {
-//         dispatch(fetchCategoriesPlaylistsFailed(categoryId, err));
-//     }
-// }
-
-
-export const fetchCategory = (categoryId, isPrefetched=false) => (dispatch, getState) => {
+export const fetchCategory = (categoryId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const categoryFetchedAt = getState().categories.timestamps[categoryId];
     if (categoryFetchedAt && Date.now() - categoryFetchedAt <= 3600000) {
         return dispatch(fetchCategoryAbort(categoryId));
     }
     dispatch(fetchCategoryRequest(categoryId, !isPrefetched));
-    return Promise.all([
-        dispatch(fetchCategoryInfo(categoryId, token)),
-        dispatch(fetchCategoriesPlaylists(categoryId, token))
-    ])
-    .then(() => {
-        const timestamp = Date.now();
-        dispatch(fetchCategorySuccess(categoryId, timestamp));
-    }, (err) => {
-        dispatch(fetchCategoryFailed(categoryId, err));
-    });
+
+    try {
+        const results = await Promise.all([
+            dispatch(fetchCategoryInfo(categoryId, token)),
+            dispatch(fetchCategoriesPlaylists(categoryId, token))
+        ]);
+        const {
+            categoryEntity,
+            playlistEntities,
+            categoryPlaylistIds
+        } = destructureData(results);
+        dispatch(storeCategories({ [categoryId]: categoryEntity }));
+        dispatch(storePlaylists(playlistEntities));
+        dispatch(storeCategoryPlaylistIds(categoryPlaylistIds, categoryId));
+        dispatch(fetchCategorySuccess(categoryId, Date.now()));
+    } catch (err) {
+        dispatch(fetchCategoryFailed(err, categoryId));
+    }
 }

@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
+import { storeAlbums, storeTracks, storeArtists } from './entityActions';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
-import { getUsersMarket } from './userActions';
 import { cloneDeep } from 'lodash';
 
 const fetchAlbumRequest = (albumId, loadingRequired) => ({
@@ -20,11 +20,11 @@ const fetchAlbumSuccess = (albumId, timestamp) => ({
     }
 });
 
-const fetchAlbumFailed = (albumId, error) => ({
+const fetchAlbumFailed = (error, albumId) => ({
     type: actionTypes.FETCH_ALBUM_FAILED,
-    payload: {
-        albumId, 
-        error
+    payload: { 
+        error,
+        albumId
     }
 });
 
@@ -35,14 +35,11 @@ const fetchAlbumAbort = (albumId) => ({
     }
 });
 
-const storeAlbum = (albumObject, albumId, albumsTrackIds, trackObjects, artistObjects) => ({
-    type: actionTypes.STORE_ALBUM,
+const storeAlbumTrackIds = (albumTrackIds, ownerId) => ({
+    type: actionTypes.STORE_ALBUM_TRACK_IDS,
     payload: {
-        albumObject,
-        albumId,
-        albumsTrackIds,
-        trackObjects,
-        artistObjects
+        albumTrackIds,
+        ownerId
     }
 });
 
@@ -80,17 +77,13 @@ const fetchAlbumInfo = (token, albumId, market) => async (dispatch) => {
             }
         );
         const normalizedData = normalize(response.data, albumSchema);
-        console.log(normalizedData);
         const albumObject = normalizedData.entities.albums[albumId];
-        const albumsTrackIds = albumObject.tracks;
+        const albumTrackIds = albumObject.tracks;
         delete albumObject.tracks;
-        dispatch(storeAlbum(
-            albumObject,
-            albumId, 
-            albumsTrackIds,
-            normalizedData.entities.tracks,
-            normalizedData.entities.artists
-        ));
+        dispatch(storeAlbums({ albumId: albumObject }));
+        dispatch(storeTracks(normalizedData.entities.tracks));
+        dispatch(storeArtists(normalizedData.entities.artists));
+        dispatch(storeAlbumTrackIds(albumTrackIds, albumId));
     } catch (err) {
         throw new Error(err);
     }
@@ -98,7 +91,7 @@ const fetchAlbumInfo = (token, albumId, market) => async (dispatch) => {
 
 export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
-    const market = getState().user.country || await dispatch(getUsersMarket(token));
+    const market = getState().user.country;
     const albumFetchedAt = getState().albums.timestamps[albumId];
     if (albumFetchedAt) {
         return dispatch(fetchAlbumAbort(albumId));
@@ -109,6 +102,6 @@ export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getS
         const timestamp = Date.now();
         dispatch(fetchAlbumSuccess(albumId, timestamp));
     }, (err) => {
-        dispatch(fetchAlbumFailed(albumId, err));
+        dispatch(fetchAlbumFailed(err, albumId));
     });
 }

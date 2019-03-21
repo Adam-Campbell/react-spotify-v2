@@ -1,4 +1,5 @@
 import * as actionTypes from '../actionTypes';
+import { storeArtists, storeAlbums, storePlaylists, storeTracks } from './entityActions';
 import { normalize, schema } from 'normalizr';
 import axios from 'axios';
 import { cloneDeep } from 'lodash';
@@ -25,61 +26,17 @@ const storeUsersProfile = (usersProfile) => ({
     }
 });
 
-const storeUsersTopArtists = (artistObjects, artistIds) => ({
-    type: actionTypes.STORE_USERS_TOP_ARTISTS,
-    payload: {
-        artistObjects,
-        artistIds
+const artistSchema = new schema.Entity('artists');
+const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
+const trackSchema = new schema.Entity('tracks', { artists: [artistSchema], album: albumSchema });
+const playlistSchema = new schema.Entity('playlists', {}, {
+    processStrategy: (value, parent, key) => {
+        const cloned = cloneDeep(value);
+        delete cloned.tracks;
+        return cloned;
     }
 });
 
-const storeUsersRecentTracks = (trackObjects, trackIds, artistObjects, albumObjects) => ({
-    type: actionTypes.STORE_USERS_RECENT_TRACKS,
-    payload: {
-        trackObjects,
-        trackIds,
-        artistObjects,
-        albumObjects
-    }
-});
-
-const storeUsersPlaylists = (playlistObjects, playlistIds) => ({
-    type: actionTypes.STORE_USERS_PLAYLISTS,
-    payload: {
-        playlistObjects,
-        playlistIds
-    }
-});
-
-const storeUsersFollowedArtists = (artistObjects, artistIds) => ({
-    type: actionTypes.STORE_USERS_FOLLOWED_ARTISTS,
-    payload: {
-        artistObjects,
-        artistIds
-    }
-});
-
-const setMarket = (market) => ({
-    type: actionTypes.SET_MARKET,
-    payload: {
-        market
-    }
-});
-
-export const getUsersMarket = (token) => async (dispatch) => {
-    try {
-        const response = await axios.get('https://api.spotify.com/v1/me', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const market = response.data.country;
-        dispatch(setMarket(market));
-        return market;
-    } catch (err) {
-        throw new Error(err);
-    }
-}
 
 const fetchUsersProfile = (token) => async (dispatch) => {
     try {
@@ -88,11 +45,11 @@ const fetchUsersProfile = (token) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        dispatch(storeUsersProfile(response.data));
+        return response.data;
     } catch (err) {
         throw new Error(err);
     }
-}
+};
 
 const fetchUsersTopArtists = (token) => async (dispatch) => {
     try {
@@ -108,11 +65,11 @@ const fetchUsersTopArtists = (token) => async (dispatch) => {
                 [artist.id]: { ...artist }
             };
         }, {});
-        dispatch(storeUsersTopArtists(artistObjects, artistIds));
+        return { artistObjects, artistIds };
     } catch (err) {
         throw new Error(err);
     }
-}
+};
 
 const fetchUsersRecentTracks = (token) => async (dispatch) => {
     try {
@@ -122,20 +79,11 @@ const fetchUsersRecentTracks = (token) => async (dispatch) => {
             }
         });
         const strippedData = response.data.items.map(item => item.track);
-        const artistSchema = new schema.Entity('artists');
-        const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-        const trackSchema = new schema.Entity('tracks', { artists: [artistSchema], album: albumSchema });
-        const normalizedData = normalize(strippedData, [trackSchema]);
-        dispatch(storeUsersRecentTracks(
-            normalizedData.entities.tracks,
-            normalizedData.result,
-            normalizedData.entities.artists,
-            normalizedData.entities.albums
-        ));
+        return normalize(strippedData, [trackSchema]);
     } catch (err) {
         throw new Error(err);
     }
-}
+};
 
 const fetchUsersPlaylists = (token) => async (dispatch) => {
     try {
@@ -144,18 +92,7 @@ const fetchUsersPlaylists = (token) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const playlistSchema = new schema.Entity('playlists', {}, {
-            processStrategy: (value, parent, key) => {
-                const cloned = cloneDeep(value);
-                delete cloned.tracks;
-                return cloned;
-            }
-        });
-        const normalizedData = normalize(response.data.items, [playlistSchema]);
-        dispatch(storeUsersPlaylists(
-            normalizedData.entities.playlists,
-            normalizedData.result
-        ));
+        return normalize(response.data.items, [playlistSchema]);
     } catch (err) {
         throw new Error(err);
     }
@@ -168,31 +105,85 @@ const fetchUsersFollowedArtists = (token) => async (dispatch) => {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const artistSchema = new schema.Entity('artists');
-        const normalizedData = normalize(response.data.artists.items, [artistSchema]);
-        dispatch(storeUsersFollowedArtists(
-            normalizedData.entities.artists,
-            normalizedData.result
-        ));
+        return normalize(response.data.artists.items, [artistSchema]);
     } catch (err) {
         throw new Error(err);
     }
-}
+};
 
+const destructureData = (resolvedPromiseArr) => {
+    const [
+        userProfileInfo,
+        {
+            artistObjects: topArtist_artistEntities,
+            artistIds: topArtistIds
+        },
+        {
+            entities: {
+                tracks: recentTrack_trackEntities,
+                artists: recentTrack_artistEntities,
+                albums: recentTrack_albumEntities,
+            },
+            result: recentTrackIds
+        },
+        {
+            entities: {
+                playlists: playlistEntities
+            },
+            result: playlistIds
+        },
+        {
+            entities: {
+                artists: followedArtist_artistEntities
+            },
+            result: followedArtistIds
+        }
+    ] = resolvedPromiseArr;
+    return {
+        userProfile: {
+            ...userProfileInfo,
+            topArtistsIds: topArtistIds,
+            recentTracksIds: recentTrackIds,
+            playlistIds,
+            followedArtistIds 
+        },
+        artistEntities: {
+            ...topArtist_artistEntities,
+            ...recentTrack_artistEntities,
+            ...followedArtist_artistEntities
+        },
+        albumEntities: recentTrack_albumEntities,
+        trackEntities: recentTrack_trackEntities,
+        playlistEntities
+    }
+};
 
 export const fetchUser = () => async (dispatch, getState) => {
     dispatch(fetchUserRequest())
     const token = getState().accessToken.token;
-    Promise.all([
-        dispatch(fetchUsersProfile(token)),
-        dispatch(fetchUsersTopArtists(token)),
-        dispatch(fetchUsersRecentTracks(token)),
-        dispatch(fetchUsersPlaylists(token)),
-        dispatch(fetchUsersFollowedArtists(token))
-    ])
-    .then(() => {
+
+    try {
+        const results = await Promise.all([
+            dispatch(fetchUsersProfile(token)),
+            dispatch(fetchUsersTopArtists(token)),
+            dispatch(fetchUsersRecentTracks(token)),
+            dispatch(fetchUsersPlaylists(token)),
+            dispatch(fetchUsersFollowedArtists(token))
+        ]);
+        const {
+            userProfile,
+            artistEntities,
+            albumEntities,
+            playlistEntities,
+            trackEntities
+        } = destructureData(results);
+        dispatch(storeUsersProfile(userProfile));
+        dispatch(storeArtists(artistEntities));
+        dispatch(storeAlbums(albumEntities));
+        dispatch(storePlaylists(playlistEntities));
+        dispatch(storeTracks(trackEntities));
         dispatch(fetchUserSuccess());
-    }, (err) => {
+    } catch (err) {
         dispatch(fetchUserFailed(err));
-    });
+    }
 }

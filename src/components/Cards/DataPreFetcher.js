@@ -76,10 +76,10 @@ export class DataPreFetcher extends Component {
         this.setState({
             isFetching: false
         });
-        // window.scrollTo(0, 0);
-        // this.props.history.push({
-        //     pathname: this.props.linkDestination
-        // });
+        window.scrollTo(0, 0);
+        this.props.history.push({
+            pathname: this.props.linkDestination
+        });
     }
 
     handleInteractionEnd = () => {
@@ -135,7 +135,7 @@ export default withRouter(
         undefined, 
         {
             storeTransitionImageRect: ActionCreators.storeTransitionImageRect,
-            fetchArtist: ActionCreators.newFetchArtist,
+            fetchArtist: ActionCreators.fetchArtist,
             fetchAlbum: ActionCreators.fetchAlbum,
             fetchPlaylist: ActionCreators.fetchPlaylist,
             fetchCategory: ActionCreators.fetchCategory
