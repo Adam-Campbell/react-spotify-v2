@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { storeCategories, storePlaylists } from './entityActions';
 import { normalize, schema } from 'normalizr';
-import axios from 'axios';
+import API from '../api';
 
 const fetchCategoryRequest = (categoryId, loadingRequired) => ({
     type: actionTypes.FETCH_CATEGORY_REQUEST,
@@ -43,31 +43,18 @@ const storeCategoryPlaylistIds = (playlistIds, ownerId) => ({
 });
 
 
-const fetchCategoryInfo = (categoryId, token) => async (dispatch) => {
+const fetchCategoryInfo = async (categoryId, token) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/categories/${categoryId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        // return {
-        //     [response.data.id]: response.data
-        // };
+        const response = await API.getCategoryInfo(token, categoryId);
         return response.data;
     } catch (err) {
         throw new Error(err);
     }
 }
 
-const fetchCategoriesPlaylists = (categoryId, token) => async (dispatch) => {
+const fetchCategoriesPlaylists = async (categoryId, token) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/categories/${categoryId}/playlists?limit=50`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getCategoryPlaylists(token, categoryId);
         const playlistSchema = new schema.Entity('playlists');
         return normalize(response.data.playlists.items, [playlistSchema]);
     } catch (err) {
@@ -102,8 +89,8 @@ export const fetchCategory = (categoryId, isPrefetched=false) => async (dispatch
 
     try {
         const results = await Promise.all([
-            dispatch(fetchCategoryInfo(categoryId, token)),
-            dispatch(fetchCategoriesPlaylists(categoryId, token))
+            fetchCategoryInfo(categoryId, token),
+            fetchCategoriesPlaylists(categoryId, token)
         ]);
         const {
             categoryEntity,

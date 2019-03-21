@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { storeAlbums, storeTracks, storeArtists } from './entityActions';
+import API from '../api';
 import { normalize, schema } from 'normalizr';
-import axios from 'axios';
 import { cloneDeep } from 'lodash';
 
 const fetchAlbumRequest = (albumId, loadingRequired) => ({
@@ -43,51 +43,32 @@ const storeAlbumTrackIds = (albumTrackIds, ownerId) => ({
     }
 });
 
-const fetchAlbumInfo = (token, albumId, market) => async (dispatch) => {
-    try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/albums/${albumId}?market=${market}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const artistSchema = new schema.Entity('artists');
-        const trackSchema = new schema.Entity('tracks', 
-            { artists: [artistSchema] },
-            {
-                processStrategy: (value, parent, key) => {
-                    const cloned = cloneDeep(value);
-                    cloned.album = parent.id;
-                    return cloned;
-                }
-            }
-        )
-        const albumSchema = new schema.Entity(
-            'albums', 
-            { 
-                artists: [artistSchema],
-                tracks: [trackSchema]
-            },
-            {
-                processStrategy: (value, parent, key) => {
-                    const cloned = cloneDeep(value);
-                    cloned.tracks = [ ...cloned.tracks.items ];
-                    return cloned;
-                }
-            }
-        );
-        const normalizedData = normalize(response.data, albumSchema);
-        const albumObject = normalizedData.entities.albums[albumId];
-        const albumTrackIds = albumObject.tracks;
-        delete albumObject.tracks;
-        dispatch(storeAlbums({ albumId: albumObject }));
-        dispatch(storeTracks(normalizedData.entities.tracks));
-        dispatch(storeArtists(normalizedData.entities.artists));
-        dispatch(storeAlbumTrackIds(albumTrackIds, albumId));
-    } catch (err) {
-        throw new Error(err);
+
+const artistSchema = new schema.Entity('artists');
+const trackSchema = new schema.Entity('tracks', 
+    { artists: [artistSchema] },
+    {
+        processStrategy: (value, parent, key) => {
+            const cloned = cloneDeep(value);
+            cloned.album = parent.id;
+            return cloned;
+        }
     }
-}
+);
+const albumSchema = new schema.Entity(
+    'albums', 
+    { 
+        artists: [artistSchema],
+        tracks: [trackSchema]
+    },
+    {
+        processStrategy: (value, parent, key) => {
+            const cloned = cloneDeep(value);
+            cloned.tracks = [ ...cloned.tracks.items ];
+            return cloned;
+        }
+    }
+);
 
 export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
@@ -97,11 +78,19 @@ export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getS
         return dispatch(fetchAlbumAbort(albumId));
     }
     dispatch(fetchAlbumRequest(albumId, !isPrefetched));
-    return dispatch(fetchAlbumInfo(token, albumId, market))
-    .then(() => {
-        const timestamp = Date.now();
-        dispatch(fetchAlbumSuccess(albumId, timestamp));
-    }, (err) => {
+
+    try {
+        const response = await API.getAlbum(token, albumId, market);
+        const normalizedData = normalize(response.data, albumSchema);
+        const albumObject = normalizedData.entities.albums[albumId];
+        const albumTrackIds = albumObject.tracks;
+        delete albumObject.tracks;
+        dispatch(storeAlbums({ albumId: albumObject }));
+        dispatch(storeTracks(normalizedData.entities.tracks));
+        dispatch(storeArtists(normalizedData.entities.artists));
+        dispatch(storeAlbumTrackIds(albumTrackIds, albumId));
+        dispatch(fetchAlbumSuccess(albumId, Date.now()));
+    } catch (err) {
         dispatch(fetchAlbumFailed(err, albumId));
-    });
-}
+    }
+};

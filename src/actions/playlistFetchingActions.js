@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { storePlaylists, storeTracks, storeAlbums, storeArtists } from './entityActions';
 import { normalize, schema } from 'normalizr';
-import axios from 'axios';
+import API from '../api';
 import { cloneDeep } from 'lodash';
 
 const fetchPlaylistRequest = (playlistId, loadingRequired) => ({
@@ -51,15 +51,10 @@ export const storePlaylistTrackIds = (playlistTrackIds, ownerId) => ({
     }
 });
 
-const checkIfFollowing = (token, playlistId, currentUserId) => async (dispatch) => {
+const checkIfFollowing = async (token, playlistId, currentUserId) => {
     console.log('checkIfFollowing was called');
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/playlists/${playlistId}/followers/contains?ids=${currentUserId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getUserFollowingPlaylistStatus(token, playlistId, currentUserId);
         return response.data[0];
     } catch (err) {
         throw new Error(err);
@@ -81,12 +76,7 @@ const makePlaylistDataRequests = async (token, playlistId, market) => {
     const promiseArray = [];
     let escapeHatch = 1;
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/playlists/${playlistId}?market=${market}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getPlaylistInfo(token, playlistId, market);
         promiseArray.push(response);
         // set a limit so we don't make an insane amount of requests.
         const totalTracks = Math.min(response.data.tracks.total, 2500);
@@ -96,12 +86,7 @@ const makePlaylistDataRequests = async (token, playlistId, market) => {
         }
         let offset = 100;
         while (offset < totalTracks && escapeHatch < 50) {
-            const response = axios.get(
-                `https://api.spotify.com/v1/playlists/${playlistId}/tracks?market=${market}&limit=100&offset=${offset}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    } 
-            });
+            const response = API.getPlaylistTracks(token, playlistId, market, offset);
             promiseArray.push(response);
             offset += 100;
             escapeHatch++;
@@ -182,7 +167,7 @@ export const fetchPlaylist = (playlistId, isPrefetched=false) => async (dispatch
     dispatch(fetchPlaylistRequest(playlistId, !isPrefetched));
     try {
         const results = await Promise.all([
-            dispatch(checkIfFollowing(token, playlistId, currentUserId)),
+            checkIfFollowing(token, playlistId, currentUserId),
             makePlaylistDataRequests(token, playlistId, market)
         ]);
         const {

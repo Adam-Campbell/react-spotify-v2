@@ -1,6 +1,5 @@
 import * as actionTypes from '../actionTypes';
-import axios from 'axios';
-
+import API from '../api'; 
 
 const updatePlaylistNameRequest = (playlistId) => ({
     type: actionTypes.UPDATE_PLAYLIST_NAME_REQUEST,
@@ -28,15 +27,7 @@ const updatePlaylistNameFailed = (error, playlistId) => ({
 export const updatePlaylistName = (newPlaylistName, playlistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     try {
-        const response = await axios.request(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            method: 'PUT',
-            data: {
-                name: newPlaylistName
-            }
-        });
+        const response = await API.updatePlaylistName(token, playlistId, newPlaylistName);
         if (response.status === 200) {
             dispatch(updatePlaylistNameSuccess(
                 newPlaylistName,
@@ -76,15 +67,7 @@ export const updatePlaylistImage = (imageData, playlistId) => async (dispatch, g
     const token = getState().accessToken.token;
     const formattedImageData = imageData.replace(/^data:image\/(jpeg|jpg|png);base64,/, '')
     try {
-        const response = await axios.request(
-            `https://api.spotify.com/v1/playlists/${playlistId}/images`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'image/jpeg'
-            },
-            method: 'PUT',
-            data: formattedImageData
-        });
+        const response = await API.updatePlaylistImage(token, playlistId, formattedImageData);
         if (response.status === 202) {
             dispatch(updatePlaylistImageSuccess(
                 imageData,
@@ -128,16 +111,7 @@ const addTrackToPlaylistFailed = (error, trackId, playlistId) => ({
 export const addTrackToPlaylist = (trackURI, trackId, playlistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     try {
-        const response = await axios.request(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            data: {
-                uris: [ trackURI ]
-            }
-        });
+        const response = await API.addTrackToPlaylist(token, playlistId, trackURI);
         if (response.status === 201) {
             dispatch(addTrackToPlaylistSuccess(
                 trackId,
@@ -177,17 +151,7 @@ const removeTrackFromPlaylistFailed = (error, playlistId) => ({
 export const removeTrackFromPlaylist = (trackURI, trackId, playlistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     try {
-        const response = await axios.request(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            method: 'DELETE',
-            data: {
-                tracks: [
-                    { uri: trackURI }
-                ]
-            }
-        });
+        const response = await API.removeTrackFromPlaylist(token, playlistId, trackURI);
         if (response.status === 200) {
             dispatch(removeTrackFromPlaylistSuccess(trackId, playlistId))
         }
@@ -217,20 +181,12 @@ const createPlaylistFailed = (error) => ({
     }
 });
 
+
 export const createPlaylist = (playlistName) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const currentUserId = getState().user.id;
     try {
-        const response = await axios.request(`https://api.spotify.com/v1/users/${currentUserId}/playlists`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            data: {
-                name: playlistName
-            }
-        });
+        const response = await API.createPlaylist(token, currentUserId, playlistName);
         const playlistObject = response.data;
         dispatch(createPlaylistSuccess(
             playlistObject,
@@ -240,4 +196,3 @@ export const createPlaylist = (playlistName) => async (dispatch, getState) => {
         dispatch(createPlaylistFailed(err));
     }
 }
-

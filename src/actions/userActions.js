@@ -1,8 +1,8 @@
 import * as actionTypes from '../actionTypes';
 import { storeArtists, storeAlbums, storePlaylists, storeTracks } from './entityActions';
 import { normalize, schema } from 'normalizr';
-import axios from 'axios';
 import { cloneDeep } from 'lodash';
+import API from '../api';
 
 const fetchUserRequest = () => ({
     type: actionTypes.FETCH_USER_REQUEST
@@ -38,26 +38,18 @@ const playlistSchema = new schema.Entity('playlists', {}, {
 });
 
 
-const fetchUsersProfile = (token) => async (dispatch) => {
+const fetchUsersProfile = async (token) => {
     try {
-        const response = await axios.get('https://api.spotify.com/v1/me', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getUserProfile(token);
         return response.data;
     } catch (err) {
         throw new Error(err);
     }
 };
 
-const fetchUsersTopArtists = (token) => async (dispatch) => {
+const fetchUsersTopArtists = async (token) => {
     try {
-        const response = await axios.get('https://api.spotify.com/v1/me/top/artists', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getUserTopArtists(token);
         const artistIds = response.data.items.map(artist => artist.id);
         const artistObjects = response.data.items.reduce((collection, artist) => {
             return {
@@ -71,13 +63,9 @@ const fetchUsersTopArtists = (token) => async (dispatch) => {
     }
 };
 
-const fetchUsersRecentTracks = (token) => async (dispatch) => {
+const fetchUsersRecentTracks = async (token) => {
     try {
-        const response = await axios.get('https://api.spotify.com/v1/me/player/recently-played', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getUserRecentTracks(token);
         const strippedData = response.data.items.map(item => item.track);
         return normalize(strippedData, [trackSchema]);
     } catch (err) {
@@ -85,26 +73,18 @@ const fetchUsersRecentTracks = (token) => async (dispatch) => {
     }
 };
 
-const fetchUsersPlaylists = (token) => async (dispatch) => {
+const fetchUsersPlaylists = async (token) => {
     try {
-        const response = await axios.get('https://api.spotify.com/v1/me/playlists', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getUserPlaylists(token);
         return normalize(response.data.items, [playlistSchema]);
     } catch (err) {
         throw new Error(err);
     }
 }
 
-const fetchUsersFollowedArtists = (token) => async (dispatch) => {
+const fetchUsersFollowedArtists = async (token) => {
     try {
-        const response = await axios.get('https://api.spotify.com/v1/me/following?type=artist', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getUserFollowedArtists(token);
         return normalize(response.data.artists.items, [artistSchema]);
     } catch (err) {
         throw new Error(err);
@@ -148,9 +128,9 @@ const destructureData = (resolvedPromiseArr) => {
             followedArtistIds 
         },
         artistEntities: {
-            ...topArtist_artistEntities,
             ...recentTrack_artistEntities,
-            ...followedArtist_artistEntities
+            ...followedArtist_artistEntities,
+            ...topArtist_artistEntities,
         },
         albumEntities: recentTrack_albumEntities,
         trackEntities: recentTrack_trackEntities,
@@ -164,11 +144,11 @@ export const fetchUser = () => async (dispatch, getState) => {
 
     try {
         const results = await Promise.all([
-            dispatch(fetchUsersProfile(token)),
-            dispatch(fetchUsersTopArtists(token)),
-            dispatch(fetchUsersRecentTracks(token)),
-            dispatch(fetchUsersPlaylists(token)),
-            dispatch(fetchUsersFollowedArtists(token))
+            fetchUsersProfile(token),
+            fetchUsersTopArtists(token),
+            fetchUsersRecentTracks(token),
+            fetchUsersPlaylists(token),
+            fetchUsersFollowedArtists(token)
         ]);
         const {
             userProfile,

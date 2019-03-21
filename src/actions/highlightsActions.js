@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { storeAlbums, storeArtists, storePlaylists, storeCategories } from './entityActions';
 import { normalize, schema } from 'normalizr';
-import axios from 'axios';
+import API from '../api';
 
 const fetchHighlightsRequest = () => ({
     type: actionTypes.FETCH_HIGHLIGHTS_REQUEST
@@ -39,48 +39,27 @@ const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
 const playlistSchema = new schema.Entity('playlists');
 const categorySchema = new schema.Entity('categories');
 
-
-// const normalizedData = normalize(response.data.albums.items, [albumSchema]);
-// const normalizedData = normalize(response.data.playlists.items, [playlistSchema]);
-// const normalizedData = normalize(response.data.categories.items, [categorySchema]);
-
-
-const fetchNewReleases = (token, market) => async (dispatch) => {
+const fetchNewReleases = async (token, market) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/new-releases?country=${market}&limit=50`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getNewReleases(token, market);
         return normalize(response.data.albums.items, [albumSchema]); 
     } catch (err) {
         throw new Error(err);
     }
 }
 
-const fetchFeaturedPlaylists = (token, market) => async (dispatch) => {
+const fetchFeaturedPlaylists = async (token, market) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/featured-playlists?country=${market}&limit=50`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getFeaturedPlaylists(token, market);
         return normalize(response.data.playlists.items, [playlistSchema]);
     } catch (err) {
         throw new Error(err);
     }
 }
 
-const fetchCategories = (token, market) => async (dispatch) => {
+const fetchCategories = async (token, market) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/categories?country=${market}&limit=50`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await API.getCategories(token, market);
         return normalize(response.data.categories.items, [categorySchema]);
     } catch (err) {
         throw new Error(err);
@@ -132,9 +111,9 @@ export const fetchHighlights = () => async (dispatch, getState) => {
 
     try {
         const results = await Promise.all([
-            dispatch(fetchNewReleases(token, market)),
-            dispatch(fetchFeaturedPlaylists(token, market)),
-            dispatch(fetchCategories(token, market))
+            fetchNewReleases(token, market),
+            fetchFeaturedPlaylists(token, market),
+            fetchCategories(token, market)
         ]);
         const {
             albumEntities,
@@ -154,5 +133,4 @@ export const fetchHighlights = () => async (dispatch, getState) => {
     } catch (err) {
         dispatch(fetchHighlightsFailed(err));
     }
-
 }
