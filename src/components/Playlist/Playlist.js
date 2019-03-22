@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
+import { purgeTransitionImageRect } from '../../actions';
 import PlaylistHeader from '../PlaylistHeader';
 import OwnedPlaylistHeader from '../OwnedPlaylistHeader';
 import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
 import PaginatedTrackCollection from '../PaginatedTrackCollection';
 import PaginationControls from '../PaginationControls';
-import { getPlaylistTrackIds } from '../../selectors';
+import { 
+    getPlaylistTrackIds, 
+    getPlaylist, 
+    getUserIsPlaylistOwner,
+    getTransitionData
+} from '../../selectors';
 
 class Playlist extends Component {
 
@@ -130,20 +135,21 @@ class Playlist extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    playlistTrackIds: getPlaylistTrackIds(state, ownProps.playlistId),
-    playlistURI: state.playlists.entities[ownProps.playlistId].uri,
-    isPlaylistOwner: state.playlists.entities[ownProps.playlistId].owner.id === state.user.id,
-    imageWidth: state.ui.transitionData.imageWidth,
-    imageHeight: state.ui.transitionData.imageHeight,
-    imageX: state.ui.transitionData.imageX, 
-    imageY: state.ui.transitionData.imageY,
-    hasTransition: state.ui.transitionData.hasTransition
-});
+const mapStateToProps = (state, ownProps) => {
+    const transitionData = getTransitionData(state);
+    return {
+        playlistTrackIds: getPlaylistTrackIds(state, ownProps.playlistId),
+        playlistURI: getPlaylist(state, ownProps.playlistId).uri,
+        isPlaylistOwner: getUserIsPlaylistOwner(state, ownProps.playlistId),
+        imageWidth: transitionData.imageWidth,
+        imageHeight: transitionData.imageHeight,
+        imageX: transitionData.imageX, 
+        imageY: transitionData.imageY,
+        hasTransition: transitionData.hasTransition
+    };
+};
 
 export default connect(
     mapStateToProps,
-    {
-        purgeTransitionImageRect: ActionCreators.purgeTransitionImageRect
-    }
+    { purgeTransitionImageRect }
 )(Playlist)

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Followers from '../Followers';
-import * as ActionCreators from '../../actions';
+import { followPlaylist, unfollowPlaylist, openModal } from '../../actions';
 import PlaylistNameInput from './PlaylistNameInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
@@ -127,9 +127,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export const ConnectedOwnedPlaylistHeader = connect(
     mapStateToProps,
-    {
-        followPlaylist: ActionCreators.followPlaylist,
-        unfollowPlaylist: ActionCreators.unfollowPlaylist,
-        openModal: ActionCreators.openModal
-    }
+    { followPlaylist, unfollowPlaylist, openModal }
 )(OwnedPlaylistHeader);

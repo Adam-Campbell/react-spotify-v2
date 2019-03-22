@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Followers from '../Followers';
+import { getUserProfile } from '../../selectors';
 
 export const UserProfileHeader = props => (
     <header className="user-profile-header">
@@ -10,10 +11,13 @@ export const UserProfileHeader = props => (
     </header>
 );
 
-const mapStateToProps = state => ({
-    userImageURL: state.user.images.length ? state.user.images[0].url : '',
-    userDisplayName: state.user.display_name,
-    userFollowerCount: state.user.followers.total
-});
+const mapStateToProps = state => {
+    const user = getUserProfile(state);
+    return {
+        userImageURL: user.images.length ? user.images[0].url : '',
+        userDisplayName: user.display_name,
+        userFollowerCount: user.followers.total
+    };
+};
 
 export const ConnectedUserProfileHeader = connect(mapStateToProps)(UserProfileHeader);

@@ -31,7 +31,7 @@ const makeReqWithURIList = (token, deviceId, contextId, contextType, trackURI, s
         //allTrackURIs = state.artists.artistData[contextId].topTrackIds.map(id => state.tracks[id].uri);
         allTrackURIs = state.artists.topTrackIds[contextId].map(id => state.tracks[id].uri);
     } else if (contextType === 'user') {
-        allTrackURIs = state.user.recentTracksIds.map(id => state.tracks[id].uri);
+        allTrackURIs = state.user.recentTrackIds.map(id => state.tracks[id].uri);
     }
     return API.selectTrackWithURIList(token, deviceId, trackURI, allTrackURIs);
 }

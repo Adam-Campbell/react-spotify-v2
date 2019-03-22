@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { fetchUser } from '../../actions';
 import Loader from '../Loader';
+import { getUserProfile } from '../../selectors';
 
 class WithUserInfo extends Component {
 
@@ -21,12 +22,10 @@ class WithUserInfo extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    hasFetched: state.user.fullProfileFetched
+    hasFetched: getUserProfile(state).fullProfileFetched
 });
 
 export default connect(
     mapStateToProps,
-    {
-        fetchUser: ActionCreators.fetchUser
-    }
+    { fetchUser }
 )(WithUserInfo);

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
+import { fetchPlaylist } from '../../actions';
 import Playlist from './Playlist';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
-import { getPlaylistTimestamp } from '../../selectors';
+import { getPlaylistTimestamp, getLoadingStatus } from '../../selectors';
 
 class PlaylistContainer extends Component {
 
@@ -42,12 +42,10 @@ class PlaylistContainer extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     timestamp: getPlaylistTimestamp(state, ownProps.playlistId),
-    isLoading: state.ui.loadingStatus.playlistView
+    isLoading: getLoadingStatus(state, 'playlistView')
 });
 
 export const ConnectedPlaylistContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchPlaylist: ActionCreators.fetchPlaylist
-    }
+    { fetchPlaylist }
 )(PlaylistContainer));

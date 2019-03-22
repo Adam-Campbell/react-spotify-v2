@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { addTrackToPlaylist, closeModal } from '../../actions';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
 import CDIcon from '../../cd-icon.jpg';
@@ -48,8 +48,5 @@ const mapStateToProps = state => ({
 
 export const ConnectedAddToPlaylistModal = connect(
     mapStateToProps,
-    { 
-        addTrackToPlaylist: ActionCreators.addTrackToPlaylist,
-        closeModal: ActionCreators.closeModal 
-    }
+    { addTrackToPlaylist, closeModal }
 )(AddToPlaylistModal);

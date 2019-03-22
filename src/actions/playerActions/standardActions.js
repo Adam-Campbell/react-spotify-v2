@@ -46,7 +46,7 @@ const getContextTrackIds = (contextURI, contextId, state) => {
             return [ ...state.artists.topTrackIds[contextId] ];
 
         case 'user':
-            return [ ...state.user.recentTracksIds ];
+            return [ ...state.user.recentTrackIds ];
 
         default:
             return [];

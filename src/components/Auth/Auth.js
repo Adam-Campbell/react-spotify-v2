@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { storeToken } from '../../actions';
 import { withRouter } from 'react-router';
+import { getAccessToken, getAccessTokenTimestamp } from '../../selectors';
 
 export class Auth extends Component {
 
@@ -33,13 +34,11 @@ export class Auth extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    accessToken: state.accessToken.token,
-    timestamp: state.accessToken.timestamp
+    accessToken: getAccessToken(state),
+    timestamp: getAccessTokenTimestamp(state)
 });
 
 export const ConnectedAuth = withRouter(connect(
     mapStateToProps,
-    {
-        storeToken: ActionCreators.storeToken
-    }
+    { storeToken }
 )(Auth));

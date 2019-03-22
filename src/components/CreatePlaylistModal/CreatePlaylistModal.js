@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { createPlaylist, closeModal } from '../../actions';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
 
@@ -56,8 +56,5 @@ export class CreatePlaylistModal extends Component {
 
 export const ConnectedCreatePlaylistModal = connect(
     undefined, 
-    {
-        createPlaylist: ActionCreators.createPlaylist,
-        closeModal: ActionCreators.closeModal
-    }
+    { createPlaylist, closeModal }
 )(CreatePlaylistModal);

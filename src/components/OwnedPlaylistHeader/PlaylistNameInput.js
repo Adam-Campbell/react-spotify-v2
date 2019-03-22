@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { updatePlaylistName } from '../../actions';
 import Button from '../Button';
 
 class PlaylistNameInput extends Component {
@@ -61,7 +61,5 @@ class PlaylistNameInput extends Component {
 
 export default connect(
     undefined,
-    {
-        updatePlaylistName: ActionCreators.updatePlaylistName
-    }
+    { updatePlaylistName }
 )(PlaylistNameInput);

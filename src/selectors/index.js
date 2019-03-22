@@ -5,3 +5,7 @@ export * from './highlightSelectors';
 export * from './playlistSelectors';
 export * from './trackSelectors';
 export * from './userSelectors';
+export * from './playerSelectors';
+export * from './modalSelectors';
+export * from './uiSelectors';
+export * from './accessTokenSelectors';

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { purgeTransitionImageRect } from '../../actions';
 import AlbumHeader from '../AlbumHeader';
 import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
-import { getAlbumTrackIds } from '../../selectors';
+import { getAlbumTrackIds, getAlbum, getTransitionData } from '../../selectors';
 
 export class Album extends Component {
 
@@ -100,19 +100,26 @@ export class Album extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    albumURI: state.albums.entities[ownProps.albumId].uri,
-    albumTrackIds: getAlbumTrackIds(state, ownProps.albumId),
-    imageWidth: state.ui.transitionData.imageWidth,
-    imageHeight: state.ui.transitionData.imageHeight,
-    imageX: state.ui.transitionData.imageX, 
-    imageY: state.ui.transitionData.imageY,
-    hasTransition: state.ui.transitionData.hasTransition
-});
+const mapStateToProps = (state, ownProps) => {
+    const { 
+        imageWidth, 
+        imageHeight, 
+        imageX, 
+        imageY, 
+        hasTransition 
+    } = getTransitionData(state);
+    return {
+        albumURI: getAlbum(state, ownProps.albumId).uri,
+        albumTrackIds: getAlbumTrackIds(state, ownProps.albumId),
+        imageWidth,
+        imageHeight,
+        imageX, 
+        imageY,
+        hasTransition
+    };
+};
 
 export default connect(
     mapStateToProps,
-    {
-        purgeTransitionImageRect: ActionCreators.purgeTransitionImageRect
-    }
+    { purgeTransitionImageRect }
 )(Album);

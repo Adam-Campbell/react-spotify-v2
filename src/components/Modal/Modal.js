@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactModal from 'react-modal';
-import * as ActionCreators from '../../actions';
+import { closeModal } from '../../actions';
 import { modalTypes } from '../../constants';
 import UploadImageModal from '../UploadImageModal';
 import AddToPlaylistModal from '../AddToPlaylistModal';
 import CreatePlaylistModal from '../CreatePlaylistModal';
+import { getModalInfo } from '../../selectors';
 
 ReactModal.setAppElement('#root');
 
@@ -37,14 +38,15 @@ const Modal = props => (
     </ReactModal>
 )
 
-const mapStateToProps = state => ({
-    modalType: state.modal.modalType,
-    modalProps: state.modal.modalProps
-});
+const mapStateToProps = state => {
+    const { modalType, modalProps } = getModalInfo(state);
+    return {
+        modalType,
+        modalProps
+    };
+};
 
 export const ConnectedModal = connect(
     mapStateToProps,
-    {
-        closeModal: ActionCreators.closeModal
-    }
+    { closeModal }
 )(Modal)

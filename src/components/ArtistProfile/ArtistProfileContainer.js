@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
+import { fetchArtist } from '../../actions';
 import ArtistProfile from './ArtistProfile';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
-import { getArtistTimestamp } from '../../selectors';
+import { getArtistTimestamp, getLoadingStatus } from '../../selectors';
 
 class ArtistProfileContainer extends Component {
 
@@ -41,12 +41,10 @@ class ArtistProfileContainer extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     timestamp: getArtistTimestamp(state, ownProps.artistId),
-    isLoading: state.ui.loadingStatus.artistProfile
+    isLoading: getLoadingStatus(state, 'artistProfile')
 });
 
 export const ConnectedArtistProfileContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchArtist: ActionCreators.fetchArtist
-    }
+    { fetchArtist }
 )(ArtistProfileContainer));

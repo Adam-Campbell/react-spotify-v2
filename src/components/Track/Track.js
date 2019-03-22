@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +8,13 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
 import { getTrack, getAlbum } from '../../selectors';
+import { 
+    openModal, 
+    removeTrackFromPlaylist, 
+    selectTrack, 
+    pausePlayer, 
+    resumePlayer 
+} from '../../actions';
 
 export const convertMsToMinSec = ms => {
     const toSecs = ms / 1000;
@@ -100,11 +106,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export const ConnectedTrack = connect(
     mapStateToProps,
-    { 
-        openModal: ActionCreators.openModal,
-        removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist,
-        selectTrack: ActionCreators.selectTrack,
-        pausePlayer: ActionCreators.pausePlayer,
-        resumePlayer: ActionCreators.resumePlayer
-    }
+    { openModal, removeTrackFromPlaylist, selectTrack, pausePlayer, resumePlayer }
 )(Track);

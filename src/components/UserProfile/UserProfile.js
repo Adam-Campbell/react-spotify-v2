@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { fetchUser } from '../../actions';
 import UserProfileHeader from '../UserProfileHeader';
 import TrackCollection from '../TrackCollection';
 import Section from '../Section';
@@ -9,7 +9,13 @@ import { TimelineMax } from 'gsap';
 import Carousel from '../Carousel';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
-import { getUserPlaylistIds, getUserRecentTrackIds, getUserTopArtistIds } from '../../selectors';
+import { 
+    getUserProfile, 
+    getUserPlaylistIds, 
+    getUserRecentTrackIds, 
+    getUserTopArtistIds,
+    getLoadingStatus
+} from '../../selectors';
 
 class UserProfileContainer extends Component {
 
@@ -71,19 +77,20 @@ class UserProfileContainer extends Component {
     
 }
 
-const mapStateToProps = (state) => ({
-    userId: state.user.id,
-    userURI: state.user.uri,
-    recentTrackIds: getUserRecentTrackIds(state),
-    topArtistIds: getUserTopArtistIds(state),
-    playlistIds: getUserPlaylistIds(state),
-    isLoading: state.ui.loadingStatus.userProfile,
-    hasFetched: state.user.fullProfileFetched
-});
+const mapStateToProps = (state) => {
+    const user = getUserProfile(state);
+    return {
+        userId: user.id,
+        userURI:user.uri,
+        recentTrackIds: user.recentTrackIds,
+        topArtistIds: user.topArtistIds,
+        playlistIds: user.playlistIds,
+        isLoading: getLoadingStatus(state, 'userProfile'),
+        hasFetched: user.fullProfileFetched
+    };
+};
 
 export const ConnectedUserProfile =  withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchUser: ActionCreators.fetchUser
-    }
+    { fetchUser }
 )(UserProfileContainer));

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Followers from '../Followers';
-import * as ActionCreators from '../../actions';
+import { followPlaylist, unfollowPlaylist } from '../../actions';
 import SmartImage from '../SmartImage';
 import { getPlaylist, getPlaylistUserFollowingStatus } from '../../selectors';
 
@@ -54,8 +54,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export const ConnectedPlaylistHeader = connect(
     mapStateToProps,
-    {
-        followPlaylist: ActionCreators.followPlaylist,
-        unfollowPlaylist: ActionCreators.unfollowPlaylist
-    }
+    { followPlaylist, unfollowPlaylist }
 )(PlaylistHeader);

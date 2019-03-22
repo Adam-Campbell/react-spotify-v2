@@ -51,7 +51,6 @@ const mapStateToProps = (state) => ({
     newReleases: getNewReleaseIds(state),
     featuredPlaylists: getFeaturedPlaylistIds(state),
     categories: getCategoryIds(state),
-    fullHighlightsFetched: state.highlights.fullHighlightsFetched
 });
 
 export default connect(mapStateToProps)(Highlights);

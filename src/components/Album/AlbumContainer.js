@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
+import { fetchAlbum } from '../../actions';
 import Album from './Album';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
-import { getAlbumTimestamp } from '../../selectors';
+import { getAlbumTimestamp, getLoadingStatus } from '../../selectors';
 
 export class AlbumContainer extends Component {
 
@@ -41,12 +41,10 @@ export class AlbumContainer extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     timestamp: getAlbumTimestamp(state, ownProps.albumId),
-    isLoading: state.ui.loadingStatus.albumView
+    isLoading: getLoadingStatus(state, 'albumView')
 });
 
 export const ConnectedAlbumContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchAlbum: ActionCreators.fetchAlbum
-    }
+    { fetchAlbum }
 )(AlbumContainer));
