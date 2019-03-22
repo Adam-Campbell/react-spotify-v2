@@ -1,6 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import { storeCategories, storePlaylists } from './entityActions';
-import { normalize, schema } from 'normalizr';
+import { handleNormalize, entryPoints } from '../utils';
 import API from '../api';
 
 const fetchCategoryRequest = (categoryId, loadingRequired) => ({
@@ -55,8 +55,7 @@ const fetchCategoryInfo = async (categoryId, token) => {
 const fetchCategoriesPlaylists = async (categoryId, token) => {
     try {
         const response = await API.getCategoryPlaylists(token, categoryId);
-        const playlistSchema = new schema.Entity('playlists');
-        return normalize(response.data.playlists.items, [playlistSchema]);
+        return handleNormalize(response.data.playlists.items, entryPoints.playlists);
     } catch (err) {
         throw new Error(err);
     }

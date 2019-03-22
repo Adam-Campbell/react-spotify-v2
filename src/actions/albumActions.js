@@ -1,8 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { storeAlbums, storeTracks, storeArtists } from './entityActions';
 import API from '../api';
-import { normalize, schema } from 'normalizr';
-import { cloneDeep } from 'lodash';
+import { handleNormalize, entryPoints } from '../utils';
 
 const fetchAlbumRequest = (albumId, loadingRequired) => ({
     type: actionTypes.FETCH_ALBUM_REQUEST,
@@ -43,33 +42,6 @@ const storeAlbumTrackIds = (albumTrackIds, ownerId) => ({
     }
 });
 
-
-const artistSchema = new schema.Entity('artists');
-const trackSchema = new schema.Entity('tracks', 
-    { artists: [artistSchema] },
-    {
-        processStrategy: (value, parent, key) => {
-            const cloned = cloneDeep(value);
-            cloned.album = parent.id;
-            return cloned;
-        }
-    }
-);
-const albumSchema = new schema.Entity(
-    'albums', 
-    { 
-        artists: [artistSchema],
-        tracks: [trackSchema]
-    },
-    {
-        processStrategy: (value, parent, key) => {
-            const cloned = cloneDeep(value);
-            cloned.tracks = [ ...cloned.tracks.items ];
-            return cloned;
-        }
-    }
-);
-
 export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     const market = getState().user.country;
@@ -81,7 +53,7 @@ export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getS
 
     try {
         const response = await API.getAlbum(token, albumId, market);
-        const normalizedData = normalize(response.data, albumSchema);
+        const normalizedData = handleNormalize(response.data, entryPoints.complexAlbum);
         const albumObject = normalizedData.entities.albums[albumId];
         const albumTrackIds = albumObject.tracks;
         delete albumObject.tracks;

@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { storeArtists, storeAlbums, storeTracks } from './entityActions';
-import { normalize, schema } from 'normalizr';
 import API from '../api';
+import { handleNormalize, entryPoints } from '../utils';
 
 const fetchArtistRequest = (artistId, loadingRequired) => ({
     type: actionTypes.FETCH_ARTIST_REQUEST,
@@ -58,11 +58,6 @@ const storeArtistRelatedArtistIds = (relatedArtistIds, ownerId) => ({
     }
 });
 
-const artistSchema = new schema.Entity('artists');
-const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-const trackSchema = new schema.Entity('tracks', { album: albumSchema, artists: [artistSchema] });
-
-
 const fetchArtistProfile = async (token, artistId) => {
     try {
         const response = await API.getArtistProfile(token, artistId);
@@ -75,7 +70,7 @@ const fetchArtistProfile = async (token, artistId) => {
 const fetchArtistsTopTracks = async (token, artistId, market) => {
     try {
         const response = await API.getArtistTopTracks(token, artistId, market);
-        return normalize(response.data.tracks, [trackSchema]);
+        return handleNormalize(response.data.tracks, entryPoints.tracks);
     } catch (err) {
         throw new Error(err);
     }
@@ -84,7 +79,7 @@ const fetchArtistsTopTracks = async (token, artistId, market) => {
 const fetchArtistsRelatedArtists = async (token, artistId) => {
     try {
         const response = await API.getArtistRelatedArtists(token, artistId);
-        return normalize(response.data.artists, [artistSchema]);
+        return handleNormalize(response.data.artists, entryPoints.artists);
     } catch (err) {
         throw new Error(err);
     }
@@ -93,12 +88,11 @@ const fetchArtistsRelatedArtists = async (token, artistId) => {
 const fetchArtistsAlbums = async (token, artistId, market) => {
     try {
         const response = await API.getArtistAlbums(token, artistId, market);
-        return normalize(response.data.items, [albumSchema]);
+        return handleNormalize(response.data.items, entryPoints.albums);
     } catch (err) {
         throw new Error(err);
     }
 }
-
 
 const destructureData = (resolvedPromiseArr, artistId) => {
     const [

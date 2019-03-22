@@ -1,8 +1,7 @@
 import * as actionTypes from '../actionTypes';
 import { storePlaylists, storeTracks, storeAlbums, storeArtists } from './entityActions';
-import { normalize, schema } from 'normalizr';
 import API from '../api';
-import { cloneDeep } from 'lodash';
+import { handleNormalize, entryPoints } from '../utils';
 
 const fetchPlaylistRequest = (playlistId, loadingRequired) => ({
     type: actionTypes.FETCH_PLAYLIST_REQUEST,
@@ -43,7 +42,7 @@ const storeUserFollowingPlaylist = (isFollowing, playlistId) => ({
     }
 });
 
-export const storePlaylistTrackIds = (playlistTrackIds, ownerId) => ({
+const storePlaylistTrackIds = (playlistTrackIds, ownerId) => ({
     type: actionTypes.STORE_PLAYLIST_TRACK_IDS,
     payload: {
         playlistTrackIds,
@@ -98,29 +97,13 @@ const makePlaylistDataRequests = async (token, playlistId, market) => {
 }
 
 const formatData = (resolvedPromiseArr, playlistId) => {
-    const artistSchema = new schema.Entity('artists');
-    const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-    const trackSchema = new schema.Entity('tracks', { artists: [artistSchema], album: albumSchema });
-    const playlistSchema = new schema.Entity(
-        'playlists', 
-        {
-            tracks: [trackSchema] 
-        },
-        {
-            processStrategy: (value, parent, key) => {
-                const cloned = cloneDeep(value);
-                cloned.tracks = cloned.tracks.items.map(item => item.track);
-                return cloned;
-            }
-        }
-    );
     const [ isFollowing, [ playlistInfoResponse, ...additionalTrackResponses ] ] = resolvedPromiseArr;
-    const normalizedPlaylistData = normalize(playlistInfoResponse.data, playlistSchema);
+    const normalizedPlaylistData = handleNormalize(playlistInfoResponse.data, entryPoints.complexPlaylist);
 
     // normalize the additional tracks requests
     const normalizedTrackData = additionalTrackResponses.reduce((acc, req) => {
         const formattedData = req.data.items.map(item => item.track);
-        const norm = normalize(formattedData, [trackSchema]);
+        const norm = handleNormalize(formattedData, entryPoints.tracks);
         return {
             trackIds: [...acc.trackIds, ...norm.result],
             tracks: { ...acc.tracks, ...norm.entities.tracks },

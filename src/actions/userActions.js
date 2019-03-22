@@ -1,7 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import { storeArtists, storeAlbums, storePlaylists, storeTracks } from './entityActions';
-import { normalize, schema } from 'normalizr';
-import { cloneDeep } from 'lodash';
+import { handleNormalize, entryPoints } from '../utils';
 import API from '../api';
 
 const fetchUserRequest = () => ({
@@ -25,18 +24,6 @@ const storeUsersProfile = (usersProfile) => ({
         usersProfile
     }
 });
-
-const artistSchema = new schema.Entity('artists');
-const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-const trackSchema = new schema.Entity('tracks', { artists: [artistSchema], album: albumSchema });
-const playlistSchema = new schema.Entity('playlists', {}, {
-    processStrategy: (value, parent, key) => {
-        const cloned = cloneDeep(value);
-        delete cloned.tracks;
-        return cloned;
-    }
-});
-
 
 const fetchUsersProfile = async (token) => {
     try {
@@ -67,8 +54,9 @@ const fetchUsersRecentTracks = async (token) => {
     try {
         const response = await API.getUserRecentTracks(token);
         const strippedData = response.data.items.map(item => item.track);
-        return normalize(strippedData, [trackSchema]);
+        return handleNormalize(strippedData, entryPoints.tracks);
     } catch (err) {
+        console.log(err);
         throw new Error(err);
     }
 };
@@ -76,8 +64,9 @@ const fetchUsersRecentTracks = async (token) => {
 const fetchUsersPlaylists = async (token) => {
     try {
         const response = await API.getUserPlaylists(token);
-        return normalize(response.data.items, [playlistSchema]);
+        return handleNormalize(response.data.items, entryPoints.playlistStripTracks);
     } catch (err) {
+        console.log(err);
         throw new Error(err);
     }
 }
@@ -85,8 +74,9 @@ const fetchUsersPlaylists = async (token) => {
 const fetchUsersFollowedArtists = async (token) => {
     try {
         const response = await API.getUserFollowedArtists(token);
-        return normalize(response.data.artists.items, [artistSchema]);
+        return handleNormalize(response.data.artists.items, entryPoints.artists);
     } catch (err) {
+        console.log(err);
         throw new Error(err);
     }
 };

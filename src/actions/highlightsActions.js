@@ -1,6 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import { storeAlbums, storeArtists, storePlaylists, storeCategories } from './entityActions';
-import { normalize, schema } from 'normalizr';
+import { handleNormalize, entryPoints } from '../utils';
 import API from '../api';
 
 const fetchHighlightsRequest = () => ({
@@ -34,15 +34,10 @@ const storeHighlights = (newReleaseIds, featuredPlaylistIds, categoryIds) => ({
     }
 });
 
-const artistSchema = new schema.Entity('artists');
-const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-const playlistSchema = new schema.Entity('playlists');
-const categorySchema = new schema.Entity('categories');
-
 const fetchNewReleases = async (token, market) => {
     try {
         const response = await API.getNewReleases(token, market);
-        return normalize(response.data.albums.items, [albumSchema]); 
+        return handleNormalize(response.data.albums.items, entryPoints.albums); 
     } catch (err) {
         throw new Error(err);
     }
@@ -51,7 +46,7 @@ const fetchNewReleases = async (token, market) => {
 const fetchFeaturedPlaylists = async (token, market) => {
     try {
         const response = await API.getFeaturedPlaylists(token, market);
-        return normalize(response.data.playlists.items, [playlistSchema]);
+        return handleNormalize(response.data.playlists.items, entryPoints.playlists);
     } catch (err) {
         throw new Error(err);
     }
@@ -60,7 +55,7 @@ const fetchFeaturedPlaylists = async (token, market) => {
 const fetchCategories = async (token, market) => {
     try {
         const response = await API.getCategories(token, market);
-        return normalize(response.data.categories.items, [categorySchema]);
+        return handleNormalize(response.data.categories.items, entryPoints.categories);
     } catch (err) {
         throw new Error(err);
     }
