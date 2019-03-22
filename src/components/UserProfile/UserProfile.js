@@ -9,6 +9,7 @@ import { TimelineMax } from 'gsap';
 import Carousel from '../Carousel';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
+import { getUserPlaylistIds, getUserRecentTrackIds, getUserTopArtistIds } from '../../selectors';
 
 class UserProfileContainer extends Component {
 
@@ -73,9 +74,9 @@ class UserProfileContainer extends Component {
 const mapStateToProps = (state) => ({
     userId: state.user.id,
     userURI: state.user.uri,
-    recentTrackIds: state.user.recentTracksIds,
-    topArtistIds: state.user.topArtistsIds,
-    playlistIds: state.user.playlistIds,
+    recentTrackIds: getUserRecentTrackIds(state),
+    topArtistIds: getUserTopArtistIds(state),
+    playlistIds: getUserPlaylistIds(state),
     isLoading: state.ui.loadingStatus.userProfile,
     hasFetched: state.user.fullProfileFetched
 });

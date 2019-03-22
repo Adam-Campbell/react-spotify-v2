@@ -8,6 +8,7 @@ import TrackCollection from '../TrackCollection';
 import { collectionTypes } from '../../constants';
 import { constructTimeline } from '../../utils';
 import Carousel from '../Carousel';
+import { getArtistAlbumIds, getArtistRelatedArtistIds, getArtistTopTrackIds } from '../../selectors';
 
 // Refactor this component so that the albumIds are sorted into albums and singles in the 
 // mapStateToProps function, that way the album data doesn't need to be passed into the component at all.
@@ -146,9 +147,9 @@ class ArtistProfile extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     artistURI: state.artists.entities[ownProps.artistId].uri,
-    artistsAlbumIds: state.artists.albumIds[ownProps.artistId],
-    artistsTopTrackIds: state.artists.topTrackIds[ownProps.artistId],
-    artistsRelatedArtistIds: state.artists.relatedArtistIds[ownProps.artistId],
+    artistsAlbumIds: getArtistAlbumIds(state, ownProps.artistId),
+    artistsTopTrackIds: getArtistTopTrackIds(state, ownProps.artistId),
+    artistsRelatedArtistIds: getArtistRelatedArtistIds(state, ownProps.artistId),
     albums: state.albums.entities,
     imageWidth: state.ui.transitionData.imageWidth,
     imageHeight: state.ui.transitionData.imageHeight,

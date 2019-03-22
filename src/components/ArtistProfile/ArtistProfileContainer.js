@@ -5,6 +5,7 @@ import * as ActionCreators from '../../actions';
 import ArtistProfile from './ArtistProfile';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
+import { getArtistTimestamp } from '../../selectors';
 
 class ArtistProfileContainer extends Component {
 
@@ -39,7 +40,7 @@ class ArtistProfileContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.artists.timestamps[ownProps.artistId],
+    timestamp: getArtistTimestamp(state, ownProps.artistId),
     isLoading: state.ui.loadingStatus.artistProfile
 });
 

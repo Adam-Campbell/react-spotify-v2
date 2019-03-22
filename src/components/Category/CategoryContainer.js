@@ -5,6 +5,7 @@ import * as ActionCreators from '../../actions';
 import Category from './Category';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
+import { getCategoryTimestamp } from '../../selectors';
 
 class CategoryContainer extends Component {
 
@@ -32,7 +33,7 @@ class CategoryContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.categories.timestamps[ownProps.category],
+    timestamp: getCategoryTimestamp(state, ownProps.category),
     isLoading: state.ui.loadingStatus.categoryView
 });
 

@@ -13,8 +13,8 @@ const defaultState = {
     product: '',
     type: '',
     uri: '',
-    topArtistsIds: [],
-    recentTracksIds: [],
+    topArtistIds: [],
+    recentTrackIds: [],
     playlistIds: [],
     followedArtistIds: [],
     fullProfileFetched: false

@@ -5,6 +5,7 @@ import * as ActionCreators from '../../actions';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
 import CDIcon from '../../cd-icon.jpg';
+import { getUserPlaylists } from '../../selectors';
 
 export const AddToPlaylistModal = props => (
     <div className="add-to-playlist-modal">
@@ -42,7 +43,7 @@ AddToPlaylistModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    usersPlaylists: state.user.playlistIds.map(playlistId => state.playlists.entities[playlistId])
+    usersPlaylists: getUserPlaylists(state)
 });
 
 export const ConnectedAddToPlaylistModal = connect(

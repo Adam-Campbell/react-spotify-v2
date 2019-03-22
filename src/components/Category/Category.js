@@ -5,6 +5,7 @@ import CategoryHeader from '../CategoryHeader';
 import { collectionTypes } from '../../constants';
 import Section from '../Section';
 import CardCollection from '../CardCollection';
+import { getCategoryPlaylistIds } from '../../selectors';
 
 class Category extends Component {
 
@@ -45,7 +46,7 @@ class Category extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    categoryPlaylistIds: state.categories.playlistIds[ownProps.categoryId]
+    categoryPlaylistIds: getCategoryPlaylistIds(state, ownProps.categoryId)
 });
 
 export default connect(mapStateToProps)(Category);

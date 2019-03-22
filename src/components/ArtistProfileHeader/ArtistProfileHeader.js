@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
 import Followers from '../Followers';
 import SmartImage from '../SmartImage';
+import { getArtist } from '../../selectors';
 
 export const ArtistProfileHeader = props => (
     <header className="artist-profile-header">         
@@ -48,7 +49,7 @@ ArtistProfileHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const artist = state.artists.entities[ownProps.artistId];
+    const artist = getArtist(state, ownProps.artistId);
     return {
         imageURL: artist.images.length ? artist.images[0].url : '',
         name: artist.name,

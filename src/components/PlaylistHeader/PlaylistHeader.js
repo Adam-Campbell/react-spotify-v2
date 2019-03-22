@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Followers from '../Followers';
 import * as ActionCreators from '../../actions';
 import SmartImage from '../SmartImage';
+import { getPlaylist, getPlaylistUserFollowingStatus } from '../../selectors';
 
 export const PlaylistHeader = props => (
     <header className="playlist-header">
@@ -41,12 +42,12 @@ PlaylistHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const playlist = state.playlists.entities[ownProps.playlistId];
+    const playlist = getPlaylist(state, ownProps.playlistId);
     return {
         imageURL: playlist.images.length ? playlist.images[0].url : '',
         playlistName: playlist.name,
         ownerName: playlist.owner.display_name,
-        isFollowing: state.playlists.userFollowing[ownProps.playlistId],
+        isFollowing: getPlaylistUserFollowingStatus(state, ownProps.playlistId),
         playlistFollowerCount: playlist.followers.total
     }
 };

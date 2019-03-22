@@ -8,6 +8,7 @@ import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
 import PaginatedTrackCollection from '../PaginatedTrackCollection';
 import PaginationControls from '../PaginationControls';
+import { getPlaylistTrackIds } from '../../selectors';
 
 class Playlist extends Component {
 
@@ -130,7 +131,7 @@ class Playlist extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    playlistTrackIds: state.playlists.trackIds[ownProps.playlistId],
+    playlistTrackIds: getPlaylistTrackIds(state, ownProps.playlistId),
     playlistURI: state.playlists.entities[ownProps.playlistId].uri,
     isPlaylistOwner: state.playlists.entities[ownProps.playlistId].owner.id === state.user.id,
     imageWidth: state.ui.transitionData.imageWidth,

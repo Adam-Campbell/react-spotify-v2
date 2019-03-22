@@ -8,6 +8,7 @@ import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
+import { getTrack, getAlbum } from '../../selectors';
 
 export const convertMsToMinSec = ms => {
     const toSecs = ms / 1000;
@@ -82,8 +83,8 @@ Track.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const track = state.tracks[ownProps.trackId];
-    const album = state.albums.entities[track.album];
+    const track = getTrack(state, ownProps.trackId);
+    const album = getAlbum(state, track.album);
     const isCurrentlySelected = state.player.trackId === ownProps.trackId && 
                                state.player.contextURI === ownProps.contextURI;
     return {

@@ -5,6 +5,7 @@ import * as ActionCreators from '../../actions';
 import Album from './Album';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
+import { getAlbumTimestamp } from '../../selectors';
 
 export class AlbumContainer extends Component {
 
@@ -39,7 +40,7 @@ export class AlbumContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.albums.timestamps[ownProps.albumId],
+    timestamp: getAlbumTimestamp(state, ownProps.albumId),
     isLoading: state.ui.loadingStatus.albumView
 });
 

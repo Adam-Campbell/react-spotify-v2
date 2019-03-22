@@ -5,6 +5,7 @@ import * as ActionCreators from '../../actions';
 import AlbumHeader from '../AlbumHeader';
 import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
+import { getAlbumTrackIds } from '../../selectors';
 
 export class Album extends Component {
 
@@ -100,9 +101,8 @@ export class Album extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    //album: state.albums.albumData[ownProps.albumId],
     albumURI: state.albums.entities[ownProps.albumId].uri,
-    albumTrackIds: state.albums.trackIds[ownProps.albumId],
+    albumTrackIds: getAlbumTrackIds(state, ownProps.albumId),
     imageWidth: state.ui.transitionData.imageWidth,
     imageHeight: state.ui.transitionData.imageHeight,
     imageX: state.ui.transitionData.imageX, 

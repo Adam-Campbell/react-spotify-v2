@@ -5,6 +5,7 @@ import * as ActionCreators from '../../actions';
 import Playlist from './Playlist';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import Loader from '../Loader';
+import { getPlaylistTimestamp } from '../../selectors';
 
 class PlaylistContainer extends Component {
 
@@ -40,7 +41,7 @@ class PlaylistContainer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    timestamp: state.playlists.timestamps[ownProps.playlistId],
+    timestamp: getPlaylistTimestamp(state, ownProps.playlistId),
     isLoading: state.ui.loadingStatus.playlistView
 });
 

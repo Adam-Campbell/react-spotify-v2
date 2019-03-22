@@ -112,8 +112,8 @@ const destructureData = (resolvedPromiseArr) => {
     return {
         userProfile: {
             ...userProfileInfo,
-            topArtistsIds: topArtistIds,
-            recentTracksIds: recentTrackIds,
+            topArtistIds,
+            recentTrackIds,
             playlistIds,
             followedArtistIds 
         },
