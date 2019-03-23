@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { fetchAlbum } from '../../actions';
 import Album from './Album';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
-import Loader from '../Loader';
+import { Loader } from '../Loaders';
 import { getAlbumTimestamp, getLoadingStatus } from '../../selectors';
 
 export class AlbumContainer extends Component {

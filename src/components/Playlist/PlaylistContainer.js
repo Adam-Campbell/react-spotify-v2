@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { fetchPlaylist } from '../../actions';
 import Playlist from './Playlist';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
-import Loader from '../Loader';
+import { Loader } from '../Loaders';
 import { getPlaylistTimestamp, getLoadingStatus } from '../../selectors';
 
 class PlaylistContainer extends Component {

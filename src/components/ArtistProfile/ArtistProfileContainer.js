@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { fetchArtist } from '../../actions';
 import ArtistProfile from './ArtistProfile';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
-import Loader from '../Loader';
+import { Loader } from '../Loaders';
 import { getArtistTimestamp, getLoadingStatus } from '../../selectors';
 
 class ArtistProfileContainer extends Component {

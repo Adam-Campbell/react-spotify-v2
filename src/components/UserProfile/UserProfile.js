@@ -8,7 +8,7 @@ import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
 import Carousel from '../Carousel';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
-import Loader from '../Loader';
+import { Loader } from '../Loaders';
 import { 
     getUserProfile, 
     getUserPlaylistIds, 

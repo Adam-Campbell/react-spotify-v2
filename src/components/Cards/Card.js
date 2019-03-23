@@ -4,6 +4,7 @@ import DataPreFetcher from './DataPreFetcher';
 import SmartImage from '../SmartImage';
 import { collectionTypes } from '../../constants';
 import './card.scss';
+import { CardLoader } from '../Loaders';
 
 export const Card = ({ linkDestination, label, additionalLabel, imageURL, itemId, collectionType }) => (
     <DataPreFetcher
@@ -28,7 +29,7 @@ export const Card = ({ linkDestination, label, additionalLabel, imageURL, itemId
                 />
                 <p className="card__label">{label}</p>
                 {additionalLabel && <p className="card__additional-label">{additionalLabel}</p>}
-                {isFetching && <p className="card__loader">Loading...</p>}
+                {isFetching && <CardLoader />}
             </a>
         )}
     </DataPreFetcher>

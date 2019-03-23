@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { fetchHighlights } from '../../actions';
 import Highlights from './Highlights';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
-import Loader from '../Loader';
+import { Loader } from '../Loaders';
 import { getHighlightFetchedStatus, getLoadingStatus } from '../../selectors';
 
 class HighlightsContainer extends Component {
