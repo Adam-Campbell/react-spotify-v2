@@ -10,7 +10,7 @@ class SearchContainer extends Component {
 
     constructor(props) {
         super(props);
-        this.debouncedFetchSearchResults = debounce(this.fetchSearchResults, 200).bind(this);
+        this.debouncedFetchSearchResults = debounce(this.fetchSearchResults, 100).bind(this);
         this.underlineRef = React.createRef();
         this.timeline = null;
         this.state = {
@@ -44,18 +44,26 @@ class SearchContainer extends Component {
     }
 
     fetchSearchResults = async (searchTerm) => {
-        const { token, market } = this.props;
-        const response = await axios.get(
-            `https://api.spotify.com/v1/search?q=${searchTerm}&type=artist,album,playlist&market=${market}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        this.setState({
-            artists: response.data.artists.items,
-            albums: response.data.albums.items,
-            playlists: response.data.playlists.items
-        })
+        if (searchTerm === '') {
+            this.setState({
+                artists: [],
+                albums: [],
+                playlists: []
+            });
+        } else {
+            const { token, market } = this.props;
+            const response = await axios.get(
+                `https://api.spotify.com/v1/search?q=${searchTerm}&type=artist,album,playlist&market=${market}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            this.setState({
+                artists: response.data.artists.items,
+                albums: response.data.albums.items,
+                playlists: response.data.playlists.items
+            });
+        }
     }
 
     render() {

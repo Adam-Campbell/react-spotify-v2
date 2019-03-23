@@ -21,6 +21,7 @@ const Search = props => (
             artists={props.artists}
             albums={props.albums}
             playlists={props.playlists}
+            searchTerm={props.searchTerm}
         />
     </main>
 );
