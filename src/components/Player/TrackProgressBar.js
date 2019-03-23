@@ -22,13 +22,13 @@ class TrackProgressBar extends Component {
 
     componentDidMount() {
         this.progBarInterval = setInterval(this.updateProgBar, 50);
-        window.addEventListener('mouseup', this.handleMouseUp);
+        window.addEventListener('mouseup', this.handleInteractionEnd);
         window.addEventListener('mousemove', this.handleMouseMove);
     }
 
     componentWillUnmount() {
         clearInterval(this.progBarInterval);
-        window.removeEventListener('mouseup', this.handleMouseUp);
+        window.removeEventListener('mouseup', this.handleInteractionEnd);
         window.removeEventListener('mousemove', this.handleMouseMove);
     }
 
@@ -44,16 +44,25 @@ class TrackProgressBar extends Component {
         }
     }
 
-    handleMouseDown = (e) => {
+    handleInteractionStart = (e) => {
         e.stopPropagation();
         this.setState({
             progressBarActive: true
         });
     }
 
-    handleMouseMove = (e) => {
+    handleInteractionEnd = (e) => {
         if (this.state.progressBarActive) {
-            const { clientX } = e;
+            this.props.setTrackProgress(this.state.trackProgressDecimal);
+            this.setState({
+                progressBarActive: false
+            });
+        }
+    }
+
+    handleInteractionUpdate = (clientX) => {
+        if (this.state.progressBarActive) {
+            //const { clientX } = e;
             const { left, width } = this.progBarOuterRef.current.getBoundingClientRect();
             const progressDecimal = (clientX - left) / width;
             const constrainedProgressDecimal = Math.max(0, Math.min(1, progressDecimal));
@@ -63,13 +72,14 @@ class TrackProgressBar extends Component {
         }
     }
 
-    handleMouseUp = () => {
-        if (this.state.progressBarActive) {
-            this.props.setTrackProgress(this.state.trackProgressDecimal);
-            this.setState({
-                progressBarActive: false
-            });
-        }
+    handleMouseMove = (e) => {
+        const { clientX } = e;
+        this.handleInteractionUpdate(clientX);
+    }
+
+    handleTouchMove = (e) => {
+        const { clientX } = e.targetTouches[0];
+        this.handleInteractionUpdate(clientX);
     }
 
     handleClick = (e) => {
@@ -97,7 +107,7 @@ class TrackProgressBar extends Component {
     }
 
     render() {
-        const { trackProgressDecimal } = this.state;
+        const { trackProgressDecimal, progressBarActive } = this.state;
         return (
             <span 
                 className="player-controls__prog-bar-outer" 
@@ -110,10 +120,13 @@ class TrackProgressBar extends Component {
                     style={{ width: `${trackProgressDecimal*100}%` }}
                 ></div>
                 <span 
-                    className="player-controls__prog-bar-knob" 
+                    className={`player-controls__prog-bar-knob ${progressBarActive ? 'active' : ''}`}
                     ref={this.knobRef}
                     style={{ left: `${trackProgressDecimal*100}%` }}
-                    onMouseDown={this.handleMouseDown}
+                    onMouseDown={this.handleInteractionStart}
+                    onTouchStart={this.handleInteractionStart}
+                    onTouchMove={this.handleTouchMove}
+                    onTouchEnd={this.handleInteractionEnd}
                     onKeyDown={this.handleKeyDown}
                     tabIndex="0"
                     role="slider"
@@ -127,7 +140,5 @@ class TrackProgressBar extends Component {
         );
     }
 }
-
-
 
 export default TrackProgressBar;

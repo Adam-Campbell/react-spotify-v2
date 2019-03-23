@@ -35,7 +35,11 @@
         bottom: 100%;
         left: 50%;
         transform: translate(-50%, 50%);
+        transition: background-color ease-out 0.2s;
         cursor: pointer;
+        &.active {
+            background-color: rgba(221,221,221,0.75);
+        }
         @media(min-width: 768px) {
             display: inline-block;
         }
