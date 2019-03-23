@@ -132,9 +132,6 @@ const mapStateToProps = (state) => {
         contextTrackIds: player.contextTrackIds,
         shuffledContextTrackIds: player.shuffledContextTrackIds,
         trackPreviewURL: getCurrentTrackPreviewURL(state)
-        // trackPreviewURL: state.tracks[state.player.trackId] ? 
-        //                 state.tracks[state.player.trackId].preview_url :
-        //                 ''
     };
 };
 

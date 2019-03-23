@@ -9,3 +9,4 @@ export * from './playerSelectors';
 export * from './modalSelectors';
 export * from './uiSelectors';
 export * from './accessTokenSelectors';
+export * from './cardCollectionSelectors';

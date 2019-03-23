@@ -14,15 +14,32 @@ const normalizedData = handleNormalize(someAlbumData, entryPoints.albums);
 
 */
 
+export const convertMsToMinSec = ms => {
+    const toSecs = ms / 1000;
+    const totalMins = Math.floor(toSecs / 60);
+    let remainingSecs = Math.round(toSecs % 60);
+    if (remainingSecs < 10) remainingSecs = '0' + remainingSecs;
+    return `${totalMins}:${remainingSecs}`;
+};
 
 
 // Simple schemas
 const artistSchema = new schema.Entity('artists');
 const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-const trackSchema = new schema.Entity('tracks', { album: albumSchema, artists: [artistSchema] });
 const playlistSchema = new schema.Entity('playlists');
 const categorySchema = new schema.Entity('categories');
+//const trackSchema = new schema.Entity('tracks', { album: albumSchema, artists: [artistSchema] });
 
+const trackSchema = new schema.Entity('tracks', 
+    { album: albumSchema, artists: [artistSchema] },
+    {
+        processStrategy: (value, parent, key) => {
+            const cloned = cloneDeep(value);
+            cloned.duration_minSec = convertMsToMinSec(cloned.duration_ms);
+            return cloned;
+        }
+    }
+);
 
 // Schema for the tracks appearing nested within a complex album entity. An 'album' property equal to the
 // parent album entities id needs to be manually added in since the entities returned from this endpoint 
@@ -33,6 +50,7 @@ const albumTrackSchema = new schema.Entity('tracks',
         processStrategy: (value, parent, key) => {
             const cloned = cloneDeep(value);
             cloned.album = parent.id;
+            cloned.duration_minSec = convertMsToMinSec(cloned.duration_ms);
             return cloned;
         }
     }

@@ -33,6 +33,7 @@ export class AlbumContainer extends Component {
         if (!timestamp) {
             return null;
         }
+
         return (
             <Album albumId={albumId} />
         );

@@ -7,7 +7,7 @@ import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
-import { getTrack, getAlbum } from '../../selectors';
+import { getTrack, getAlbum, getPlayerInfo } from '../../selectors';
 import { 
     openModal, 
     removeTrackFromPlaylist, 
@@ -91,16 +91,17 @@ Track.propTypes = {
 const mapStateToProps = (state, ownProps) => {
     const track = getTrack(state, ownProps.trackId);
     const album = getAlbum(state, track.album);
-    const isCurrentlySelected = state.player.trackId === ownProps.trackId && 
-                               state.player.contextURI === ownProps.contextURI;
+    const player = getPlayerInfo(state);
+    const isCurrentlySelected = player.trackId === ownProps.trackId && 
+                               player.contextURI === ownProps.contextURI;
     return {
         name: track.name,
         imageURL: album.images.length ? album.images[0].url : '',
-        duration: convertMsToMinSec(track.duration_ms),
+        duration: track.duration_minSec,
         trackNumber: track.track_number,
         trackURI: track.uri,
         isCurrentlySelected,
-        isPlaying: state.player.isPlaying
+        isPlaying: player.isPlaying
     };
 };
 
