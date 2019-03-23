@@ -96,7 +96,7 @@ const mapStateToProps = (state, ownProps) => {
                                player.contextURI === ownProps.contextURI;
     return {
         name: track.name,
-        imageURL: album.images.length ? album.images[0].url : '',
+        imageURL: album.images.length ? album.images[album.images.length-1].url : '',
         duration: track.duration_minSec,
         trackNumber: track.track_number,
         trackURI: track.uri,
