@@ -1,0 +1,88 @@
+@import '../../scssVariables/index.scss';
+
+.loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    &__text {
+        font-family: $font--body;
+        font-weight: 700;
+        font-size: 16px;
+        color: $black;
+    }
+    &__line-container {
+        width: 60px;
+        height: 42px;
+        text-align: center;
+        &--card {
+            width: 40px;
+            height: 30px;
+        }
+    }
+    &__line {
+        background-color: $black;
+        width: 10px;
+        height: 100%;
+        display: inline-block;
+        border-radius: 3px;
+        margin-left: 3px;
+        margin-right: 3px;
+        &--card {
+            width: 6px;
+            margin-left: 2px;
+            margin-right: 2px;
+            background-color: $brand;
+        }
+    }
+    &__line--1 {
+        animation: pulse-1 0.65s infinite linear;
+    }
+    &__line--2 {
+        animation: pulse-2 0.65s infinite linear;
+    }
+    &__line--3 {
+        animation: pulse-3 0.65s infinite linear;
+    }
+}
+
+
+@keyframes pulse-1 {
+    0% {
+        transform: scaleY(0.5);
+    }
+    50% {
+        transform: scaleY(1);
+    }
+    100% {
+        transform: scaleY(0.5);
+    }
+}
+  
+@keyframes pulse-2 {
+    0% {
+        transform: scaleY(0.75);
+    }
+    25% {
+        transform: scaleY(0.5);
+    }
+    75% {
+        transform: scaleY(1);
+    }
+    100% {
+        transform: scaleY(0.75);
+    }
+}
+  
+  
+@keyframes pulse-3 {
+    0% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.5);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}

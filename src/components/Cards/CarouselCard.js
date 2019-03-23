@@ -5,6 +5,7 @@ import DataPreFetcher from './DataPreFetcher';
 import SmartImage from '../SmartImage';
 import { collectionTypes } from '../../constants';
 import './carouselCard.scss';
+import { CardLoader } from '../Loaders';
 
 export const CarouselCard = ({ linkDestination, label, additionalLabel, imageURL, itemId, collectionType }) => (
     <InteractionValidator>
@@ -42,7 +43,7 @@ export const CarouselCard = ({ linkDestination, label, additionalLabel, imageURL
                         />
                         <p className="carousel-card__label">{label}</p>
                         {additionalLabel && <p className="carousel-card__additional-label">{additionalLabel}</p>}
-                        {dpProps.isFetching && <p className="carousel-card__loader">Loading...</p>}
+                        {dpProps.isFetching && <CardLoader />}
                     </a>
                )}
            </DataPreFetcher> 

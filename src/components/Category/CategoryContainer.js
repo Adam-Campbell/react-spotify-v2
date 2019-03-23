@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { fetchCategory } from '../../actions';
 import Category from './Category';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
-import Loader from '../Loader';
+import { Loader } from '../Loaders';
 import { getCategoryTimestamp, getLoadingStatus } from '../../selectors';
 
 class CategoryContainer extends Component {

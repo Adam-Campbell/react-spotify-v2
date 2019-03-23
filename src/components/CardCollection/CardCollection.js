@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Card, CarouselCard, CreatePlaylistCard } from '../Cards';
@@ -18,9 +18,8 @@ export const getImageURL = (item, collectionType) => {
     }
 }
 
-const CardCollection = (props) => {
-    console.log('card collection render method called');
-    return props.isWithinCarousel ? (
+const CardCollection = (props) => (
+    props.isWithinCarousel ? (
         <React.Fragment>
             {props.includeCreatePlaylistCard && <CreatePlaylistCard />}
             {props.items.map((item, index) => (
@@ -52,7 +51,7 @@ const CardCollection = (props) => {
             ))}
         </div>
     )
-};
+);
 
 CardCollection.propTypes = {
     itemIds: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -113,89 +112,3 @@ const makeMapStateToProps = () => {
 };
 
 export const ConnectedCardCollection = connect(makeMapStateToProps)(CardCollection);
-
-/*
-
-Overview
-
-
-switch
-    artists
-        return {
-            memoized selector, takes getAllArtists selector and an array of ids as arguments.
-            URLPath
-        }
-
-    albums
-        return {
-            memoized selector, takes getAllAlbums selector, getAllArtists selector, an array of ids
-                and a boolean includeAdditionalLabel prop.
-            URLPath
-        }
-
-
-    playlists
-       return {
-            memoized selector, takes getAllPlaylists selector and an array of ids as arguments.
-            URLPath
-        } 
-
-    categories
-        return {
-            memoized selector, takes getAllCategories selector and an array of ids as arguments.
-            URLPath
-        }
-
-*/
-
-
-
-
-
-
-
-// const mapStateToProps = (state, ownProps) => {
-//     switch (ownProps.collectionType) {
-//         case collectionTypes.artists:
-//             return {
-//                 items: ownProps.itemIds.map(itemId => state.artists.entities[itemId]),
-//                 URLPath: '/artist/'
-//             };
-
-//         case collectionTypes.albums:
-//             return {
-//                 items: ownProps.itemIds.map(itemId => {
-//                     const albumObject = state.albums.entities[itemId];
-//                     if (ownProps.includeAdditionalLabel) {
-//                         const albumArtistId = albumObject.artists[0];
-//                         return {
-//                             ...albumObject,
-//                             additional: state.artists.entities[albumArtistId].name
-//                         }
-//                     } else {
-//                         return albumObject;
-//                     }
-//                 }),
-//                 URLPath: '/album/'
-//             };
-        
-
-//         case collectionTypes.playlists:
-//             return {
-//                 items: ownProps.itemIds.map(itemId => state.playlists.entities[itemId]),
-//                 URLPath: '/playlist/'
-//             };
-
-//         case collectionTypes.categories:
-//             return {
-//                 items: ownProps.itemIds.map(itemId => state.categories.entities[itemId]),
-//                 URLPath: '/category/'
-//             };
-
-//         default:
-//             return {
-//                 items: [],
-//                 URLPath: ''
-//             };
-//     }
-// };

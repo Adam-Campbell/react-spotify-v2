@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchUser } from '../../actions';
-import Loader from '../Loader';
+import { Loader } from '../Loaders';
 import { getUserProfile } from '../../selectors';
 
 class WithUserInfo extends Component {
