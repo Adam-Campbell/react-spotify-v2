@@ -1,7 +1,7 @@
 import * as actionTypes from '../actionTypes';
-import { normalize, schema } from 'normalizr';
-import axios from 'axios';
-import { getUsersMarket } from './userActions';
+import { storeAlbums, storeArtists, storePlaylists, storeCategories } from './entityActions';
+import { handleNormalize, entryPoints } from '../utils';
+import API from '../api';
 
 const fetchHighlightsRequest = () => ({
     type: actionTypes.FETCH_HIGHLIGHTS_REQUEST
@@ -25,107 +25,107 @@ const fetchHighlightsAbort = () => ({
     type: actionTypes.FETCH_HIGHLIGHTS_ABORT
 });
 
-const storeNewReleases = (albumObjects, albumIds, artistObjects) => ({
-    type: actionTypes.STORE_NEW_RELEASES,
+const storeHighlights = (newReleaseIds, featuredPlaylistIds, categoryIds) => ({
+    type: actionTypes.STORE_HIGHLIGHTS,
     payload: {
-        albumObjects,
-        albumIds,
-        artistObjects
-    }
-});
-
-const storeFeaturedPlaylists = (playlistObjects, playlistIds) => ({
-    type: actionTypes.STORE_FEATURED_PLAYLISTS,
-    payload: {
-        playlistObjects,
-        playlistIds
-    }
-});
-
-const storeCategories = (categoryObjects, categoryIds) => ({
-    type: actionTypes.STORE_CATEGORIES,
-    payload: {
-        categoryObjects,
+        newReleaseIds,
+        featuredPlaylistIds,
         categoryIds
     }
 });
 
-const fetchNewReleases = (token, market) => async (dispatch) => {
+const fetchNewReleases = async (token, market) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/new-releases?country=${market}&limit=50`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const artistSchema = new schema.Entity('artists');
-        const albumSchema = new schema.Entity('albums', { artists: [artistSchema] });
-        const normalizedData = normalize(response.data.albums.items, [albumSchema]);
-        dispatch(storeNewReleases(
-            normalizedData.entities.albums,
-            normalizedData.result,
-            normalizedData.entities.artists
-        ));
+        const response = await API.getNewReleases(token, market);
+        return handleNormalize(response.data.albums.items, entryPoints.albums); 
     } catch (err) {
         throw new Error(err);
     }
 }
 
-const fetchFeaturedPlaylists = (token, market) => async (dispatch) => {
+const fetchFeaturedPlaylists = async (token, market) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/featured-playlists?country=${market}&limit=50`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const playlistSchema = new schema.Entity('playlists');
-        const normalizedData = normalize(response.data.playlists.items, [playlistSchema]);
-        dispatch(storeFeaturedPlaylists(
-            normalizedData.entities.playlists,
-            normalizedData.result
-        ));
+        const response = await API.getFeaturedPlaylists(token, market);
+        return handleNormalize(response.data.playlists.items, entryPoints.playlists);
     } catch (err) {
         throw new Error(err);
     }
 }
 
-const fetchCategories = (token, market) => async (dispatch) => {
+const fetchCategories = async (token, market) => {
     try {
-        const response = await axios.get(
-            `https://api.spotify.com/v1/browse/categories?country=${market}&limit=50`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const categorySchema = new schema.Entity('categories');
-        const normalizedData = normalize(response.data.categories.items, [categorySchema]);
-        dispatch(storeCategories(
-            normalizedData.entities.categories,
-            normalizedData.result
-        ));
+        const response = await API.getCategories(token, market);
+        return handleNormalize(response.data.categories.items, entryPoints.categories);
     } catch (err) {
         throw new Error(err);
+    }
+}
+
+const destructureData = (resolvedPromiseArr) => {
+    const [
+        {
+            entities: {
+                albums: albumEntities,
+                artists: artistEntities
+            },
+            result: newReleaseIds
+        },
+        {
+            entities: {
+                playlists: playlistEntities
+            },
+            result: featuredPlaylistIds
+        },
+        {
+            entities: {
+                categories: categoryEntities
+            },
+            result: categoryIds
+        }
+    ] = resolvedPromiseArr;
+
+    return {
+        artistEntities,
+        albumEntities,
+        playlistEntities,
+        categoryEntities,
+        newReleaseIds,
+        featuredPlaylistIds,
+        categoryIds
     }
 }
 
 export const fetchHighlights = () => async (dispatch, getState) => {
-    dispatch(fetchHighlightsRequest());
     const token = getState().accessToken.token;
-    const market = getState().user.country || await dispatch(getUsersMarket(token));
+    const market = getState().user.country;
     const highlights = getState().highlights;
     if (highlights.fullHighlightsFetched && Date.now() - highlights.lastFetchedAt <= 3600000) {
         return dispatch(fetchHighlightsAbort());
     }
-    Promise.all([
-        dispatch(fetchNewReleases(token, market)),
-        dispatch(fetchFeaturedPlaylists(token, market)),
-        dispatch(fetchCategories(token, market))
-    ])
-    .then(() => {
-        const timestamp = Date.now();
-        dispatch(fetchHighlightsSuccess(timestamp));
-    }, (err) => {
+    dispatch(fetchHighlightsRequest());
+
+    try {
+        const results = await Promise.all([
+            fetchNewReleases(token, market),
+            fetchFeaturedPlaylists(token, market),
+            fetchCategories(token, market)
+        ]);
+        const {
+            albumEntities,
+            artistEntities,
+            playlistEntities,
+            categoryEntities,
+            newReleaseIds,
+            featuredPlaylistIds,
+            categoryIds
+        } = destructureData(results);
+        dispatch(storeAlbums(albumEntities));
+        dispatch(storeArtists(artistEntities));
+        dispatch(storePlaylists(playlistEntities));
+        dispatch(storeCategories(categoryEntities));
+        dispatch(storeHighlights(newReleaseIds, featuredPlaylistIds, categoryIds));
+        dispatch(fetchHighlightsSuccess(Date.now()));
+    } catch (err) {
         dispatch(fetchHighlightsFailed(err));
-    })
+    }
 }

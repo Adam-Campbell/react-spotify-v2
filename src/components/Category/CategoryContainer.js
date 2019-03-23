@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
+import { fetchCategory } from '../../actions';
 import Category from './Category';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
+import { getCategoryTimestamp, getLoadingStatus } from '../../selectors';
 
 class CategoryContainer extends Component {
 
@@ -16,21 +18,26 @@ class CategoryContainer extends Component {
     }
 
     render() {
-        const { categoryObject } = this.props;
-        if (!categoryObject || !categoryObject.fullCategoryFetched) {
+        
+        const { category, timestamp, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader />;
+        }
+
+        if (!timestamp) {
             return null;
         }
-        return <Category categoryId={this.props.category} />
+        return <Category categoryId={category} />
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    categoryObject: state.categories.categoryData[ownProps.category]
+    timestamp: getCategoryTimestamp(state, ownProps.category),
+    isLoading: getLoadingStatus(state, 'categoryView')
 });
 
 export const ConnectedCategoryContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchCategory: ActionCreators.fetchCategory
-    }
+    { fetchCategory }
 )(CategoryContainer));

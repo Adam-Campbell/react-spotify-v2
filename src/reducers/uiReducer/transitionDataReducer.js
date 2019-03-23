@@ -1,4 +1,4 @@
-import * as actionTypes from '../actionTypes';
+import * as actionTypes from '../../actionTypes';
 
 const defaultState = {
     imageWidth: null,
@@ -27,4 +27,3 @@ const reducer = (state=defaultState, action) => {
 }
 
 export default reducer;
-

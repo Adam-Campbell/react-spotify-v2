@@ -10,6 +10,12 @@
 
 - Look for any improvements that can be made to data layer. Take a look at utilising selectors when mapping state to props. Also consider seperating out relationship associations into seperate reducers. This includes things like the array of an artists top tracks, which are not part of the artist object itself, but I'm adding onto the artist object in the store currently, and this is happening seperately from fetching the main artist object. Instead I could have an artistTopTracks reducer which is a dictionary where each key is the artist id and the associated value is the array of top track ids. This would lead to me having more reducers to deal with but would make other logic simpler. 
 
+Implement loading/spinner component, and render it conditionally when a loading status is true in store.
+
+Look at selectors/reselect to make some of the logic in mapStateToProps more efficient. 
+
+
+
 - [DONE] improving the animations - when transitioned from a card, as well as the specific header animations, give the rest of the page a fade in animation. When a page is navigated to without transitioning from a card, just give the whole page including the header a fade in animation.
 
 - [DONE] implementing a netflix style slider to hold the cards. Needs to support mouse and touch.

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +8,8 @@ import { faStepForward } from '@fortawesome/free-solid-svg-icons';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
 import { faSyncAlt } from '@fortawesome/free-solid-svg-icons';
 import TrackProgressBar from './TrackProgressBar';
+import { getPlayerInfo } from '../../selectors';
+import { setShuffle, setRepeat, resumePlayer, pausePlayer, skipForwards, skipBackwards } from '../../actions';
 
 class PlayerControls extends Component {
 
@@ -79,22 +80,18 @@ class PlayerControls extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    isPlaying: state.player.isPlaying,
-    isShuffled: state.player.isShuffled,
-    repeat: state.player.repeat
-});
+const mapStateToProps = (state) => {
+    const player = getPlayerInfo(state);
+    return {
+        isPlaying: player.isPlaying,
+        isShuffled: player.isShuffled,
+        repeat: player.repeat
+    };
+};
 
 export default connect(
     mapStateToProps,
-    {
-        setShuffle: ActionCreators.setShuffle,
-        setRepeat: ActionCreators.setRepeat,
-        resumePlayer: ActionCreators.resumePlayer,
-        pausePlayer: ActionCreators.pausePlayer,
-        skipForwards: ActionCreators.skipForwards,
-        skipBackwards: ActionCreators.skipBackwards
-    }
+    { setShuffle, setRepeat, resumePlayer, pausePlayer, skipForwards, skipBackwards }
 )(PlayerControls);
 
 

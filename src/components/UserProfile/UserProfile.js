@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { fetchUser } from '../../actions';
 import UserProfileHeader from '../UserProfileHeader';
 import TrackCollection from '../TrackCollection';
 import Section from '../Section';
@@ -8,6 +8,14 @@ import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
 import Carousel from '../Carousel';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
+import { 
+    getUserProfile, 
+    getUserPlaylistIds, 
+    getUserRecentTrackIds, 
+    getUserTopArtistIds,
+    getLoadingStatus
+} from '../../selectors';
 
 class UserProfileContainer extends Component {
 
@@ -24,7 +32,21 @@ class UserProfileContainer extends Component {
     }
 
     render() {
-        if (!this.props.userId) {
+        const { 
+            userId, 
+            userURI, 
+            recentTrackIds, 
+            topArtistIds, 
+            playlistIds, 
+            isLoading,
+            hasFetched 
+        } = this.props;
+
+        if (isLoading) {
+            return <Loader />
+        }
+
+        if (!hasFetched) {
             return null;
         }
         return (
@@ -32,19 +54,19 @@ class UserProfileContainer extends Component {
                 <UserProfileHeader />
                 <Section title="Recently Played Tracks">
                     <TrackCollection 
-                        trackIds={this.props.recentTracksIds.slice(0,5)}
-                        contextURI={this.props.userURI}
-                        contextId={this.props.userId}
+                        trackIds={recentTrackIds.slice(0,5)}
+                        contextURI={userURI}
+                        contextId={userId}
                     />
                 </Section>
                 <Carousel 
-                    itemIds={this.props.topArtistsIds}
+                    itemIds={topArtistIds}
                     title="Your Top Artists"
                     collectionType={collectionTypes.artists}
                     includeCreatePlaylistCard={false}
                 />
                 <Carousel 
-                    itemIds={this.props.playlistIds}
+                    itemIds={playlistIds}
                     title="Your Playlists"
                     collectionType={collectionTypes.playlists}
                     includeCreatePlaylistCard={true}
@@ -55,17 +77,20 @@ class UserProfileContainer extends Component {
     
 }
 
-const mapStateToProps = (state) => ({
-    userId: state.user.id,
-    userURI: state.user.uri,
-    recentTracksIds: state.user.recentTracksIds,
-    topArtistsIds: state.user.topArtistsIds,
-    playlistIds: state.user.playlistIds
-});
+const mapStateToProps = (state) => {
+    const user = getUserProfile(state);
+    return {
+        userId: user.id,
+        userURI:user.uri,
+        recentTrackIds: user.recentTrackIds,
+        topArtistIds: user.topArtistIds,
+        playlistIds: user.playlistIds,
+        isLoading: getLoadingStatus(state, 'userProfile'),
+        hasFetched: user.fullProfileFetched
+    };
+};
 
 export const ConnectedUserProfile =  withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchUser: ActionCreators.fetchUser
-    }
+    { fetchUser }
 )(UserProfileContainer));

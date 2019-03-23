@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import * as ActionCreators from '../../actions';
+import { storeToken } from '../../actions';
+import { getAccessToken, getAccessTokenTimestamp } from '../../selectors';
 
 class WithAuth extends Component {
     hasValidToken = () => {
@@ -20,13 +21,11 @@ class WithAuth extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    accessToken: state.accessToken.token,
-    timestamp: state.accessToken.timestamp
+    accessToken: getAccessToken(state),
+    timestamp: getAccessTokenTimestamp(state)
 });
 
 export default connect(
     mapStateToProps,
-    {
-        storeToken: ActionCreators.storeToken
-    }
+    { storeToken }
 )(WithAuth);

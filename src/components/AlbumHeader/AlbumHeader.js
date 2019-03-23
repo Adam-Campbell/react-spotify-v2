@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
 import SmartImage from '../SmartImage';
+import { getArtist, getAlbum } from '../../selectors';
 
 export const AlbumHeader = props => (
     <header className="album-header">
@@ -37,8 +38,8 @@ AlbumHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const album = state.albums.albumData[ownProps.albumId];
-    const artist = state.artists.artistData[album.artists[0]];
+    const album = getAlbum(state, ownProps.albumId);
+    const artist = getArtist(state, album.artists[0]);
     return {
         artistName: artist.name,
         artistId: artist.id,

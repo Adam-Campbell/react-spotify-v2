@@ -37,16 +37,16 @@ const getContextTrackIds = (contextURI, contextId, state) => {
     const contextType = splitContext[splitContext.length - 2];
     switch (contextType) {
         case 'album':
-            return [ ...state.albums.albumData[contextId].tracks ];
+            return [ ...state.albums.trackIds[contextId] ];
         
         case 'playlist':
-            return [ ...state.playlists.playlistData[contextId].tracks ];
+            return [ ...state.playlists.trackIds[contextId] ];
 
         case 'artist':
-            return [ ...state.artists.artistData[contextId].topTrackIds ];
+            return [ ...state.artists.topTrackIds[contextId] ];
 
         case 'user':
-            return [ ...state.user.recentTracksIds ];
+            return [ ...state.user.recentTrackIds ];
 
         default:
             return [];

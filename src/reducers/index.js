@@ -1,26 +1,29 @@
 import { combineReducers } from 'redux';
+// entities
+import artists from './artistsReducer';
+import albums from './albumsReducer';
+import categories from './categoriesReducer';
+import playlists from './playlistsReducer';
+import tracks from './tracksReducer';
+// app state
 import accessToken from './accessTokenReducer';
 import user from './userReducer';
-import artists from './artistsReducer';
-import tracks from './tracksReducer';
-import albums from './albumsReducer';
-import playlists from './playlistsReducer';
 import highlights from './highlightsReducer';
-import categories from './categoriesReducer';
-import transitions from './transitionsReducer';
-import modal from './modalReducer';
 import player from './playerReducer';
+import modal from './modalReducer';
+// ui
+import ui from './uiReducer';
 
 export default combineReducers({
+    artists,
+    albums,
+    tracks,
+    categories,
+    playlists,
     accessToken,
     user,
-    artists,
-    tracks,
-    albums,
-    playlists,
     highlights,
-    categories,
-    transitions,
+    player,
     modal,
-    player
+    ui
 });

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { fetchHighlights } from '../../actions';
 import Highlights from './Highlights';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
+import { getHighlightFetchedStatus, getLoadingStatus } from '../../selectors';
 
 class HighlightsContainer extends Component {
 
@@ -11,7 +13,13 @@ class HighlightsContainer extends Component {
     }
 
     render() {
-        if (!this.props.fullHighlightsFetched) {
+        const { fullHighlightsFetched, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader />;
+        }
+
+        if (!fullHighlightsFetched) {
             return null;
         }
         return <Highlights />;
@@ -19,12 +27,11 @@ class HighlightsContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    fullHighlightsFetched: state.highlights.fullHighlightsFetched
+    fullHighlightsFetched: getHighlightFetchedStatus(state),
+    isLoading: getLoadingStatus(state, 'highlightsView')
 });
 
 export const ConnectedHighlightsContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchHighlights: ActionCreators.fetchHighlights
-    }
+    { fetchHighlights }
 )(HighlightsContainer));

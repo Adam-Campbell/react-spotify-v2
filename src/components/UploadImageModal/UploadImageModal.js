@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { closeModal, updatePlaylistImage } from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload } from '@fortawesome/free-solid-svg-icons';
 import Button from '../Button';
@@ -109,8 +109,5 @@ class UploadImageModal extends Component {
 
 export const ConnectedUploadImageModal = connect(
     undefined, 
-    {
-        closeModal: ActionCreators.closeModal,
-        updatePlaylistImage: ActionCreators.updatePlaylistImage
-    }
+    { closeModal, updatePlaylistImage }
 )(UploadImageModal);

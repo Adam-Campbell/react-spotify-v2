@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { followArtist, unfollowArtist } from '../../actions';
 import Followers from '../Followers';
 import SmartImage from '../SmartImage';
+import { getArtist, getUserFollowingArtist } from '../../selectors';
 
 export const ArtistProfileHeader = props => (
     <header className="artist-profile-header">         
@@ -48,19 +49,16 @@ ArtistProfileHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const artist = state.artists.artistData[ownProps.artistId];
+    const artist = getArtist(state, ownProps.artistId);
     return {
         imageURL: artist.images.length ? artist.images[0].url : '',
         name: artist.name,
         followerCount: artist.followers.total,
-        isFollowing: state.user.followedArtistIds.includes(ownProps.artistId)
+        isFollowing: getUserFollowingArtist(state, ownProps.artistId)
     };
 };
 
 export const ConnectedArtistProfileHeader = connect(
     mapStateToProps,
-    {
-        followArtist: ActionCreators.followArtist,
-        unfollowArtist: ActionCreators.unfollowArtist
-    }
+    { followArtist, unfollowArtist }
 )(ArtistProfileHeader);

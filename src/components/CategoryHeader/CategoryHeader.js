@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SmartImage from '../SmartImage';
+import { getCategory } from '../../selectors';
 
 export const CategoryHeader = props => (
     <header className="category-header" >
@@ -32,7 +33,7 @@ CategoryHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const category = state.categories.categoryData[ownProps.categoryId];
+    const category = getCategory(state, ownProps.categoryId);
     return {
         name: category.name,
         imageURL: category.icons.length ? category.icons[0].url : ''

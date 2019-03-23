@@ -1,6 +1,7 @@
 @import '../../scssVariables/index.scss';
 
 .carousel-card {
+    position: relative;
     text-align: center;
     display: inline-block;
     width: 240px;
@@ -34,5 +35,15 @@
         font-weight: 300;
         margin-top: 4px;
         margin-bottom: 4px;
+    }
+    &__loader {
+        font-family: $font--body;
+        color: $brand;
+        font-weight: 700;
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
     }
 }

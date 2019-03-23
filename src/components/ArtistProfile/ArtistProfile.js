@@ -1,46 +1,39 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { purgeTransitionImageRect } from '../../actions';
 import ArtistProfileHeader from '../ArtistProfileHeader';
 import Section from '../Section';
 import TrackCollection from '../TrackCollection';
 import { collectionTypes } from '../../constants';
 import { constructTimeline } from '../../utils';
 import Carousel from '../Carousel';
+import { 
+    getArtist,
+    getArtistRelatedArtistIds, 
+    getArtistTopTrackIds,
+    getTransitionData,
+    getSortedArtistAlbumIds
+} from '../../selectors';
 
-const sortSinglesFromAlbums = (allIds, albumData) => {
-    const albumIds = [];
-    const singleIds = [];
-    allIds.forEach(id => {
-        if (albumData[id].album_type === 'single') {
-            singleIds.push(id);
-        } else {
-            albumIds.push(id);
-        }
-    });
-    return {
-        albumIds,
-        singleIds
-    };
-};
+// Refactor this component so that the albumIds are sorted into albums and singles in the 
+// mapStateToProps function, that way the album data doesn't need to be passed into the component at all.
 
-const _sortSinglesFromAlbums = (allIds, albumData) => {
-    allIds.reduce((acc, id) => {
-        return albumData[id].album_type === 'single' ?
-                {
-                    albumIds: [ ...acc.albumIds ],
-                    singleIds: [ ...acc.singleIds, id ]
-                } :
-                {
-                    albumIds: [ ...acc.albumIds, id ],
-                    singleIds: [ ...acc.singleIds ]
-                }
-    }, {
-      albumIds: [],
-      singleIds: []  
-    });
-};
+// const sortSinglesFromAlbums = (allIds, albumData) => {
+//     const albumIds = [];
+//     const singleIds = [];
+//     allIds.forEach(id => {
+//         if (albumData[id].album_type === 'single') {
+//             singleIds.push(id);
+//         } else {
+//             albumIds.push(id);
+//         }
+//     });
+//     return {
+//         albumIds,
+//         singleIds
+//     };
+// };
 
 class ArtistProfile extends Component {
 
@@ -58,7 +51,7 @@ class ArtistProfile extends Component {
 
     componentDidMount() {
         // const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        // const { top, left } = this.imageRef.current.getBoundingClientRect();
+        // const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         // constructTimeline(this.timeline, {
         //     hasTransition,
         //     image: this.imageRef.current,
@@ -71,8 +64,10 @@ class ArtistProfile extends Component {
         //     prevImageHeight: imageHeight,
         //     prevImageTop: imageY,
         //     prevImageLeft: imageX,
-        //     imageTop: top,
-        //     imageLeft: left
+        //     currImageWidth: width,
+        //     currImageHeight: height,
+        //     currImageTop: top,
+        //     currImageLeft: left
         // }); 
         // this.props.purgeTransitionImageRect(); 
     }
@@ -80,7 +75,7 @@ class ArtistProfile extends Component {
     componentDidUpdate(prevProps) {
         // if (prevProps.artistId !== this.props.artistId) {
         //     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        //     const { top, left } = this.imageRef.current.getBoundingClientRect();
+        //     const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         //     constructTimeline(this.timeline, {
         //         hasTransition,
         //         image: this.imageRef.current,
@@ -93,26 +88,32 @@ class ArtistProfile extends Component {
         //         prevImageHeight: imageHeight,
         //         prevImageTop: imageY,
         //         prevImageLeft: imageX,
-        //         imageTop: top,
-        //         imageLeft: left
+        //         currImageWidth: width,
+        //         currImageHeight: height,
+        //         currImageTop: top,
+        //         currImageLeft: left
         //     }); 
         //     this.props.purgeTransitionImageRect(); 
         // }
     }
 
     render() {
-        const { topTrackIds, relatedArtistIds, uri } = this.props.artist;
-        const { albumIds, singleIds } = sortSinglesFromAlbums(
-                                            this.props.artist.albumIds, 
-                                            this.props.albums
-                                        );
+        const { 
+            artistTopTrackIds, 
+            artistRelatedArtistIds,  
+            artistId, 
+            artistURI,
+            artistAlbumIds,
+            artistSingleIds
+        } = this.props;
+        //const { albumIds, singleIds } = sortSinglesFromAlbums(artistsAlbumIds, albums);
         return (
             <main 
                 className="body-content-container"
                 ref={this.pageContainerRef}
             >
                 <ArtistProfileHeader 
-                    artistId={this.props.artistId}
+                    artistId={artistId}
                     imageRef={this.imageRef}
                     titleRef={this.titleRef}
                     underlineRef={this.underlineRef}
@@ -121,25 +122,25 @@ class ArtistProfile extends Component {
                 <div ref={this.mainContentContainerRef}>
                     <Section title="Popular Tracks">
                         <TrackCollection 
-                            trackIds={topTrackIds.slice(0,5)}
-                            contextURI={uri}
-                            contextId={this.props.artistId}
+                            trackIds={artistTopTrackIds.slice(0,5)}
+                            contextURI={artistURI}
+                            contextId={artistId}
                         />
                     </Section>
                     <Carousel 
-                        itemIds={albumIds}
+                        itemIds={artistAlbumIds}
                         title="Albums"
                         collectionType={collectionTypes.albums}
                         includeCreatePlaylistCard={false}
                     />
                     <Carousel 
-                        itemIds={singleIds}
+                        itemIds={artistSingleIds}
                         title="Singles"
                         collectionType={collectionTypes.albums}
                         includeCreatePlaylistCard={false}
                     />
                     <Carousel 
-                        itemIds={relatedArtistIds}
+                        itemIds={artistRelatedArtistIds}
                         title="Related Artists"
                         collectionType={collectionTypes.artists}
                         includeCreatePlaylistCard={false}
@@ -150,38 +151,24 @@ class ArtistProfile extends Component {
     }
 }
 
-/*
-
-<Section title="Music">
-                        <CardCollection 
-                            itemIds={albumIds}
-                            collectionType={collectionTypes.albums}
-                        />
-                    </Section>
-
-                    <Section title="Related Artists">
-                        <CardCollection 
-                            itemIds={relatedArtistIds}
-                            collectionType={collectionTypes.artists}
-                        />
-                    </Section>
-
-
-*/
-
-const mapStateToProps = (state, ownProps) => ({
-    artist: state.artists.artistData[ownProps.artistId],
-    albums: state.albums.albumData,
-    imageWidth: state.transitions.imageWidth,
-    imageHeight: state.transitions.imageHeight,
-    imageX: state.transitions.imageX, 
-    imageY: state.transitions.imageY,
-    hasTransition: state.transitions.hasTransition
-});
+const mapStateToProps = (state, ownProps) => {
+    const { imageWidth, imageHeight, imageX, imageY, hasTransition } = getTransitionData(state);
+    const { albumIds, singleIds } = getSortedArtistAlbumIds(state, ownProps.artistId);
+    return {
+        artistURI: getArtist(state, ownProps.artistId).uri,
+        artistAlbumIds: albumIds,
+        artistSingleIds: singleIds,
+        artistTopTrackIds: getArtistTopTrackIds(state, ownProps.artistId),
+        artistRelatedArtistIds: getArtistRelatedArtistIds(state, ownProps.artistId),
+        imageWidth,
+        imageHeight,
+        imageX, 
+        imageY,
+        hasTransition
+    }
+};
 
 export default connect(
     mapStateToProps,
-    {
-        purgeTransitionImageRect: ActionCreators.purgeTransitionImageRect
-    }
+    { purgeTransitionImageRect }
 )(ArtistProfile);

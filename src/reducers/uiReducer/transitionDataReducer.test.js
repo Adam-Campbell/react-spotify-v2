@@ -1,4 +1,4 @@
-import * as actionTypes from '../actionTypes';
+import * as actionTypes from '../../actionTypes';
 import reducer from './transitionsReducer';
 
 test('returns the default state', () => {

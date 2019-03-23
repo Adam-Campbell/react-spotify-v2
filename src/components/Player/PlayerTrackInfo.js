@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { getTrack, getAlbum, getArtist } from '../../selectors';
 
 const PlayerTrackInfo = props => (
     <div className="track-info">
@@ -19,9 +20,10 @@ const mapStateToProps = (state, ownProps) => {
             artistName: ''
         }
     }
-    const track = state.tracks[state.player.trackId];
-    const album = state.albums.albumData[track.album];
-    const artist = state.artists.artistData[track.artists[0]];
+    // this could be memoized
+    const track = getTrack(state, state.player.trackId);
+    const album = getAlbum(state, track.album);
+    const artist = getArtist(state, track.artists[0]);
     return {
         imageURL: album.images.length ? album.images[0].url : '',
         trackName: track.name,

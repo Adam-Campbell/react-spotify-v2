@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { addTrackToPlaylist, closeModal } from '../../actions';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
 import CDIcon from '../../cd-icon.jpg';
+import { getUserPlaylists } from '../../selectors';
 
 export const AddToPlaylistModal = props => (
     <div className="add-to-playlist-modal">
@@ -42,13 +43,10 @@ AddToPlaylistModal.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    usersPlaylists: state.user.playlistIds.map(playlistId => state.playlists.playlistData[playlistId])
+    usersPlaylists: getUserPlaylists(state)
 });
 
 export const ConnectedAddToPlaylistModal = connect(
     mapStateToProps,
-    { 
-        addTrackToPlaylist: ActionCreators.addTrackToPlaylist,
-        closeModal: ActionCreators.closeModal 
-    }
+    { addTrackToPlaylist, closeModal }
 )(AddToPlaylistModal);

@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Followers from '../Followers';
-import * as ActionCreators from '../../actions';
+import { followPlaylist, unfollowPlaylist } from '../../actions';
 import SmartImage from '../SmartImage';
+import { getPlaylist, getPlaylistUserFollowingStatus } from '../../selectors';
 
 export const PlaylistHeader = props => (
     <header className="playlist-header">
@@ -41,20 +42,17 @@ PlaylistHeader.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const playlist = state.playlists.playlistData[ownProps.playlistId];
+    const playlist = getPlaylist(state, ownProps.playlistId);
     return {
         imageURL: playlist.images.length ? playlist.images[0].url : '',
         playlistName: playlist.name,
         ownerName: playlist.owner.display_name,
-        isFollowing: playlist.isFollowing,
+        isFollowing: getPlaylistUserFollowingStatus(state, ownProps.playlistId),
         playlistFollowerCount: playlist.followers.total
     }
 };
 
 export const ConnectedPlaylistHeader = connect(
     mapStateToProps,
-    {
-        followPlaylist: ActionCreators.followPlaylist,
-        unfollowPlaylist: ActionCreators.unfollowPlaylist
-    }
+    { followPlaylist, unfollowPlaylist }
 )(PlaylistHeader);

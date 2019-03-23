@@ -5,14 +5,7 @@ import CategoryHeader from '../CategoryHeader';
 import { collectionTypes } from '../../constants';
 import Section from '../Section';
 import CardCollection from '../CardCollection';
-
-/* 
-
-Todo - add transition animations for this route. Can't use the generic constructTimeline function, since it 
-doesn't have some of the elements required. I either need to just handle any transitions manually within this 
-component, or alter the constructTimeline function to handle this case. 
-
-*/
+import { getCategoryPlaylistIds } from '../../selectors';
 
 class Category extends Component {
 
@@ -28,7 +21,7 @@ class Category extends Component {
 
     render() {
 
-        const { categoryId, playlistIds } = this.props;
+        const { categoryId, categoryPlaylistIds } = this.props;
 
         return (
             <main className="body-content-container">
@@ -41,33 +34,19 @@ class Category extends Component {
                 <div ref={this.mainContainerRef}>
                     <Section title="Playlists" >
                         <CardCollection 
-                            itemIds={playlistIds}
+                            itemIds={categoryPlaylistIds}
                             collectionType={collectionTypes.playlists}
                             includeCreatePlaylistCard={false}
                         />
                     </Section> 
                 </div>
             </main>
-        )
+        );
     }
 }
 
-/*
-
-<Carousel 
-                        itemIds={playlistIds}
-                        title="Playlists"
-                        collectionType={collectionTypes.playlists}
-                        includeCreatePlaylistCard={false}
-                    />
-
-*/
-
-const mapStateToProps = (state, ownProps) => {
-    const category = state.categories.categoryData[ownProps.categoryId];
-    return {
-        playlistIds: category.playlistIds
-    };
-};
+const mapStateToProps = (state, ownProps) => ({
+    categoryPlaylistIds: getCategoryPlaylistIds(state, ownProps.categoryId)
+});
 
 export default connect(mapStateToProps)(Category);

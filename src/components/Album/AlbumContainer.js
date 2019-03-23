@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
+import { fetchAlbum } from '../../actions';
 import Album from './Album';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
+import Loader from '../Loader';
+import { getAlbumTimestamp, getLoadingStatus } from '../../selectors';
 
 export class AlbumContainer extends Component {
 
@@ -22,22 +24,28 @@ export class AlbumContainer extends Component {
     }
 
     render() {
-        if (!this.props.album || !this.props.album.fullAlbumFetched) {
+        const { albumId, timestamp, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader />;
+        }
+
+        if (!timestamp) {
             return null;
         }
+
         return (
-            <Album albumId={this.props.albumId} />
+            <Album albumId={albumId} />
         );
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    album: state.albums.albumData[ownProps.albumId]
+    timestamp: getAlbumTimestamp(state, ownProps.albumId),
+    isLoading: getLoadingStatus(state, 'albumView')
 });
 
 export const ConnectedAlbumContainer = withAuthAndUserInfo(connect(
     mapStateToProps,
-    {
-        fetchAlbum: ActionCreators.fetchAlbum
-    }
+    { fetchAlbum }
 )(AlbumContainer));

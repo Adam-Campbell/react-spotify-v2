@@ -42,6 +42,7 @@ export const CarouselCard = ({ linkDestination, label, additionalLabel, imageURL
                         />
                         <p className="carousel-card__label">{label}</p>
                         {additionalLabel && <p className="carousel-card__additional-label">{additionalLabel}</p>}
+                        {dpProps.isFetching && <p className="carousel-card__loader">Loading...</p>}
                     </a>
                )}
            </DataPreFetcher> 

@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import * as ActionCreators from '../../actions';
+import { purgeTransitionImageRect } from '../../actions';
 import PlaylistHeader from '../PlaylistHeader';
 import OwnedPlaylistHeader from '../OwnedPlaylistHeader';
 import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
 import PaginatedTrackCollection from '../PaginatedTrackCollection';
 import PaginationControls from '../PaginationControls';
+import { 
+    getPlaylistTrackIds, 
+    getPlaylist, 
+    getUserIsPlaylistOwner,
+    getTransitionData
+} from '../../selectors';
 
 class Playlist extends Component {
 
@@ -25,7 +31,7 @@ class Playlist extends Component {
 
     componentDidMount() {
         // const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        // const { top, left } = this.imageRef.current.getBoundingClientRect();
+        // const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         // constructTimeline(this.timeline, {
         //     hasTransition,
         //     image: this.imageRef.current,
@@ -38,8 +44,10 @@ class Playlist extends Component {
         //     prevImageHeight: imageHeight,
         //     prevImageTop: imageY,
         //     prevImageLeft: imageX,
-        //     imageTop: top,
-        //     imageLeft: left
+        //     currImageWidth: width,
+        //     currImageHeight: height,
+        //     currImageTop: top,
+        //     currImageLeft: left
         // });
         // this.props.purgeTransitionImageRect();
     }
@@ -47,7 +55,7 @@ class Playlist extends Component {
     componentDidUpdate(prevProps) {
         // if (prevProps.playlistId !== this.props.playlistId) {
         //     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        //     const { top, left } = this.imageRef.current.getBoundingClientRect();
+        //     const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
         //     constructTimeline(this.timeline, {
         //         hasTransition,
         //         image: this.imageRef.current,
@@ -60,24 +68,32 @@ class Playlist extends Component {
         //         prevImageHeight: imageHeight,
         //         prevImageTop: imageY,
         //         prevImageLeft: imageX,
-        //         imageTop: top,
-        //         imageLeft: left
+        //         currImageWidth: width,
+        //         currImageHeight: height,
+        //         currImageTop: top,
+        //         currImageLeft: left
         //     });
         //     this.props.purgeTransitionImageRect();
         // }
     }
 
     render() {
-        const isOwner = this.props.playlist.owner.id === this.props.currentUserId;
-        const { tracks, uri } = this.props.playlist;
+        //const isOwner = this.props.playlist.owner.id === this.props.currentUserId;
+        //const { tracks, uri } = this.props.playlist;
+        const {
+            playlistId,
+            playlistURI,
+            playlistTrackIds,
+            isPlaylistOwner
+        } = this.props;
         return (
             <main 
                 className="playlist"
                 ref={this.pageContainerRef}
             >
-                {isOwner ? (
+                {isPlaylistOwner ? (
                     <OwnedPlaylistHeader 
-                        playlistId={this.props.playlistId}
+                        playlistId={playlistId}
                         imageRef={this.imageRef}
                         titleRef={this.titleRef}
                         underlineRef={this.underlineRef}
@@ -85,7 +101,7 @@ class Playlist extends Component {
                     />
                 ) : (
                     <PlaylistHeader 
-                        playlistId={this.props.playlistId} 
+                        playlistId={playlistId} 
                         imageRef={this.imageRef}
                         titleRef={this.titleRef}
                         underlineRef={this.underlineRef}
@@ -96,14 +112,14 @@ class Playlist extends Component {
                     className="playlist__tracks-container"
                     ref={this.mainContentContainerRef}
                 >
-                    <PaginatedTrackCollection itemIds={tracks}>
+                    <PaginatedTrackCollection itemIds={playlistTrackIds}>
                         {({ itemIds, setPage, numberOfPages, currentPage }) => (
                             <React.Fragment>
                                 <TrackCollection 
                                     trackIds={itemIds}
-                                    contextId={this.props.playlistId}
-                                    contextURI={uri}
-                                    includeRemoveTrackButton={isOwner}
+                                    contextId={playlistId}
+                                    contextURI={playlistURI}
+                                    includeRemoveTrackButton={isPlaylistOwner}
                                 />
                                 <PaginationControls 
                                     numberOfPages={numberOfPages}
@@ -119,30 +135,21 @@ class Playlist extends Component {
     }
 }
 
-/*
-
-<TrackCollection 
-                        trackIds={tracks} 
-                        contextId={this.props.playlistId}
-                        contextURI={uri}
-                        includeRemoveTrackButton={isOwner} 
-                    />
-
-*/
-
-const mapStateToProps = (state, ownProps) => ({
-    playlist: state.playlists.playlistData[ownProps.playlistId],
-    currentUserId: state.user.id,
-    imageWidth: state.transitions.imageWidth,
-    imageHeight: state.transitions.imageHeight,
-    imageX: state.transitions.imageX, 
-    imageY: state.transitions.imageY,
-    hasTransition: state.transitions.hasTransition
-});
+const mapStateToProps = (state, ownProps) => {
+    const transitionData = getTransitionData(state);
+    return {
+        playlistTrackIds: getPlaylistTrackIds(state, ownProps.playlistId),
+        playlistURI: getPlaylist(state, ownProps.playlistId).uri,
+        isPlaylistOwner: getUserIsPlaylistOwner(state, ownProps.playlistId),
+        imageWidth: transitionData.imageWidth,
+        imageHeight: transitionData.imageHeight,
+        imageX: transitionData.imageX, 
+        imageY: transitionData.imageY,
+        hasTransition: transitionData.hasTransition
+    };
+};
 
 export default connect(
     mapStateToProps,
-    {
-        purgeTransitionImageRect: ActionCreators.purgeTransitionImageRect
-    }
+    { purgeTransitionImageRect }
 )(Playlist)

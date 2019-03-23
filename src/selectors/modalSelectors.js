@@ -1,0 +1,1 @@
+export const getModalInfo = (state) => state.modal;

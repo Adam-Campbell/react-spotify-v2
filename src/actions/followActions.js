@@ -1,5 +1,5 @@
 import * as actionTypes from '../actionTypes';
-import axios from 'axios';
+import API from '../api';
 
 const followArtistRequest = (artistId) => ({
     type: actionTypes.FOLLOW_ARTIST_REQUEST,
@@ -25,20 +25,8 @@ const followArtistFailed = (error, artistId) => ({
 
 export const followArtist = (artistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
-    // Put requests to this Spotify endpoint only seem to work when the method param on the request is set to
-    // 'PUT' rather than 'put'. However axios.put will always set the method param to 'put' and this can't be
-    // overridden, so instead I have used axios.request and manually set the method param to 'PUT'.
     try {
-        const response = await axios.request(`https://api.spotify.com/v1/me/following?type=artist`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            method: 'PUT',
-            data: {
-                'ids': [ artistId ]
-            } 
-        });
+        const response = await API.followArtist(token, artistId);
         if (response.status === 204) {
             dispatch(followArtistSuccess(artistId));
         }
@@ -73,15 +61,7 @@ const unfollowArtistFailed = (error, artistId) => ({
 export const unfollowArtist = (artistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     try {
-        const response = await axios.delete(`https://api.spotify.com/v1/me/following?type=artist`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            data: {
-                'ids': [ artistId ]
-            } 
-        });
+        const response = await API.unfollowArtist(token, artistId);
         if (response.status === 204) {
             dispatch(unfollowArtistSuccess(artistId));
         }
@@ -116,17 +96,8 @@ const followPlaylistFailed = (error, playlistId) => ({
 
 export const followPlaylist = (playlistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
-    // Put requests to this Spotify endpoint only seem to work when the method param on the request is set to
-    // 'PUT' rather than 'put'. However axios.put will always set the method param to 'put' and this can't be
-    // overridden, so instead I have used axios.request and manually set the method param to 'PUT'.
     try {
-        const response = await axios.request(`https://api.spotify.com/v1/playlists/${playlistId}/followers`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            method: 'PUT'
-        });
+        const response = await API.followPlaylist(token, playlistId);
         if (response.status === 200) {
             dispatch(followPlaylistSuccess(playlistId));
         }
@@ -161,12 +132,7 @@ const unfollowPlaylistFailed = (error, playlistId) => ({
 export const unfollowPlaylist = (playlistId) => async (dispatch, getState) => {
     const token = getState().accessToken.token;
     try {
-        const response = await axios.delete(`https://api.spotify.com/v1/playlists/${playlistId}/followers`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            } 
-        });
+        const response = await API.unfollowPlaylist(token, playlistId);
         if (response.status === 200) {
             dispatch(unfollowPlaylistSuccess(playlistId));
         }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { collectionTypes } from '../../constants';
 import { TimelineMax } from 'gsap';
 import Carousel from '../Carousel';
+import { getNewReleaseIds, getFeaturedPlaylistIds, getCategoryIds } from '../../selectors';
 
 class Highlights extends Component {
 
@@ -47,10 +48,9 @@ class Highlights extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    newReleases: state.highlights.newReleases,
-    featuredPlaylists: state.highlights.featuredPlaylists,
-    categories: state.highlights.categories,
-    fullHighlightsFetched: state.highlights.fullHighlightsFetched
+    newReleases: getNewReleaseIds(state),
+    featuredPlaylists: getFeaturedPlaylistIds(state),
+    categories: getCategoryIds(state),
 });
 
 export default connect(mapStateToProps)(Highlights);

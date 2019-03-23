@@ -1,5 +1,5 @@
 import * as actionTypes from '../../actionTypes';
-import axios from 'axios';
+import API from '../../api';
 
 export const SDKUpdatePlayerState = (trackId, isPlaying, isShuffled, repeatMode) => ({
     type: actionTypes.SDK_UPDATE_PLAYER_STATE,
@@ -25,40 +25,15 @@ const SDKSelectTrackFailed = (error) => ({
     }
 });
 
-const makeReqWithContext = (token, deviceId, contextURI, trackURI) => {
-    return axios.request(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-        method: 'PUT',
-        data: {
-            context_uri: contextURI,
-            offset: {
-                uri: trackURI
-            }
-        }
-    });
-};
-
 const makeReqWithURIList = (token, deviceId, contextId, contextType, trackURI, state) => {
     let allTrackURIs;
     if (contextType === 'artist') {
-        allTrackURIs = state.artists.artistData[contextId].topTrackIds.map(id => state.tracks[id].uri);
+        //allTrackURIs = state.artists.artistData[contextId].topTrackIds.map(id => state.tracks[id].uri);
+        allTrackURIs = state.artists.topTrackIds[contextId].map(id => state.tracks[id].uri);
     } else if (contextType === 'user') {
-        allTrackURIs = state.user.recentTracksIds.map(id => state.tracks[id].uri);
+        allTrackURIs = state.user.recentTrackIds.map(id => state.tracks[id].uri);
     }
-    return axios.request(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-        method: 'PUT',
-        data: {
-            uris: [ ...allTrackURIs ],
-            offset: {
-                uri: trackURI
-            }
-        }
-    });
+    return API.selectTrackWithURIList(token, deviceId, trackURI, allTrackURIs);
 }
 
 export const SDKSelectTrack = (contextURI, contextId, trackURI) => async (dispatch, getState) => {
@@ -74,7 +49,7 @@ export const SDKSelectTrack = (contextURI, contextId, trackURI) => async (dispat
         const contextType = splitContext[splitContext.length - 2];
 
         if (contextType === 'album' || contextType === 'playlist') {
-            const response = await makeReqWithContext(token, deviceId, contextURI, trackURI);
+            const response = await API.selectTrackWithContext(token, deviceId, trackURI, contextURI);
             dispatch(SDKSelectTrackSuccess(contextURI));
         } else if (contextType === 'artist' || contextType === 'user') {
             const response = await makeReqWithURIList(token, deviceId, contextId, contextType, trackURI, state);
@@ -198,14 +173,7 @@ export const SDKSetShuffle = (shuffleValue) => async (dispatch, getState) => {
     const token = state.accessToken.token;
     const deviceId = state.player.deviceId;
     try {
-        const response = await axios.request(
-            `https://api.spotify.com/v1/me/player/shuffle?device_id=${deviceId}&state=${shuffleValue}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            method: 'PUT'
-        });
-        console.log(response.data);
+        const response = await API.setShuffle(token, deviceId, shuffleValue);
         dispatch(SDKSetShuffleSuccess(shuffleValue));
     } catch (err) {
         dispatch(SDKSetShuffleFailed(err, shuffleValue));
@@ -240,13 +208,7 @@ export const SDKSetRepeat = (newRepeatValue) => async (dispatch, getState) => {
     const token = state.accessToken.token;
     const deviceId = state.player.deviceId;
     try {
-        const response = await axios.request(
-            `https://api.spotify.com/v1/me/player/repeat?state=${newRepeatValue}&device_id=${deviceId}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            method: 'PUT'
-        });
+        const response = await API.setRepeat(token, deviceId, newRepeatValue);
         dispatch(SDKSetRepeatSuccess(newRepeatValue));
     } catch (err) {
         dispatch(SDKSetRepeatFailed(err, newRepeatValue));

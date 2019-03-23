@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
+import { skipForwards } from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import PlayerTrackInfo from './PlayerTrackInfo';
 import PlayerControls from './PlayerControls';
 import PlayerVolumeControl from './PlayerVolumeControl';
+import { getPlayerInfo, getCurrentTrackPreviewURL } from '../../selectors';
 
 class Player extends Component {
 
@@ -118,24 +119,23 @@ class Player extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    isActive: state.player.isActive,
-    SDKAvailable: state.player.SDKAvailable,
-    isPlaying: state.player.isPlaying,
-    isShuffled: state.player.isShuffled,
-    repeat: state.player.repeat,
-    trackId: state.player.trackId,
-    contextURI: state.player.contextURI,
-    contextTrackIds: state.player.contextTrackIds,
-    shuffledContextTrackIds: state.player.shuffledContextTrackIds,
-    trackPreviewURL: state.tracks[state.player.trackId] ? 
-                     state.tracks[state.player.trackId].preview_url :
-                     ''
-});
+const mapStateToProps = (state) => {
+    const player = getPlayerInfo(state);
+    return {
+        isActive: player.isActive,
+        SDKAvailable: player.SDKAvailable,
+        isPlaying: player.isPlaying,
+        isShuffled: player.isShuffled,
+        repeat: player.repeat,
+        trackId: player.trackId,
+        contextURI: player.contextURI,
+        contextTrackIds: player.contextTrackIds,
+        shuffledContextTrackIds: player.shuffledContextTrackIds,
+        trackPreviewURL: getCurrentTrackPreviewURL(state)
+    };
+};
 
 export const ConnectedPlayer = connect(
     mapStateToProps,
-    {
-        skipForwards: ActionCreators.skipForwards
-    }
+    { skipForwards }
 )(Player);

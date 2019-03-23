@@ -1,13 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
+import { getTrack, getAlbum, getPlayerInfo } from '../../selectors';
+import { 
+    openModal, 
+    removeTrackFromPlaylist, 
+    selectTrack, 
+    pausePlayer, 
+    resumePlayer 
+} from '../../actions';
 
 export const convertMsToMinSec = ms => {
     const toSecs = ms / 1000;
@@ -82,30 +89,23 @@ Track.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const track = state.tracks[ownProps.trackId];
-    const album = state.albums.albumData[track.album];
-    // const currentTrack = state.player.trackId;
-    // const currentContext = state.player.contextURI;
-    const isCurrentlySelected = state.player.trackId === ownProps.trackId && 
-                               state.player.contextURI === ownProps.contextURI;
+    const track = getTrack(state, ownProps.trackId);
+    const album = getAlbum(state, track.album);
+    const player = getPlayerInfo(state);
+    const isCurrentlySelected = player.trackId === ownProps.trackId && 
+                               player.contextURI === ownProps.contextURI;
     return {
         name: track.name,
         imageURL: album.images.length ? album.images[0].url : '',
-        duration: convertMsToMinSec(track.duration_ms),
+        duration: track.duration_minSec,
         trackNumber: track.track_number,
         trackURI: track.uri,
         isCurrentlySelected,
-        isPlaying: state.player.isPlaying
+        isPlaying: player.isPlaying
     };
 };
 
 export const ConnectedTrack = connect(
     mapStateToProps,
-    { 
-        openModal: ActionCreators.openModal,
-        removeTrackFromPlaylist: ActionCreators.removeTrackFromPlaylist,
-        selectTrack: ActionCreators.selectTrack,
-        pausePlayer: ActionCreators.pausePlayer,
-        resumePlayer: ActionCreators.resumePlayer
-    }
+    { openModal, removeTrackFromPlaylist, selectTrack, pausePlayer, resumePlayer }
 )(Track);
