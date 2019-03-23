@@ -18,19 +18,27 @@ class PlayerVolumeControl extends Component {
 
     componentDidMount() {
         window.addEventListener('mousemove', this.handleMouseMove);
-        window.addEventListener('mouseup', this.handleMouseUp);
+        window.addEventListener('mouseup', this.handleInteractionEnd);
     }
 
     componentWillUnmount() {
         window.removeEventListener('mousemove', this.handleMouseMove);
-        window.removeEventListener('mouseup', this.handleMouseUp);
+        window.removeEventListener('mouseup', this.handleInteractionEnd);
     }
 
-    handleMouseDown = (e) => {
+    handleInteractionStart = (e) => {
         e.stopPropagation();
         this.setState({
             volumeControlActive: true
         });
+    }
+
+    handleInteractionEnd = () => {
+        if (this.state.volumeControlActive) {
+            this.setState({
+                volumeControlActive: false
+            });
+        } 
     }
 
     handleMouseMove = (e) => {
@@ -40,12 +48,12 @@ class PlayerVolumeControl extends Component {
         }
     }
 
-    handleMouseUp = () => {
+    handleTouchMove = (e) => {
+        e.preventDefault();
+        const { clientY } = e.targetTouches[0];
         if (this.state.volumeControlActive) {
-            this.setState({
-                volumeControlActive: false
-            });
-        }    
+            this.updateVolume(clientY);
+        }
     }
 
     handleClick = (e) => {
@@ -89,8 +97,7 @@ class PlayerVolumeControl extends Component {
     }
 
     render() {
-        const { volumeDecimal } = this.state;
-        console.log(volumeDecimal)
+        const { volumeDecimal, volumeControlActive } = this.state;
         return (
             <span 
                 className="volume-control"
@@ -102,10 +109,13 @@ class PlayerVolumeControl extends Component {
                     style={{ height: `${volumeDecimal*100}%` }}
                 ></div>
                 <span 
-                    className="volume-control__knob"
+                    className={`volume-control__knob ${volumeControlActive ? 'active' : ''}`}
                     style={{ bottom: `${volumeDecimal*100}%` }} 
                     ref={this.knobRef}
-                    onMouseDown={this.handleMouseDown}
+                    onMouseDown={this.handleInteractionStart}
+                    onTouchStart={this.handleInteractionStart}
+                    onTouchMove={this.handleTouchMove}
+                    onTouchEnd={this.handleInteractionEnd}
                     onKeyDown={this.handleKeyDown}
                     tabIndex="0"
                     role="slider"
