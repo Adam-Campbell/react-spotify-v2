@@ -25,7 +25,7 @@ const createPlaylistCard = ({ openModal }) => (
                         onMouseUp={handleInteractionEnd}
                         onMouseLeave={ivProps.endInteraction}
                         onTouchStart={ivProps.startTouchInteraction}
-                        onTouchMove={ivProps.updateMouseInteraction}
+                        onTouchMove={ivProps.updateTouchInteraction}
                         onTouchEnd={handleInteractionEnd}
                         onClick={(e) => e.preventDefault()}
                     >
