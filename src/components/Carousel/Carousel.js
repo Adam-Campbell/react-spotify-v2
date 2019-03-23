@@ -262,6 +262,11 @@ export class Carousel extends Component {
             includeAdditionalLabel 
         } = this.props;
         const containerWidth = `${this.calculateContainerWidth()}px`;
+
+        if (!itemIds.length) {
+            return null;
+        }
+
         return (
             <section className="carousel__section">
                 <h1 className="carousel__title heading">{title}</h1>
