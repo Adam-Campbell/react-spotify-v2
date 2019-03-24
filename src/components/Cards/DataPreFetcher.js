@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as ActionCreators from '../../actions';
@@ -56,6 +56,25 @@ export class DataPreFetcher extends Component {
         }
     }
 
+    getBundle = (collectionType) => {
+        switch (collectionType) {
+            case collectionTypes.artists:
+                return import('../ArtistProfile');
+
+            case collectionTypes.albums:
+                return import('../Album');
+
+            case collectionTypes.playlists:
+                return import('../Playlist');
+
+            case collectionTypes.categories:
+                return import('../Category');
+
+            default:
+                return import('../ArtistProfile');
+        }
+    }
+
     /**
      * This function passes the dimension and location the clicked image to the store to allow a smooth
      * transition, then ensures that the data for the route to be transitioned to has been fetched, then
@@ -72,7 +91,10 @@ export class DataPreFetcher extends Component {
         //const adjustedTop = y ? y : top - window.pageYOffset;
         this.props.storeTransitionImageRect(width, height, left, top);
         const fetchingFunction = this.getFetchingFunction(this.props.collectionType);
-        await fetchingFunction(this.props.itemId, true);
+        await Promise.all([
+            fetchingFunction(this.props.itemId, true),
+            this.getBundle(this.props.collectionType)
+        ]);
         this.setState({
             isFetching: false
         });
