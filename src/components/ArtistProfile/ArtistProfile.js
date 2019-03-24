@@ -15,6 +15,7 @@ import {
     getTransitionData,
     getSortedArtistAlbumIds
 } from '../../selectors';
+import { Helmet } from 'react-helmet';
 
 // Refactor this component so that the albumIds are sorted into albums and singles in the 
 // mapStateToProps function, that way the album data doesn't need to be passed into the component at all.
@@ -102,51 +103,57 @@ class ArtistProfile extends Component {
             artistTopTrackIds, 
             artistRelatedArtistIds,  
             artistId, 
+            artistName,
             artistURI,
             artistAlbumIds,
             artistSingleIds
         } = this.props;
         //const { albumIds, singleIds } = sortSinglesFromAlbums(artistsAlbumIds, albums);
         return (
-            <main 
-                className="body-content-container"
-                ref={this.pageContainerRef}
-            >
-                <ArtistProfileHeader 
-                    artistId={artistId}
-                    imageRef={this.imageRef}
-                    titleRef={this.titleRef}
-                    underlineRef={this.underlineRef}
-                    followersContainerRef={this.followersContainerRef}
-                />
-                <div ref={this.mainContentContainerRef}>
-                    <Section title="Popular Tracks">
-                        <TrackCollection 
-                            trackIds={artistTopTrackIds.slice(0,5)}
-                            contextURI={artistURI}
-                            contextId={artistId}
+            <React.Fragment>
+                <Helmet>
+                    <title>{artistName} - Reactify</title>
+                </Helmet>
+                <main 
+                    className="body-content-container"
+                    ref={this.pageContainerRef}
+                >
+                    <ArtistProfileHeader 
+                        artistId={artistId}
+                        imageRef={this.imageRef}
+                        titleRef={this.titleRef}
+                        underlineRef={this.underlineRef}
+                        followersContainerRef={this.followersContainerRef}
+                    />
+                    <div ref={this.mainContentContainerRef}>
+                        <Section title="Popular Tracks">
+                            <TrackCollection 
+                                trackIds={artistTopTrackIds.slice(0,5)}
+                                contextURI={artistURI}
+                                contextId={artistId}
+                            />
+                        </Section>
+                        <Carousel 
+                            itemIds={artistAlbumIds}
+                            title="Albums"
+                            collectionType={collectionTypes.albums}
+                            includeCreatePlaylistCard={false}
                         />
-                    </Section>
-                    <Carousel 
-                        itemIds={artistAlbumIds}
-                        title="Albums"
-                        collectionType={collectionTypes.albums}
-                        includeCreatePlaylistCard={false}
-                    />
-                    <Carousel 
-                        itemIds={artistSingleIds}
-                        title="Singles"
-                        collectionType={collectionTypes.albums}
-                        includeCreatePlaylistCard={false}
-                    />
-                    <Carousel 
-                        itemIds={artistRelatedArtistIds}
-                        title="Related Artists"
-                        collectionType={collectionTypes.artists}
-                        includeCreatePlaylistCard={false}
-                    />
-                </div>
-            </main>
+                        <Carousel 
+                            itemIds={artistSingleIds}
+                            title="Singles"
+                            collectionType={collectionTypes.albums}
+                            includeCreatePlaylistCard={false}
+                        />
+                        <Carousel 
+                            itemIds={artistRelatedArtistIds}
+                            title="Related Artists"
+                            collectionType={collectionTypes.artists}
+                            includeCreatePlaylistCard={false}
+                        />
+                    </div>
+                </main>
+            </React.Fragment>
         );
     }
 }
@@ -154,8 +161,10 @@ class ArtistProfile extends Component {
 const mapStateToProps = (state, ownProps) => {
     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = getTransitionData(state);
     const { albumIds, singleIds } = getSortedArtistAlbumIds(state, ownProps.artistId);
+    const artist = getArtist(state, ownProps.artistId);
     return {
-        artistURI: getArtist(state, ownProps.artistId).uri,
+        artistURI: artist.uri,
+        artistName: artist.name,
         artistAlbumIds: albumIds,
         artistSingleIds: singleIds,
         artistTopTrackIds: getArtistTopTrackIds(state, ownProps.artistId),

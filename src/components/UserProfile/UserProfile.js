@@ -16,6 +16,7 @@ import {
     getUserTopArtistIds,
     getLoadingStatus
 } from '../../selectors';
+import { Helmet } from 'react-helmet';
 
 class UserProfileContainer extends Component {
 
@@ -44,50 +45,62 @@ class UserProfileContainer extends Component {
         } = this.props;
 
         if (isLoading) {
-            return <Loader />
+            return (
+                <React.Fragment>
+                    <Helmet>
+                        <title>Your profile - Reactify</title>
+                    </Helmet>
+                    <Loader />
+                </React.Fragment>
+            );
         }
 
         if (!hasFetched) {
             return null;
         }
         return (
-            <main className="body-content-container" ref={this.pageContainerRef}>
-                <UserProfileHeader />
-                
-                {
-                    hasUserData ? (
-                        <React.Fragment>
-                            <Section title="Recently Played Tracks">
-                                <TrackCollection 
-                                    trackIds={recentTrackIds.slice(0,5)}
-                                    contextURI={userURI}
-                                    contextId={userId}
+            <React.Fragment>
+                <Helmet>
+                    <title>Your profile - Reactify</title>
+                </Helmet>
+                <main className="body-content-container" ref={this.pageContainerRef}>
+                    <UserProfileHeader />
+                    
+                    {
+                        hasUserData ? (
+                            <React.Fragment>
+                                <Section title="Recently Played Tracks">
+                                    <TrackCollection 
+                                        trackIds={recentTrackIds.slice(0,5)}
+                                        contextURI={userURI}
+                                        contextId={userId}
+                                    />
+                                </Section>
+                                <Carousel 
+                                    itemIds={topArtistIds}
+                                    title="Your Top Artists"
+                                    collectionType={collectionTypes.artists}
+                                    includeCreatePlaylistCard={false}
                                 />
-                            </Section>
-                            <Carousel 
-                                itemIds={topArtistIds}
-                                title="Your Top Artists"
-                                collectionType={collectionTypes.artists}
-                                includeCreatePlaylistCard={false}
-                            />
-                            <Carousel 
-                                itemIds={playlistIds}
-                                title="Your Playlists"
-                                collectionType={collectionTypes.playlists}
-                                includeCreatePlaylistCard={true}
-                            />
-                        </React.Fragment>
-                    ) : (
-                        <div className="user-profile-intro">
-                            <h2 className="heading">New around here?</h2>
-                            <p className="user-profile-intro-text">
-                                We don't have much to show on your profile yet! Click the menu icon to the left to start browsing.
-                            </p>
-                        </div>
-                    )
-                }
-                
-            </main>
+                                <Carousel 
+                                    itemIds={playlistIds}
+                                    title="Your Playlists"
+                                    collectionType={collectionTypes.playlists}
+                                    includeCreatePlaylistCard={true}
+                                />
+                            </React.Fragment>
+                        ) : (
+                            <div className="user-profile-intro">
+                                <h2 className="heading">New around here?</h2>
+                                <p className="user-profile-intro-text">
+                                    We don't have much to show on your profile yet! Click the menu icon to the left to start browsing.
+                                </p>
+                            </div>
+                        )
+                    }
+                    
+                </main>
+            </React.Fragment>
         );
     }
     

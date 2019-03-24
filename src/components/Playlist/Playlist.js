@@ -14,6 +14,7 @@ import {
     getUserIsPlaylistOwner,
     getTransitionData
 } from '../../selectors';
+import { Helmet } from 'react-helmet';
 
 class Playlist extends Component {
 
@@ -83,54 +84,60 @@ class Playlist extends Component {
         const {
             playlistId,
             playlistURI,
+            playlistName,
             playlistTrackIds,
             isPlaylistOwner
         } = this.props;
         return (
-            <main 
-                className="playlist"
-                ref={this.pageContainerRef}
-            >
-                {isPlaylistOwner ? (
-                    <OwnedPlaylistHeader 
-                        playlistId={playlistId}
-                        imageRef={this.imageRef}
-                        titleRef={this.titleRef}
-                        underlineRef={this.underlineRef}
-                        followersContainerRef={this.followersContainerRef} 
-                    />
-                ) : (
-                    <PlaylistHeader 
-                        playlistId={playlistId} 
-                        imageRef={this.imageRef}
-                        titleRef={this.titleRef}
-                        underlineRef={this.underlineRef}
-                        followersContainerRef={this.followersContainerRef} 
-                    />
-                )}
-                <section 
-                    className="playlist__tracks-container"
-                    ref={this.mainContentContainerRef}
+            <React.Fragment>
+                <Helmet>
+                    <title>{playlistName} - Reactify</title>
+                </Helmet>
+                <main 
+                    className="playlist"
+                    ref={this.pageContainerRef}
                 >
-                    <PaginatedTrackCollection itemIds={playlistTrackIds}>
-                        {({ itemIds, setPage, numberOfPages, currentPage }) => (
-                            <React.Fragment>
-                                <TrackCollection 
-                                    trackIds={itemIds}
-                                    contextId={playlistId}
-                                    contextURI={playlistURI}
-                                    includeRemoveTrackButton={isPlaylistOwner}
-                                />
-                                <PaginationControls 
-                                    numberOfPages={numberOfPages}
-                                    currentPage={currentPage}
-                                    setPage={setPage}
-                                />
-                            </React.Fragment>
-                        )}
-                    </PaginatedTrackCollection>
-                </section>
-            </main>
+                    {isPlaylistOwner ? (
+                        <OwnedPlaylistHeader 
+                            playlistId={playlistId}
+                            imageRef={this.imageRef}
+                            titleRef={this.titleRef}
+                            underlineRef={this.underlineRef}
+                            followersContainerRef={this.followersContainerRef} 
+                        />
+                    ) : (
+                        <PlaylistHeader 
+                            playlistId={playlistId} 
+                            imageRef={this.imageRef}
+                            titleRef={this.titleRef}
+                            underlineRef={this.underlineRef}
+                            followersContainerRef={this.followersContainerRef} 
+                        />
+                    )}
+                    <section 
+                        className="playlist__tracks-container"
+                        ref={this.mainContentContainerRef}
+                    >
+                        <PaginatedTrackCollection itemIds={playlistTrackIds}>
+                            {({ itemIds, setPage, numberOfPages, currentPage }) => (
+                                <React.Fragment>
+                                    <TrackCollection 
+                                        trackIds={itemIds}
+                                        contextId={playlistId}
+                                        contextURI={playlistURI}
+                                        includeRemoveTrackButton={isPlaylistOwner}
+                                    />
+                                    <PaginationControls 
+                                        numberOfPages={numberOfPages}
+                                        currentPage={currentPage}
+                                        setPage={setPage}
+                                    />
+                                </React.Fragment>
+                            )}
+                        </PaginatedTrackCollection>
+                    </section>
+                </main>
+            </React.Fragment>
         );
     }
 }
@@ -141,6 +148,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         playlistTrackIds: getPlaylistTrackIds(state, ownProps.playlistId),
         playlistURI: playlist.uri,
+        playlistName: playlist.name,
         isPlaylistOwner: getUserIsPlaylistOwner(state, playlist.owner.id),
         imageWidth: transitionData.imageWidth,
         imageHeight: transitionData.imageHeight,
