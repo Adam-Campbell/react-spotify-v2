@@ -3,8 +3,7 @@ import * as actionTypes from '../actionTypes';
 const defaultState = {
     newReleases: [],
     featuredPlaylists: [],
-    categories: [],
-    //isFetching: false
+    categories: []
 };
 
 const highlights = (state=defaultState, action) => {
