@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { clearInterval } from 'timers';
 
 class TrackProgressBar extends Component {
 

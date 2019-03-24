@@ -126,6 +126,7 @@ export class Carousel extends Component {
      * handleInteractionUpdate occurs.
      */
     handleTouchMove = (e) => {
+        
         if (this.state.isActive) {
             const { startX, startY, dragOrientation, startOffset } = this.state;
             if (dragOrientation === 'horizontal') {

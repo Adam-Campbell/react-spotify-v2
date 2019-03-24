@@ -137,10 +137,11 @@ class Playlist extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     const transitionData = getTransitionData(state);
+    const playlist = getPlaylist(state, ownProps.playlistId);
     return {
         playlistTrackIds: getPlaylistTrackIds(state, ownProps.playlistId),
-        playlistURI: getPlaylist(state, ownProps.playlistId).uri,
-        isPlaylistOwner: getUserIsPlaylistOwner(state, ownProps.playlistId),
+        playlistURI: playlist.uri,
+        isPlaylistOwner: getUserIsPlaylistOwner(state, playlist.owner.id),
         imageWidth: transitionData.imageWidth,
         imageHeight: transitionData.imageHeight,
         imageX: transitionData.imageX, 

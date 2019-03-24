@@ -122,9 +122,9 @@ const destructureData = (resolvedPromiseArr, artistId) => {
 
     return {
         artistEntities: {
+            ...topTrack_artistEntities,
             ...album_artistEntities,
             ...relatedArtist_artistEntities,
-            ...topTrack_artistEntities,
             [artistId]: profileData
         },
         albumEntities: {
