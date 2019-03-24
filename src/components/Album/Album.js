@@ -6,6 +6,7 @@ import AlbumHeader from '../AlbumHeader';
 import TrackCollection from '../TrackCollection';
 import { constructTimeline } from '../../utils';
 import { getAlbumTrackIds, getAlbum, getTransitionData } from '../../selectors';
+import { Helmet } from 'react-helmet';
 
 export class Album extends Component {
 
@@ -71,31 +72,36 @@ export class Album extends Component {
 
     render() {
         //const { tracks, id, uri } = this.props.album;
-        const { albumId, albumURI, albumTrackIds } = this.props;
+        const { albumId, albumURI, albumName, albumTrackIds } = this.props;
         return (
-            <main 
-                className="album"
-                ref={this.pageContainerRef}
-            >
-                <AlbumHeader 
-                    albumId={albumId}
-                    imageRef={this.imageRef}
-                    titleRef={this.titleRef}
-                    underlineRef={this.underlineRef}
-                    linkContainerRef={this.linkContainerRef} 
-                />
-                <section 
-                    className="album__tracks-container"
-                    ref={this.mainContentContainerRef}
+            <React.Fragment>
+                <Helmet>
+                    <title>{albumName} - Reactify</title>
+                </Helmet>
+                <main 
+                    className="album"
+                    ref={this.pageContainerRef}
                 >
-                    <TrackCollection 
-                        trackIds={albumTrackIds}
-                        useAlbumLayout={true}
-                        contextId={albumId}
-                        contextURI={albumURI}
+                    <AlbumHeader 
+                        albumId={albumId}
+                        imageRef={this.imageRef}
+                        titleRef={this.titleRef}
+                        underlineRef={this.underlineRef}
+                        linkContainerRef={this.linkContainerRef} 
                     />
-                </section>
-            </main>
+                    <section 
+                        className="album__tracks-container"
+                        ref={this.mainContentContainerRef}
+                    >
+                        <TrackCollection 
+                            trackIds={albumTrackIds}
+                            useAlbumLayout={true}
+                            contextId={albumId}
+                            contextURI={albumURI}
+                        />
+                    </section>
+                </main>
+            </React.Fragment>
         );
     }
 }
@@ -108,8 +114,10 @@ const mapStateToProps = (state, ownProps) => {
         imageY, 
         hasTransition 
     } = getTransitionData(state);
+    const album = getAlbum(state, ownProps.albumId);
     return {
-        albumURI: getAlbum(state, ownProps.albumId).uri,
+        albumURI: album.uri,
+        albumName: album.name,
         albumTrackIds: getAlbumTrackIds(state, ownProps.albumId),
         imageWidth,
         imageHeight,

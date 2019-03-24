@@ -5,7 +5,8 @@ import CategoryHeader from '../CategoryHeader';
 import { collectionTypes } from '../../constants';
 import Section from '../Section';
 import CardCollection from '../CardCollection';
-import { getCategoryPlaylistIds } from '../../selectors';
+import { getCategory, getCategoryPlaylistIds } from '../../selectors';
+import { Helmet } from 'react-helmet';
 
 class Category extends Component {
 
@@ -21,31 +22,37 @@ class Category extends Component {
 
     render() {
 
-        const { categoryId, categoryPlaylistIds } = this.props;
-
+        const { categoryId, categoryName, categoryPlaylistIds } = this.props;
+        
         return (
-            <main className="body-content-container">
-                <CategoryHeader 
-                    categoryId={categoryId}
-                    imageRef={this.imageRef}
-                    titleRef={this.titleRef}
-                    underlineRef={this.underlineRef}
-                />
-                <div ref={this.mainContainerRef}>
-                    <Section title="Playlists" >
-                        <CardCollection 
-                            itemIds={categoryPlaylistIds}
-                            collectionType={collectionTypes.playlists}
-                            includeCreatePlaylistCard={false}
-                        />
-                    </Section> 
-                </div>
-            </main>
+            <React.Fragment>
+                <Helmet>
+                    <title>{categoryName} - Reactify</title>
+                </Helmet>
+                <main className="body-content-container">
+                    <CategoryHeader 
+                        categoryId={categoryId}
+                        imageRef={this.imageRef}
+                        titleRef={this.titleRef}
+                        underlineRef={this.underlineRef}
+                    />
+                    <div ref={this.mainContainerRef}>
+                        <Section title="Playlists" >
+                            <CardCollection 
+                                itemIds={categoryPlaylistIds}
+                                collectionType={collectionTypes.playlists}
+                                includeCreatePlaylistCard={false}
+                            />
+                        </Section> 
+                    </div>
+                </main>
+            </React.Fragment>
         );
     }
 }
 
 const mapStateToProps = (state, ownProps) => ({
+    categoryName: getCategory(state, ownProps.categoryId).name,
     categoryPlaylistIds: getCategoryPlaylistIds(state, ownProps.categoryId)
 });
 
