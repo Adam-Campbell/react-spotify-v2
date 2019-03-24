@@ -39,7 +39,8 @@ class UserProfileContainer extends Component {
             topArtistIds, 
             playlistIds, 
             isLoading,
-            hasFetched 
+            hasFetched,
+            hasUserData 
         } = this.props;
 
         if (isLoading) {
@@ -52,25 +53,40 @@ class UserProfileContainer extends Component {
         return (
             <main className="body-content-container" ref={this.pageContainerRef}>
                 <UserProfileHeader />
-                <Section title="Recently Played Tracks">
-                    <TrackCollection 
-                        trackIds={recentTrackIds.slice(0,5)}
-                        contextURI={userURI}
-                        contextId={userId}
-                    />
-                </Section>
-                <Carousel 
-                    itemIds={topArtistIds}
-                    title="Your Top Artists"
-                    collectionType={collectionTypes.artists}
-                    includeCreatePlaylistCard={false}
-                />
-                <Carousel 
-                    itemIds={playlistIds}
-                    title="Your Playlists"
-                    collectionType={collectionTypes.playlists}
-                    includeCreatePlaylistCard={true}
-                />
+                
+                {
+                    hasUserData ? (
+                        <React.Fragment>
+                            <Section title="Recently Played Tracks">
+                                <TrackCollection 
+                                    trackIds={recentTrackIds.slice(0,5)}
+                                    contextURI={userURI}
+                                    contextId={userId}
+                                />
+                            </Section>
+                            <Carousel 
+                                itemIds={topArtistIds}
+                                title="Your Top Artists"
+                                collectionType={collectionTypes.artists}
+                                includeCreatePlaylistCard={false}
+                            />
+                            <Carousel 
+                                itemIds={playlistIds}
+                                title="Your Playlists"
+                                collectionType={collectionTypes.playlists}
+                                includeCreatePlaylistCard={true}
+                            />
+                        </React.Fragment>
+                    ) : (
+                        <div className="user-profile-intro">
+                            <h2 className="heading">New around here?</h2>
+                            <p className="user-profile-intro-text">
+                                We don't have much to show on your profile yet! Click the menu icon to the left to start browsing.
+                            </p>
+                        </div>
+                    )
+                }
+                
             </main>
         );
     }
@@ -79,6 +95,9 @@ class UserProfileContainer extends Component {
 
 const mapStateToProps = (state) => {
     const user = getUserProfile(state);
+    console.log(user);
+    const hasUserData = user.recentTrackIds.length && 
+                        (user.topArtistIds.length || user.playlistIds.length)
     return {
         userId: user.id,
         userURI:user.uri,
@@ -86,7 +105,8 @@ const mapStateToProps = (state) => {
         topArtistIds: user.topArtistIds,
         playlistIds: user.playlistIds,
         isLoading: getLoadingStatus(state, 'userProfile'),
-        hasFetched: user.fullProfileFetched
+        hasFetched: user.fullProfileFetched,
+        hasUserData
     };
 };
 

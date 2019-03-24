@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { authURL } from '../../constants';
 import Landing from './Landing';
 import { Redirect } from 'react-router-dom';
+import { getAccessToken, getAccessTokenTimestamp } from '../../selectors';
 
 class LandingContainer extends Component {
 
@@ -28,8 +29,8 @@ class LandingContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    token: state.accessToken.token,
-    timestamp: state.accessToken.timestamp
+    token: getAccessToken(state),
+    timestamp: getAccessTokenTimestamp(state)
 });
 
 export const ConnectedLandingContainer = connect(mapStateToProps)(LandingContainer);

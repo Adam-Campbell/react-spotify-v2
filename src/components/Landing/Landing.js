@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify, faGithub } from '@fortawesome/free-brands-svg-icons';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
+import HighlightsGraphic from '../../highlights-graphic.png';
+import PlayerGraphic from '../../player-graphic.png';
+import ProfileGraphic from '../../profile-graphic.png';
 
 const Landing = ({ handleLoginRedirect }) => (
     <main className="landing">
@@ -18,31 +21,52 @@ const Landing = ({ handleLoginRedirect }) => (
             />
         </header>
         <section className="app-feature app-feature--1">
-            <div>
-                <h2 className="heading">Full Spotify Access</h2>
-                <span className="app-feature__heading-underline"></span>
+            <img
+                className="highlights-image"
+                src={HighlightsGraphic}
+                alt="A screenshot of the highlights view of this application"
+            />
+            <div className="app-feature__text-container app-feature__text-container--1">
+                <div>
+                    <h2 className="heading">Full Spotify Access</h2>
+                    <span className="app-feature__heading-underline"></span>
+                </div>
+                <p className="app-feature__description">
+                    Browse the curated list of new releases and featured playlists, or search for a specific artist, album or playlist - you have full access to Spotifys vast music library.
+                </p>
             </div>
-            <p className="app-feature__description">
-                Browse the curated list of new releases and featured playlists, or search for a specific artist, album or playlist - you have full access to Spotifys vast music library.
-            </p>
         </section>
         <section className="app-feature app-feature--2">
-            <div>
-                <h2 className="heading">Polymorphic Player</h2>
-                <span className="app-feature__heading-underline"></span>
+            <div className="app-feature__text-container app-feature__text-container--2">
+                <div>
+                    <h2 className="heading">Polymorphic Player</h2>
+                    <span className="app-feature__heading-underline"></span>
+                </div>
+                <p className="app-feature__description">
+                    The built in music player utilises Spotifys Web Playback SDK, when available, to facilitate the streaming of complete tracks. When the environment is not compatible with the SDK however, the player will fall back to using the 30 second track previews to maintain the best listening experience possible. 
+                </p>
             </div>
-            <p className="app-feature__description">
-                The built in music player utilises Spotifys Web Playback SDK, when available, to facilitate the streaming of complete tracks. When the environment is not compatible with the SDK however, the player will fall back to using the 30 second track previews to maintain the best listening experience possible. 
-            </p>
+            <img
+                className="player-image"
+                src={PlayerGraphic}
+                alt="A screenshot of the music player included in the app"
+            />
         </section>
         <section className="app-feature app-feature--3">
-            <div>
-                <h2 className="heading">Personalize Your Experience</h2>
-                <span className="app-feature__heading-underline"></span>
+            <img
+                className="profile-image"
+                src={ProfileGraphic}
+                alt="A screenshot of an artist profile within the app"
+            />
+            <div className="app-feature__text-container app-feature__text-container--3">
+                <div>
+                    <h2 className="heading">Personalize Your Experience</h2>
+                    <span className="app-feature__heading-underline"></span>
+                </div>
+                <p className="app-feature__description">
+                    Follow and unfollow artists or playlists. Create new playlists. Update your existing playlists by adding or removing tracks and changing the playlists name or cover image.  Reactify gives you the tools to make the experience your own. 
+                </p>
             </div>
-            <p className="app-feature__description">
-                Follow and unfollow artists or playlists. Create new playlists at any point. Update your existing playlists by adding or removing tracks and changing the playlists name or cover image.  Reactify gives you the tools to make the experience your own. 
-            </p>
         </section>
         <footer className="landing-footer">
             <FontAwesomeIcon icon={faGithub} />

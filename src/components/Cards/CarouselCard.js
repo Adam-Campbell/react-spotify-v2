@@ -26,8 +26,14 @@ export const CarouselCard = ({ linkDestination, label, additionalLabel, imageURL
                     <a 
                         href={linkDestination} 
                         className={`carousel-card ${dpProps.isActive ? 'active' : ''}`}
-                        onMouseDown={dpProps.handleMouseDown}
-                        onMouseMove={dpProps.handleMouseMove}
+                        onMouseDown={(e) => {
+                            e.preventDefault();
+                            dpProps.handleMouseDown(e);
+                        }}
+                        onMouseMove={(e) => {
+                            e.preventDefault();
+                            dpProps.handleMouseMove(e);
+                        }}
                         onMouseUp={dpProps.handleInteractionEnd}
                         onMouseLeave={dpProps.handleMouseLeave}
                         onTouchStart={dpProps.handleTouchStart}

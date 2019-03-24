@@ -1,0 +1,12 @@
+@import '../../scssVariables/index.scss';
+
+.user-profile-intro {
+    padding: 20px;
+    text-align: center;
+}
+
+.user-profile-intro-text {
+    font-family: $font--body;
+    font-weight: 300;
+    color: $black;
+}

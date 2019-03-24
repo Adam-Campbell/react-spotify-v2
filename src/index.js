@@ -1,3 +1,4 @@
+import 'react-app-polyfill/ie11';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './sharedStyles/index.scss';
@@ -54,7 +55,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       window._REACTIFY_GLOBAL_PLAYER_INSTANCE_ = player;
       store.dispatch(confirmSDKAvailable(device_id));
     });
-    player.connect();
+    if (window.location.hash || localStorage.getItem('accessToken')) {
+      player.connect();
+    }
     window.player = player;
 };
 
