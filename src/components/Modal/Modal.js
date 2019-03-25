@@ -49,4 +49,4 @@ const mapStateToProps = state => {
 export const ConnectedModal = connect(
     mapStateToProps,
     { closeModal }
-)(Modal)
+)(Modal);

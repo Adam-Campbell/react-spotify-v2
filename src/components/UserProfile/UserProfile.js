@@ -10,13 +10,9 @@ import Carousel from '../Carousel';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import { Loader } from '../Loaders';
 import { 
-    getUserProfile, 
-    getUserPlaylistIds, 
-    getUserRecentTrackIds, 
-    getUserTopArtistIds,
+    getUserProfile,
     getLoadingStatus
 } from '../../selectors';
-import { Helmet } from 'react-helmet';
 
 class UserProfileContainer extends Component {
 
@@ -24,12 +20,12 @@ class UserProfileContainer extends Component {
     timeline = null;
 
     componentDidMount() {
-        // if (this.pageContainerRef.current) {
-        //     this.timeline = new TimelineMax();
-        //     this.timeline.from(this.pageContainerRef.current, 0.6, {
-        //         opacity: 0
-        //     });
-        // }
+        if (this.pageContainerRef.current) {
+            this.timeline = new TimelineMax();
+            this.timeline.from(this.pageContainerRef.current, 0.6, {
+                opacity: 0
+            });
+        }
     }
 
     render() {
@@ -43,64 +39,51 @@ class UserProfileContainer extends Component {
             hasFetched,
             hasUserData 
         } = this.props;
-
         if (isLoading) {
             return (
-                <React.Fragment>
-                    <Helmet>
-                        <title>Your profile - Reactify</title>
-                    </Helmet>
-                    <Loader />
-                </React.Fragment>
+                <Loader />
             );
         }
-
         if (!hasFetched) {
             return null;
         }
         return (
-            <React.Fragment>
-                <Helmet>
-                    <title>Your profile - Reactify</title>
-                </Helmet>
-                <main className="body-content-container" ref={this.pageContainerRef}>
-                    <UserProfileHeader />
-                    
-                    {
-                        hasUserData ? (
-                            <React.Fragment>
-                                <Section title="Recently Played Tracks">
-                                    <TrackCollection 
-                                        trackIds={recentTrackIds.slice(0,5)}
-                                        contextURI={userURI}
-                                        contextId={userId}
-                                    />
-                                </Section>
-                                <Carousel 
-                                    itemIds={topArtistIds}
-                                    title="Your Top Artists"
-                                    collectionType={collectionTypes.artists}
-                                    includeCreatePlaylistCard={false}
+            <main className="body-content-container" ref={this.pageContainerRef}>
+                <UserProfileHeader />
+                
+                {
+                    hasUserData ? (
+                        <React.Fragment>
+                            <Section title="Recently Played Tracks">
+                                <TrackCollection 
+                                    trackIds={recentTrackIds.slice(0,5)}
+                                    contextURI={userURI}
+                                    contextId={userId}
                                 />
-                                <Carousel 
-                                    itemIds={playlistIds}
-                                    title="Your Playlists"
-                                    collectionType={collectionTypes.playlists}
-                                    includeCreatePlaylistCard={true}
-                                />
-                            </React.Fragment>
-                        ) : (
-                            <div className="user-profile-intro">
-                                <h2 className="heading">New around here?</h2>
-                                <p className="user-profile-intro-text">
-                                    We don't have much to show on your profile yet! Click the menu icon to the left to start browsing.
-                                </p>
-                            </div>
-                        )
-                    }
-                    
-                </main>
-            </React.Fragment>
+                            </Section>
+                            <Carousel 
+                                itemIds={topArtistIds}
+                                title="Your Top Artists"
+                                collectionType={collectionTypes.artists}
+                                includeCreatePlaylistCard={false}
+                            />
+                            <Carousel 
+                                itemIds={playlistIds}
+                                title="Your Playlists"
+                                collectionType={collectionTypes.playlists}
+                                includeCreatePlaylistCard={true}
+                            />
+                        </React.Fragment>
+                    ) : (
+                        <div className="user-profile-intro">
+                            <h2 className="heading">New around here?</h2>
+                            <p className="user-profile-intro-text">
+                                We don't have much to show on your profile yet! Click the menu icon to the left to start browsing.
+                            </p>
+                        </div>
+                    )
+                }
+            </main>
         );
     }
     
@@ -108,7 +91,6 @@ class UserProfileContainer extends Component {
 
 const mapStateToProps = (state) => {
     const user = getUserProfile(state);
-    console.log(user);
     const hasUserData = user.recentTrackIds.length && 
                         (user.topArtistIds.length || user.playlistIds.length)
     return {

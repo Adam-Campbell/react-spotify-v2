@@ -28,19 +28,21 @@ class Player extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         // if SDKAvailable is true then the SDK player is active so the audio element shouldn't be doing
         // anything.
-        if (this.props.SDKAvailable) return;
+        if (this.props.SDKAvailable) {
+            return;
+        }
 
         // if previous track preview url doesn't match the new track preview url or previous context uri 
-        // doesn't match the new context uri, then pause the audio and update the src.
+        // doesn't match the new context uri, then update the src with the new preview url.
         if (
             prevProps.trackId !== this.props.trackId ||
             prevProps.contextURI !== this.props.contextURI
         ) {
-            //this.audio.pause();
             this.audio.src = this.props.trackPreviewURL;
         }
 
-        // if isPlaying is true in the new props, then call play on the audio.
+        // if isPlaying is true in the new props, then call play on the audio (will work whether the audio
+        // was already playing or not).
         if (this.props.isPlaying) {
             this.audio.play();
             // else if isPlaying is false in the new props, then call pause on the audio.
@@ -54,11 +56,16 @@ class Player extends Component {
         if (this.props.repeat === 'track') {
             this.audio.currentTime = 0;
             this.audio.play();
+            // else call the skipForwards function, which will update the store.
         } else {
             this.props.skipForwards();
         }
     }
 
+    /**
+     * Gets the current track progress, either by querying the spotify player instance or the audio element,
+     * depending on which is being used.
+     */
     getTrackProgress = async () => {
         if (this.props.SDKAvailable) {
             const playerState = await window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.getCurrentState();
@@ -68,6 +75,11 @@ class Player extends Component {
         }
     }
 
+    /**
+     * Set the current track progress, either by using the setter on the spotify player instance or on 
+     * the audio element.
+     * @param {Number} progressDecimal - a decimal representing the desired progression within the track.
+     */
     setTrackProgress = async (progressDecimal) => {
         if (this.props.SDKAvailable) {
             const playerState = await window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.getCurrentState();
@@ -77,6 +89,10 @@ class Player extends Component {
         }
     }
 
+    /**
+     * Sets the player volumen, either by using the setter on the player instance or on the audio element.
+     * @param {Number} newVolume - the desired volume as a decimal.
+     */
     setPlayerVolume = async (newVolume) => {
         if (this.props.SDKAvailable) {
            window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.setVolume(newVolume); 
@@ -85,6 +101,11 @@ class Player extends Component {
         }
     }
 
+    /**
+     * Toggles the player between being displayed as a bar along the bottom of the screen and being displayed
+     * full screen. Only has a visible effect at smaller viewport widths, at larger viewport widths the player
+     * displays the same regardless of isFullScreen.
+     */
     toggleFullScreen = () => {
         this.setState(prevState => ({
             isFullScreen: !prevState.isFullScreen

@@ -7,6 +7,10 @@ import { collectionTypes } from '../../constants';
 import './carouselCard.scss';
 import { CardLoader } from '../Loaders';
 
+/**
+ * A card component to be used only within the Carousel component, it requires both interaction validation and
+ * data prefetching functionality. 
+ */
 export const CarouselCard = ({ linkDestination, label, additionalLabel, imageURL, itemId, collectionType }) => (
     <InteractionValidator>
         {(ivProps) => (

@@ -75,7 +75,7 @@ const SDKResumePlayerFailed = (error) => ({
 
 export const SDKResumePlayer = () => async (dispatch, getState) => {
     try {
-        await window.player.resume();
+        await window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.resume();
         dispatch(SDKResumePlayerSuccess());
     } catch (err) {
         dispatch(SDKResumePlayerFailed(err));
@@ -96,7 +96,7 @@ const SDKPausePlayerFailed = (error) => ({
 
 export const SDKPausePlayer = () => async (dispatch) => {
     try {
-        await window.player.pause();
+        await window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.pause();
         dispatch(SDKPausePlayerSuccess());
     } catch (err) {
         dispatch(SDKPausePlayerFailed(err));
@@ -117,7 +117,7 @@ const SDKSkipForwardsFailed = (error) => ({
 
 export const SDKSkipForwards = () => async (dispatch) => {
     try {
-        await window.player.nextTrack();
+        await window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.nextTrack();
         dispatch(SDKSkipForwardsSuccess())
     } catch (err) {
         dispatch(SDKSkipForwardsFailed(err));
@@ -137,7 +137,7 @@ const SDKSkipBackwardsFailed = (error) => ({
 
 export const SDKSkipBackwards = () => async (dispatch) => {
     try {
-        await window.player.previousTrack();
+        await window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.previousTrack();
         dispatch(SDKSkipBackwardsSuccess())
     } catch (err) {
         dispatch(SDKSkipForwardsFailed(err));

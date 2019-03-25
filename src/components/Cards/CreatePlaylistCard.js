@@ -7,6 +7,11 @@ import InteractionValidator from './InteractionValidator';
 import { modalTypes } from '../../constants';
 import './createPlaylistCard.scss';
 
+
+/**
+ * A one-off card component used within the playlist Carousel component on the users profile page, requires
+ * interaction validation but not data prefetching. 
+ */
 const createPlaylistCard = ({ openModal }) => (
     <InteractionValidator>
         {(ivProps) => {

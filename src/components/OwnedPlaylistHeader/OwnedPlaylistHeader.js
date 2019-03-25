@@ -26,6 +26,10 @@ class OwnedPlaylistHeader extends Component {
         currentTitleWidth: 0
     };
 
+    /**
+     * Enters the name editing state causing the text input to render, and also stores the width of the h1 
+     * element prior to entering editing state.
+     */
     enterNameEditingState = () => {
         const { width } = this.props.titleRef.current.getBoundingClientRect();
         this.setState({
@@ -34,6 +38,9 @@ class OwnedPlaylistHeader extends Component {
         });
     };
 
+    /**
+     * Exits the name editing state to render the h1 element instead of the text input.
+     */
     exitNameEditingState = () => {
         this.setState({
             isEditingName: false,
@@ -41,6 +48,10 @@ class OwnedPlaylistHeader extends Component {
         });
     }
 
+    /**
+     * Exits the name editing state, used to allow the exiting of editing state by clicking outside of the text
+     * input whilst in editing state.
+     */
     handleClick = () => {
         if (this.state.isEditingName) {
             this.setState({
@@ -50,6 +61,9 @@ class OwnedPlaylistHeader extends Component {
         }
     }
 
+    /**
+     * Opens the upload image modal with the required modal props. 
+     */
     openUploadImageModal = () => {
         this.props.openModal(
             modalTypes.uploadImage,

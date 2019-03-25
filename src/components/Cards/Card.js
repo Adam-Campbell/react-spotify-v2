@@ -5,7 +5,10 @@ import SmartImage from '../SmartImage';
 import { collectionTypes } from '../../constants';
 import './card.scss';
 import { CardLoader } from '../Loaders';
-
+/**
+ * A card component to be used outside of the Carousel component, requiring data prefetching functionality, but
+ * not interaction validation functionality.
+ */
 export const Card = ({ linkDestination, label, additionalLabel, imageURL, itemId, collectionType }) => (
     <DataPreFetcher
         itemId={itemId}

@@ -19,12 +19,6 @@ const permissionsRequired = [
 const clientID = 'bc785a3e64da41a8a122a4458dc4afc3';
 //const redirectURI = process.env.callbackURL;
 
-// Normal redirect uri
-//const redirectURI = 'http%3A%2F%2Flocalhost%3A3000';
-
-// Redirect uri for testing on mobile
-//const redirectURI = 'http%3A%2F%2F192.168.1.67%3A3000';
-
 // Redirect uri to specific auth url
 const redirectURI = 'http%3A%2F%2Flocalhost%3A3000%2Fauth';
 

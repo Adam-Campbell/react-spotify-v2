@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
@@ -11,74 +11,39 @@ import TrackProgressBar from './TrackProgressBar';
 import { getPlayerInfo } from '../../selectors';
 import { setShuffle, setRepeat, resumePlayer, pausePlayer, skipForwards, skipBackwards } from '../../actions';
 
-class PlayerControls extends Component {
+const repeatModeMap = {
+    'off': 'context',
+    'context': 'track',
+    'track': 'off'
+};
 
-    static repeatModeMap = {
-        'off': 'context',
-        'context': 'track',
-        'track': 'off'
-    };
-
-    progBarOuterRef = React.createRef();
-    progBarInnerRef = React.createRef();
-    knobRef = React.createRef();
-    progBarInterval = null;
-
-    componentDidMount() {
-        //this.progBarInterval = setInterval(this.updateProgBar, 50);
-    }
-
-    componentWillUnmount() {
-        //clearInterval(this.progBarInterval);
-    }
-
-    updateProgBar = async () => {
-        if (this.progBarInnerRef.current && this.knobRef.current) {
-            const progress = await this.props.getTrackProgress();
-            const progressPercent = `${progress * 100}%`;
-            this.progBarInnerRef.current.style.width = progressPercent;
-            this.knobRef.current.style.left = progressPercent;
-        }
-    }
-
-    handleProgBarClick = (e) => {
-        const { clientX } = e;
-        const { left, width } = this.progBarOuterRef.current.getBoundingClientRect();
-        const progressDecimal = (clientX - left) / width;
-        const constrainedProgressDecimal = Math.max(0, Math.min(1, progressDecimal));
-        this.props.setTrackProgress(constrainedProgressDecimal);
-    }
-
-    render() {
-        return (
-            <div className="player-controls">
-                <FontAwesomeIcon 
-                    icon={faRandom} 
-                    onClick={() => this.props.setShuffle(!this.props.isShuffled)}
-                    className={this.props.isShuffled ? 'active' : ''} 
-                />
-                <FontAwesomeIcon icon={faStepBackward} onClick={this.props.skipBackwards} />
-                <FontAwesomeIcon 
-                    icon={this.props.isPlaying ? faPauseCircle : faPlayCircle} 
-                    onClick={this.props.isPlaying ? this.props.pausePlayer: this.props.resumePlayer}
-                />
-                <FontAwesomeIcon icon={faStepForward} onClick={this.props.skipForwards} />
-                <span className="player-controls__repeat">
-                    <FontAwesomeIcon 
-                        icon={faSyncAlt}
-                        onClick={() => this.props.setRepeat(PlayerControls.repeatModeMap[this.props.repeat])} 
-                        className={this.props.repeat === 'off' ? '' : 'active'}
-                    />
-                    <span style={{ display: this.props.repeat === 'track' ? 'initial' : 'none' }}>1</span>
-                </span>
-                <TrackProgressBar 
-                    getTrackProgress={this.props.getTrackProgress}
-                    setTrackProgress={this.props.setTrackProgress}
-                /> 
-            </div>
-        )
-    }
-}
+const PlayerControls = (props) => (
+    <div className="player-controls">
+        <FontAwesomeIcon 
+            icon={faRandom} 
+            onClick={() => props.setShuffle(!props.isShuffled)}
+            className={props.isShuffled ? 'active' : ''} 
+        />
+        <FontAwesomeIcon icon={faStepBackward} onClick={props.skipBackwards} />
+        <FontAwesomeIcon 
+            icon={props.isPlaying ? faPauseCircle : faPlayCircle} 
+            onClick={props.isPlaying ? props.pausePlayer: props.resumePlayer}
+        />
+        <FontAwesomeIcon icon={faStepForward} onClick={props.skipForwards} />
+        <span className="player-controls__repeat">
+            <FontAwesomeIcon 
+                icon={faSyncAlt}
+                onClick={() => props.setRepeat(repeatModeMap[props.repeat])} 
+                className={props.repeat === 'off' ? '' : 'active'}
+            />
+            <span style={{ display: props.repeat === 'track' ? 'initial' : 'none' }}>1</span>
+        </span>
+        <TrackProgressBar 
+            getTrackProgress={props.getTrackProgress}
+            setTrackProgress={props.setTrackProgress}
+        /> 
+    </div>
+);
 
 const mapStateToProps = (state) => {
     const player = getPlayerInfo(state);
@@ -93,20 +58,3 @@ export default connect(
     mapStateToProps,
     { setShuffle, setRepeat, resumePlayer, pausePlayer, skipForwards, skipBackwards }
 )(PlayerControls);
-
-
-
-/*
-
-<span 
-                    className="player-controls__prog-bar-outer" 
-                    ref={this.progBarOuterRef}
-                    onClick={this.handleProgBarClick}
-                >
-                    <div className="player-controls__prog-bar-inner" ref={this.progBarInnerRef}></div>
-                    <span className="player-controls__prog-bar-knob" ref={this.knobRef}>
-                        <span className="player-controls__prog-bar-knob-inner"></span>
-                    </span>
-                </span>
-
-*/

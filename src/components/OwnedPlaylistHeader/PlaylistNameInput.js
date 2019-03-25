@@ -29,11 +29,15 @@ class PlaylistNameInput extends Component {
         });
     }
 
+    /**
+     * Calls the exitNameEditingState callback to cause the parent component to go back to rendering the h1
+     * element rather than this component. The callback is only called after awaiting the updatePlaylistName
+     * response - this prevents any 'flicker' of the previous name occurring if the parent component renders
+     * the h1 element before the store can update with the new name.
+     */
     handleSave = async (e) => {
         e.stopPropagation();
         const { editedPlaylistName } = this.state;
-        // Wait for API response and store update before exiting the name editing state to prevent
-        // flicker of previous name when rendering the non editing view
         await this.props.updatePlaylistName(editedPlaylistName, this.props.playlistId);
         this.props.exitNameEditingState();
     }

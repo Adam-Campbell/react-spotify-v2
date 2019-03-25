@@ -68,22 +68,22 @@ export const constructTimeline = (timeline, options) => {
         const deltaScaleY = prevImageHeight / currImageHeight;
 
         // Now construct the timeline
-        timeline.from(image, 0.3, {
+        timeline.from(image, 0.4, {
             x: deltaX,
             y: deltaY,
             scaleX: deltaScaleX,
             scaleY: deltaScaleY
         })
-        .from(title, 0.4, {
+        .from(title, 0.25, {
             opacity: 0
         })
-        .from(underline, 0.6, {
+        .from(underline, 0.25, {
             scaleX: 0
         })
-        .from(headerAdditional, 0.4, {
+        .from(headerAdditional, 0.25, {
             opacity: 0
         })
-        .from(mainContent, 0.4, {
+        .from(mainContent, 0.25, {
             opacity: 0
         });
         // When hasTransition is false, construct a simple timeline which just fades everything in. 

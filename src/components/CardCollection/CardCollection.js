@@ -76,29 +76,25 @@ const makeMapStateToProps = () => {
             case collectionTypes.artists:
                 return {
                     items: getCollectionOfArtists(state, ownProps.itemIds),
-                    URLPath: '/artist/',
-                    allItems: state.artists.entities
+                    URLPath: '/artist/'
                 };
 
             case collectionTypes.albums:
                 return {
                     items: getCollectionOfAlbums(state, ownProps.itemIds, ownProps.includeAdditionalLabel),
-                    URLPath: '/album/',
-                    allItems: state.albums.entities
+                    URLPath: '/album/'
                 };
             
             case collectionTypes.playlists:
                 return {
                     items: getCollectionOfPlaylists(state, ownProps.itemIds),
-                    URLPath: '/playlist/',
-                    allItems: state.playlists.entities,
+                    URLPath: '/playlist/'
                 };
 
             case collectionTypes.categories:
                 return {
                     items: getCollectionOfCategories(state, ownProps.itemIds),
-                    URLPath: '/category/',
-                    allItems: state.categories.entities
+                    URLPath: '/category/'
                 };
 
             default:

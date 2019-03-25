@@ -11,12 +11,12 @@ class Highlights extends Component {
     timeline = null;
 
     componentDidMount() {
-        // if (this.pageContainerRef.current) {
-        //     this.timeline = new TimelineMax();
-        //     this.timeline.from(this.pageContainerRef.current, 0.6, {
-        //         opacity: 0
-        //     });
-        // }
+        if (this.pageContainerRef.current) {
+            this.timeline = new TimelineMax();
+            this.timeline.from(this.pageContainerRef.current, 0.6, {
+                opacity: 0
+            });
+        }
     }
 
     render() {

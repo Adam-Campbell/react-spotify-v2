@@ -43,6 +43,9 @@ class TrackProgressBar extends Component {
         }
     }
 
+    /**
+     * Updates the state to mark that an interaction is in progress.
+     */
     handleInteractionStart = (e) => {
         e.stopPropagation();
         this.setState({
@@ -50,6 +53,10 @@ class TrackProgressBar extends Component {
         });
     }
 
+    /**
+     * Calls the setTrackProgress callback function passed as a prop, which causes the player to update to
+     * the position in the track specified by the trackProgressDecimal property in local component state.
+     */
     handleInteractionEnd = (e) => {
         if (this.state.progressBarActive) {
             this.props.setTrackProgress(this.state.trackProgressDecimal);
@@ -59,9 +66,15 @@ class TrackProgressBar extends Component {
         }
     }
 
+    /**
+     * Updates the trackProgressDecimal property in local component state, which will cause the component to 
+     * update visually, but will not cause the actual track progress to update. This allows for the desired 
+     * behaviour - the actual track doesn't update its position until the interaction has come to an end,
+     * however the component will visually stay up to date throughout the interaction.
+     * @param {Number} clientX - the clientX value from which to derive the new trackProgressDecimal value.
+     */
     handleInteractionUpdate = (clientX) => {
         if (this.state.progressBarActive) {
-            //const { clientX } = e;
             const { left, width } = this.progBarOuterRef.current.getBoundingClientRect();
             const progressDecimal = (clientX - left) / width;
             const constrainedProgressDecimal = Math.max(0, Math.min(1, progressDecimal));
@@ -71,16 +84,29 @@ class TrackProgressBar extends Component {
         }
     }
 
+    /**
+     * Grab the clientX value from the mousemove event object and call handleInteractionUpdate with clientX
+     * as an arg.
+     */
     handleMouseMove = (e) => {
         const { clientX } = e;
         this.handleInteractionUpdate(clientX);
     }
 
+    /**
+     * Grab the clientX value from the touchmove event object and call handleInteractionUpdate with clientX
+     * as an arg.
+     */
     handleTouchMove = (e) => {
         const { clientX } = e.targetTouches[0];
         this.handleInteractionUpdate(clientX);
     }
 
+    /**
+     * Calculates a new progressDecimal value based on the clientX value from a click event object, and
+     * calls the setTrackProgress callback function with the desired value. This allows the track progress
+     * to be updated with a click anywhere within the progress bar.
+     */
     handleClick = (e) => {
         const { target, clientX } = e;
         if (target !== this.knobRef.current && target !== this.knobInnerRef.current) {
@@ -91,6 +117,10 @@ class TrackProgressBar extends Component {
         }
     }
 
+    /**
+     * Contains the logic for adjusting the track progress bar via the arrow keys when the progress bar
+     * is focused, providing the functionality you would expect with a convential range input. 
+     */
     handleKeyDown = (e) => {
         const { key } = e;
         const { trackProgressDecimal } = this.state;
