@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 
 /**
- * A simple class for keeping track of whether there is a valid 'interaction' occuring on the rendered child
+ * A simple component for keeping track of whether there is a valid 'interaction' occuring on the rendered child
  * component. An 'interaction' begins with a mousedown or touchstart event, and ends either when a mouseup or
  * touchend event occurs, or when the current position of the mouse/touch deviates from the starting position
  * by more than 3px. Thus, any 'click' type of interaction will still count as an active interaction at the time 
@@ -17,6 +17,12 @@ class InteractionValidator extends Component {
         startY: null
     };
 
+    /**
+     * Contains the shared logic for starting an interaction, and is used internally by startMouseInteraction
+     * and startTouchInteraction. 
+     * @param {Number} clientX - the x coord that the interaction starts at.
+     * @param {Number} clientY - the y coord that the interaction starts at.
+     */
     startInteraction = (clientX, clientY) => {
         this.setState({
             isActive: true,
@@ -25,6 +31,9 @@ class InteractionValidator extends Component {
         });
     }
 
+    /**
+     * Contains the logic for ending an interaction.
+     */
     endInteraction = () => {
         this.setState({
             isActive: false,
@@ -33,11 +42,21 @@ class InteractionValidator extends Component {
         });
     }
 
+    /**
+     * Grabs the clientX and clientY properties from the event object from a mousedown event and calls
+     * startInteraction with clientX and clientY as args.
+     * @param {Object} e - the event object
+     */
     startMouseInteraction = (e) => {
         const { clientX, clientY } = e;
         this.startInteraction(clientX, clientY);
     }
 
+    /**
+     * Contains the logic for ensuring that the mouse interaction is still valid - that it has not deviated
+     * by more than 3px from its starting location.
+     * @param {Object} e - the event object.
+     */
     updateMouseInteraction = (e) => {
         if (this.state.isActive) {
             const { clientX, clientY } = e;
@@ -50,11 +69,21 @@ class InteractionValidator extends Component {
         }
     }
 
+    /**
+     * Grabs the clientX and clientY properties from the event object from a touchdown event and calls 
+     * startInteraction with clientX and clientY as args. 
+     * @param {Object} e - the event object.
+     */
     startTouchInteraction = (e) => {
         const { clientX, clientY } = e.targetTouches[0];
         this.startInteraction(clientX, clientY);
     }
 
+    /**
+     * Contains the logic for ensuring that the touch interaction is still valid - that it has not deviated
+     * by more than 3px from its starting location.
+     * @param {Object} e - the event object.
+     */
     updateTouchInteraction = (e) => {
         if (this.state.isActive) {
             const { clientX, clientY } = e.targetTouches[0];

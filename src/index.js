@@ -10,6 +10,24 @@ import { SDKUpdatePlayerState, confirmSDKAvailable } from './actions';
 
 let player;
 
+/**
+ * Determines whether the player should attempt to connect or not - if it tries to connect when there is not a 
+ * token available either through window.location.hash or local storage then it will cause an error.
+ */
+const shouldAttemptToConnect = () => {
+  if (window.location.hash) {
+    return true;
+  }
+  const JSONAccessToken = localStorage.getItem('accessToken');
+  if (JSONAccessToken) {
+    const accessToken = JSON.parse(JSONAccessToken);
+    if (Date.now() - accessToken.timestamp < 3600000) {
+      return true;
+    }
+  }
+  return false;
+};
+
 window.onSpotifyWebPlaybackSDKReady = () => {
     console.log('Spotify web playback SDK is ready');
     player = new window.Spotify.Player({
@@ -35,7 +53,6 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     player.addListener('account_error', ({ message }) => { console.error(message); });
     player.addListener('playback_error', ({ message }) => { console.error(message); });
     player.addListener('player_state_changed', state => { 
-        console.log(state); 
         const trackId = state.track_window && 
                         state.track_window.current_track &&
                         state.track_window.current_track.id;
@@ -55,14 +72,11 @@ window.onSpotifyWebPlaybackSDKReady = () => {
       window._REACTIFY_GLOBAL_PLAYER_INSTANCE_ = player;
       store.dispatch(confirmSDKAvailable(device_id));
     });
-    if (window.location.hash || localStorage.getItem('accessToken')) {
+    if (shouldAttemptToConnect()) {
       player.connect();
     }
-    window.player = player;
+    //window.player = player;
 };
-
-//console.log(player);
-
 
 ReactDOM.render(
     <Provider store={store}>

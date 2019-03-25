@@ -18,13 +18,10 @@ class CategoryContainer extends Component {
     }
 
     render() {
-        
         const { category, timestamp, isLoading } = this.props;
-
         if (isLoading) {
             return <Loader />;
         }
-
         if (!timestamp) {
             return null;
         }

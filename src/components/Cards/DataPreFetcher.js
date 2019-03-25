@@ -1,10 +1,21 @@
 import React, { Component, lazy } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as ActionCreators from '../../actions';
 import { withRouter } from 'react-router-dom';
 import { collectionTypes } from '../../constants';
+import { 
+    storeTransitionImageRect,
+    fetchArtist,
+    fetchAlbum,
+    fetchPlaylist,
+    fetchCategory
+} from '../../actions';
 
+/**
+ * Handles the prefetching of both the data and the JS bundle associated with a particular collectionType,
+ * as well as managing loading status via component state. Passed both the prefetching function and the
+ * current loading state to the component that it renders via a render prop.
+ */
 export class DataPreFetcher extends Component {
 
     static propTypes = {
@@ -34,8 +45,9 @@ export class DataPreFetcher extends Component {
     imageRef = React.createRef();
 
     /**
-     * This function simply returns the correct data fetching function based on the route that the card
-     * should redirect to when clicked. 
+     * Takes a given collection type and returns the corresponding data fetching function. 
+     * @param {String} collectionType - the collection type that the card belongs to.
+     * @returns {Function} - the data fetching function corresponding to the collection type.
      */
     getFetchingFunction = (collectionType) => {
         switch (collectionType) {
@@ -56,6 +68,16 @@ export class DataPreFetcher extends Component {
         }
     }
 
+    /**
+     * Takes a given collection type and returns a dynamic import for the bundle containing the resources
+     * needed to display the page corresponding to that collection type. This is important as the app uses
+     * code splitting at the route level to make the initial bundle smaller, and resource associated with a 
+     * route are lazily loaded when that route is hit. When navigating via card however, in order for the
+     * transitions to work there cannot be a loading screen in between routes, therefore the card must
+     * dynamically import the necessary resources before redirecting to the new route.
+     * @param {String} collectionType - the collection type that the card belongs to.
+     * @returns {Function} - a promise that resolves when the resources are loaded.
+     */
     getBundle = (collectionType) => {
         switch (collectionType) {
             case collectionTypes.artists:
@@ -76,12 +98,11 @@ export class DataPreFetcher extends Component {
     }
 
     /**
-     * This function passes the dimension and location the clicked image to the store to allow a smooth
-     * transition, then ensures that the data for the route to be transitioned to has been fetched, then
-     * finally redirects to the specified route. 
+     * This function passes the dimension and location of the clicked image to the store to allow a smooth
+     * transition, then ensures that the data and resources for the route to be transitioned to have been 
+     * fetched, then finally redirects to the specified route. 
      */
     fetchAndRedirect = async () => {
-        //e.preventDefault();
         this.setState({
             isFetching: true
         });
@@ -104,6 +125,11 @@ export class DataPreFetcher extends Component {
         });
     }
 
+    /**
+     * Handles the end of an interaction (triggered by mouseup, mouseleave or touchend events). Determines 
+     * whether or not it should call the fetchAndRedirect method based on the boolean values isActive and
+     * shouldManageValidation.
+     */
     handleInteractionEnd = () => {
         const { shouldManageValidation, isActive, endInteraction } = this.props;
         // If this component should not care about interaction validation, always call fetchAndRedirect
@@ -155,12 +181,6 @@ export class DataPreFetcher extends Component {
 export default withRouter(
     connect(
         undefined, 
-        {
-            storeTransitionImageRect: ActionCreators.storeTransitionImageRect,
-            fetchArtist: ActionCreators.fetchArtist,
-            fetchAlbum: ActionCreators.fetchAlbum,
-            fetchPlaylist: ActionCreators.fetchPlaylist,
-            fetchCategory: ActionCreators.fetchCategory
-        }
+        { storeTransitionImageRect, fetchArtist, fetchAlbum, fetchPlaylist, fetchCategory }
     )(DataPreFetcher)
 );

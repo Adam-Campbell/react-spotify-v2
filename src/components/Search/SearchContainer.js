@@ -5,7 +5,6 @@ import Search from './Search';
 import { debounce } from 'lodash';
 import { TimelineMax } from 'gsap';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
-import { Helmet } from 'react-helmet'
 
 class SearchContainer extends Component {
 
@@ -24,12 +23,12 @@ class SearchContainer extends Component {
     }
 
     componentDidMount() {
-        // if (this.underlineRef.current) {
-        //     this.timeline = new TimelineMax();
-        //     this.timeline.from(this.underlineRef.current, 0.6, {
-        //         scaleX: 0
-        //     });
-        // }
+        if (this.underlineRef.current) {
+            this.timeline = new TimelineMax();
+            this.timeline.from(this.underlineRef.current, 0.6, {
+                scaleX: 0
+            });
+        }
     }
 
     updateSearchTerm = (newSearchTerm) => {
@@ -69,22 +68,17 @@ class SearchContainer extends Component {
 
     render() {
         return (
-            <React.Fragment>
-                <Helmet>
-                    <title>Search - Reactify</title>
-                </Helmet>
-                <Search 
-                    searchTerm={this.state.searchTerm}
-                    artists={this.state.artists}
-                    albums={this.state.albums}
-                    playlists={this.state.playlists}
-                    resultsFilter={this.state.resultsFilter}
-                    updateSearchTerm={this.updateSearchTerm}
-                    updateResultsFilter={this.updateResultsFilter}
-                    fetchSearchResults={this.debouncedFetchSearchResults}
-                    underlineRef={this.underlineRef}
-                />
-            </React.Fragment>
+            <Search 
+                searchTerm={this.state.searchTerm}
+                artists={this.state.artists}
+                albums={this.state.albums}
+                playlists={this.state.playlists}
+                resultsFilter={this.state.resultsFilter}
+                updateSearchTerm={this.updateSearchTerm}
+                updateResultsFilter={this.updateResultsFilter}
+                fetchSearchResults={this.debouncedFetchSearchResults}
+                underlineRef={this.underlineRef}
+            />
         )
     }
 }

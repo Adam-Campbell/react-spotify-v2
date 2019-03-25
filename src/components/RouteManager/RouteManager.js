@@ -6,6 +6,8 @@ import Nav from '../Nav';
 import NavToggle from '../NavToggle';
 import { Loader } from '../Loaders';
 
+// Routes are imported within calls to lazy to allow for code splitting at the route level. Each route has its
+// own JS bundle that isn't loaded until needed.
 const UserProfile = lazy(() => import('../UserProfile'));
 const ArtistProfile = lazy(() => import('../ArtistProfile'));
 const Album = lazy(() => import('../Album'));

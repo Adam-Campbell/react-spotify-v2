@@ -25,18 +25,15 @@ class PlaylistContainer extends Component {
 
     render() {
         const { playlistId, timestamp, isLoading } = this.props;
-
         if (isLoading) {
             return <Loader />;
         }
-
         if (!timestamp) {
             return null;
         }
         return (
             <Playlist playlistId={playlistId} />
         );
-        
     }
 }
 

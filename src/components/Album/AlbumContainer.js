@@ -25,15 +25,12 @@ export class AlbumContainer extends Component {
 
     render() {
         const { albumId, timestamp, isLoading } = this.props;
-
         if (isLoading) {
             return <Loader />;
         }
-
         if (!timestamp) {
             return null;
         }
-
         return (
             <Album albumId={albumId} />
         );

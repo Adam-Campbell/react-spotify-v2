@@ -5,22 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
 
-describe('convertMsToMinSec', () => {
-    test('converts the millisecond integer input to a string formatted as minutes:seconds', () => {
-        expect(convertMsToMinSec(80000)).toBe('1:20');
-    });
-    test('the output is rounded to the nearest whole second', () => {
-        expect(convertMsToMinSec(90499)).toBe('1:30');
-        expect(convertMsToMinSec(90500)).toBe('1:31');
-    });
-    test('any seconds figure less than 10 is padded with a leading 0', () => {
-        expect(convertMsToMinSec(68000)).toBe('1:08');
-    });
-    test("inputs under one minute will result in a 0 minutes figure but won't change the string format", () => {
-        expect(convertMsToMinSec(52000)).toBe('0:52');
-    });
-});
-
 describe('Track', () => {
 
     const mockedOpenModal = jest.fn();

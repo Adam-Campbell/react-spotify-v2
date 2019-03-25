@@ -47,12 +47,26 @@ export class Carousel extends Component {
     interactionUpdateRAF = null;
     postSwipeRAF = null;
 
+    componentDidUpdate = (prevProps) => {
+        // If the itemIds props from prevProps and current props are not referentially the same then move
+        // the carousel back to the start. This covers situations such as moving from viewing one artists
+        // profile to another, so the components don't unmount but the position of the carousel does need
+        // to be reset.
+        if (prevProps.itemIds !== this.props.itemIds) {
+            this.contentContainerRef.current.style.transform = 'translateX(0px)';
+        }
+    }
+
     componentWillUnmount = () => {
         // In the event that there is still an animation frame saved in either of these variables, cancel it.
         cancelAnimationFrame(this.interactionUpdateRAF);
         cancelAnimationFrame(this.postSwipeRAF);
     }
 
+    /**
+     * Calculates the width required for the container, based on the number of cards that need to be
+     * rendered.
+     */
     calculateContainerWidth = () => {
         const numberOfItems = this.props.includeCreatePlaylistCard ? 
                               this.props.itemIds.length + 1 :
@@ -118,7 +132,7 @@ export class Carousel extends Component {
     }
 
     /**
-     * Called on every touchmove event. Handles managing which, if any method should be called, depending on
+     * Called on every touchmove event. Handles managing which, if any, method should be called, depending on
      * the value of dragOrientation. If null, then the orientation of the current drag has not yet been 
      * calculated, so it simply calculates the orientation of the drag. If the value is 'vertical', then nothing
      * needs to be done. If the value is 'horizontal', then preventDefault is called to stop vertical scrolling

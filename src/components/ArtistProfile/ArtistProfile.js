@@ -15,26 +15,6 @@ import {
     getTransitionData,
     getSortedArtistAlbumIds
 } from '../../selectors';
-import { Helmet } from 'react-helmet';
-
-// Refactor this component so that the albumIds are sorted into albums and singles in the 
-// mapStateToProps function, that way the album data doesn't need to be passed into the component at all.
-
-// const sortSinglesFromAlbums = (allIds, albumData) => {
-//     const albumIds = [];
-//     const singleIds = [];
-//     allIds.forEach(id => {
-//         if (albumData[id].album_type === 'single') {
-//             singleIds.push(id);
-//         } else {
-//             albumIds.push(id);
-//         }
-//     });
-//     return {
-//         albumIds,
-//         singleIds
-//     };
-// };
 
 class ArtistProfile extends Component {
 
@@ -51,51 +31,51 @@ class ArtistProfile extends Component {
     timeline = null;
 
     componentDidMount() {
-        // const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        // const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
-        // constructTimeline(this.timeline, {
-        //     hasTransition,
-        //     image: this.imageRef.current,
-        //     title: this.titleRef.current,
-        //     underline: this.underlineRef.current,
-        //     headerAdditional: this.followersContainerRef.current,
-        //     mainContent: this.mainContentContainerRef.current,
-        //     fullPage: this.pageContainerRef.current,
-        //     prevImageWidth: imageWidth,
-        //     prevImageHeight: imageHeight,
-        //     prevImageTop: imageY,
-        //     prevImageLeft: imageX,
-        //     currImageWidth: width,
-        //     currImageHeight: height,
-        //     currImageTop: top,
-        //     currImageLeft: left
-        // }); 
-        // this.props.purgeTransitionImageRect(); 
+        const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+        const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
+        constructTimeline(this.timeline, {
+            hasTransition,
+            image: this.imageRef.current,
+            title: this.titleRef.current,
+            underline: this.underlineRef.current,
+            headerAdditional: this.followersContainerRef.current,
+            mainContent: this.mainContentContainerRef.current,
+            fullPage: this.pageContainerRef.current,
+            prevImageWidth: imageWidth,
+            prevImageHeight: imageHeight,
+            prevImageTop: imageY,
+            prevImageLeft: imageX,
+            currImageWidth: width,
+            currImageHeight: height,
+            currImageTop: top,
+            currImageLeft: left
+        }); 
+        this.props.purgeTransitionImageRect(); 
     }
 
     componentDidUpdate(prevProps) {
-        // if (prevProps.artistId !== this.props.artistId) {
-        //     const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
-        //     const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
-        //     constructTimeline(this.timeline, {
-        //         hasTransition,
-        //         image: this.imageRef.current,
-        //         title: this.titleRef.current,
-        //         underline: this.underlineRef.current,
-        //         headerAdditional: this.followersContainerRef.current,
-        //         mainContent: this.mainContentContainerRef.current,
-        //         fullPage: this.pageContainerRef.current,
-        //         prevImageWidth: imageWidth,
-        //         prevImageHeight: imageHeight,
-        //         prevImageTop: imageY,
-        //         prevImageLeft: imageX,
-        //         currImageWidth: width,
-        //         currImageHeight: height,
-        //         currImageTop: top,
-        //         currImageLeft: left
-        //     }); 
-        //     this.props.purgeTransitionImageRect(); 
-        // }
+        if (prevProps.artistId !== this.props.artistId) {
+            const { imageWidth, imageHeight, imageX, imageY, hasTransition } = this.props;
+            const { top, left, width, height } = this.imageRef.current.getBoundingClientRect();
+            constructTimeline(this.timeline, {
+                hasTransition,
+                image: this.imageRef.current,
+                title: this.titleRef.current,
+                underline: this.underlineRef.current,
+                headerAdditional: this.followersContainerRef.current,
+                mainContent: this.mainContentContainerRef.current,
+                fullPage: this.pageContainerRef.current,
+                prevImageWidth: imageWidth,
+                prevImageHeight: imageHeight,
+                prevImageTop: imageY,
+                prevImageLeft: imageX,
+                currImageWidth: width,
+                currImageHeight: height,
+                currImageTop: top,
+                currImageLeft: left
+            }); 
+            this.props.purgeTransitionImageRect(); 
+        }
     }
 
     render() {
@@ -103,57 +83,50 @@ class ArtistProfile extends Component {
             artistTopTrackIds, 
             artistRelatedArtistIds,  
             artistId, 
-            artistName,
             artistURI,
             artistAlbumIds,
             artistSingleIds
         } = this.props;
-        //const { albumIds, singleIds } = sortSinglesFromAlbums(artistsAlbumIds, albums);
         return (
-            <React.Fragment>
-                <Helmet>
-                    <title>{artistName} - Reactify</title>
-                </Helmet>
-                <main 
-                    className="body-content-container"
-                    ref={this.pageContainerRef}
-                >
-                    <ArtistProfileHeader 
-                        artistId={artistId}
-                        imageRef={this.imageRef}
-                        titleRef={this.titleRef}
-                        underlineRef={this.underlineRef}
-                        followersContainerRef={this.followersContainerRef}
+            <main 
+                className="body-content-container"
+                ref={this.pageContainerRef}
+            >
+                <ArtistProfileHeader 
+                    artistId={artistId}
+                    imageRef={this.imageRef}
+                    titleRef={this.titleRef}
+                    underlineRef={this.underlineRef}
+                    followersContainerRef={this.followersContainerRef}
+                />
+                <div ref={this.mainContentContainerRef}>
+                    <Section title="Popular Tracks">
+                        <TrackCollection 
+                            trackIds={artistTopTrackIds.slice(0,5)}
+                            contextURI={artistURI}
+                            contextId={artistId}
+                        />
+                    </Section>
+                    <Carousel 
+                        itemIds={artistAlbumIds}
+                        title="Albums"
+                        collectionType={collectionTypes.albums}
+                        includeCreatePlaylistCard={false}
                     />
-                    <div ref={this.mainContentContainerRef}>
-                        <Section title="Popular Tracks">
-                            <TrackCollection 
-                                trackIds={artistTopTrackIds.slice(0,5)}
-                                contextURI={artistURI}
-                                contextId={artistId}
-                            />
-                        </Section>
-                        <Carousel 
-                            itemIds={artistAlbumIds}
-                            title="Albums"
-                            collectionType={collectionTypes.albums}
-                            includeCreatePlaylistCard={false}
-                        />
-                        <Carousel 
-                            itemIds={artistSingleIds}
-                            title="Singles"
-                            collectionType={collectionTypes.albums}
-                            includeCreatePlaylistCard={false}
-                        />
-                        <Carousel 
-                            itemIds={artistRelatedArtistIds}
-                            title="Related Artists"
-                            collectionType={collectionTypes.artists}
-                            includeCreatePlaylistCard={false}
-                        />
-                    </div>
-                </main>
-            </React.Fragment>
+                    <Carousel 
+                        itemIds={artistSingleIds}
+                        title="Singles"
+                        collectionType={collectionTypes.albums}
+                        includeCreatePlaylistCard={false}
+                    />
+                    <Carousel 
+                        itemIds={artistRelatedArtistIds}
+                        title="Related Artists"
+                        collectionType={collectionTypes.artists}
+                        includeCreatePlaylistCard={false}
+                    />
+                </div>
+            </main>
         );
     }
 }
@@ -164,7 +137,6 @@ const mapStateToProps = (state, ownProps) => {
     const artist = getArtist(state, ownProps.artistId);
     return {
         artistURI: artist.uri,
-        artistName: artist.name,
         artistAlbumIds: albumIds,
         artistSingleIds: singleIds,
         artistTopTrackIds: getArtistTopTrackIds(state, ownProps.artistId),

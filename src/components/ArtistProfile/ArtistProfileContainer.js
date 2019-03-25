@@ -25,11 +25,9 @@ class ArtistProfileContainer extends Component {
 
     render() {
         const { artistId, timestamp, isLoading } = this.props;
-
         if (isLoading) {
             return <Loader />;
         }
-
         if (!timestamp) {
             return null;
         }

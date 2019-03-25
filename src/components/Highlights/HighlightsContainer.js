@@ -5,7 +5,6 @@ import Highlights from './Highlights';
 import withAuthAndUserInfo from '../withAuthAndUserInfo';
 import { Loader } from '../Loaders';
 import { getHighlightFetchedStatus, getLoadingStatus } from '../../selectors';
-import { Helmet } from 'react-helmet';
 
 class HighlightsContainer extends Component {
 
@@ -15,28 +14,16 @@ class HighlightsContainer extends Component {
 
     render() {
         const { fullHighlightsFetched, isLoading } = this.props;
-
         if (isLoading) {
             return (
-                <React.Fragment>
-                    <Helmet>
-                        <title>Highlights - React</title>
-                    </Helmet>
-                    <Loader />
-                </React.Fragment>
+                <Loader />
             );
         }
-
         if (!fullHighlightsFetched) {
             return null;
         }
         return (
-            <React.Fragment>
-                <Helmet>
-                    <title>Highlights - Reactify</title>
-                </Helmet>
-                <Highlights />
-            </React.Fragment>
+            <Highlights />
         )
     }
 }

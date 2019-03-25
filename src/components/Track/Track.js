@@ -16,15 +16,6 @@ import {
     resumePlayer 
 } from '../../actions';
 
-export const convertMsToMinSec = ms => {
-    const toSecs = ms / 1000;
-    const totalMins = Math.floor(toSecs / 60);
-    let remainingSecs = Math.round(toSecs % 60);
-    if (remainingSecs < 10) remainingSecs = '0' + remainingSecs;
-    return `${totalMins}:${remainingSecs}`;
-};
-
-
 export const Track = props => (
     <li className={`track ${props.isCurrentlySelected ? 'currently-playing' : ''}`}
         onClick={() => {

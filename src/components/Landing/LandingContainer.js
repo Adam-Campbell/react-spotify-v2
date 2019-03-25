@@ -12,19 +12,16 @@ class LandingContainer extends Component {
     }
 
     render() {
-
         const { token, timestamp } = this.props;
         const isLoggedIn = token && Date.now() - timestamp < 3600000;
-
         if (isLoggedIn) {
             return (
                 <Redirect to="/me" />
             )
-        } else {
-            return (
-                <Landing handleLoginRedirect={this.redirectToSpotifyLogin} />
-            );
         }
+        return (
+            <Landing handleLoginRedirect={this.redirectToSpotifyLogin} />
+        );
     }
 }
 
