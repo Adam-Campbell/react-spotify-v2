@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import GroupIcon from '../../group-icon.jpg';
+import UserIcon from '../../user-icon.jpg';
 import Followers from '../Followers';
 import { getUserProfile } from '../../selectors';
 
@@ -15,7 +15,7 @@ export const UserProfileHeader = props => (
 const mapStateToProps = state => {
     const user = getUserProfile(state);
     return {
-        userImageURL: user.images.length ? user.images[0].url : GroupIcon,
+        userImageURL: user.images.length ? user.images[0].url : UserIcon,
         userDisplayName: user.display_name,
         userFollowerCount: user.followers.total
     };
