@@ -18,7 +18,7 @@ const Search = lazy(() => import('../Search'));
 
 export const RouteManager = (props) => (
     <React.Fragment>
-        <div className="nav-container">
+        <div className={`nav-container ${props.navIsOpen ? 'is-open' : ''}`}>
             {props.navIsOpen && <Nav toggleNav={props.toggleNav} />}
         </div>
         <NavToggle 

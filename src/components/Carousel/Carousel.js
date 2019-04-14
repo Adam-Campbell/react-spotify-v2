@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import VelocityTracker from './VelocityTracker';
 import CardCollection from '../CardCollection';
 import { collectionTypes } from '../../constants';
+import { isEqual } from 'lodash';
 
 
 export class Carousel extends Component {
@@ -47,12 +48,22 @@ export class Carousel extends Component {
     interactionUpdateRAF = null;
     postSwipeRAF = null;
 
+    /**
+     * In some scenarios, such as updating a page by staying on the same route but updating the url params,
+     * (ie moving from artist A to artist B), the carousel components won't unmount but they should still
+     * be forced back to their starting offset of 0 since we're moving to a new page (albeit on the same route). 
+     * The componentDidUpdate method is used to force the offset back to 0 when appropriate. It first tests
+     * the the old item array and new item array are referentially equivalent since if they are then nothing
+     * further needs to happen. If they aren't, then it additionally checks whether the two arrays are deeply
+     * equal. This avoids certain situations where a change occurs in the store causing a new array (with
+     * the same ids) to be created, meaning they are no longer referentially equivalent. Only when it has
+     * established that the two arrays are not deeply equal does it force that offset back to 0.
+     */
     componentDidUpdate = (prevProps) => {
-        // If the itemIds props from prevProps and current props are not referentially the same then move
-        // the carousel back to the start. This covers situations such as moving from viewing one artists
-        // profile to another, so the components don't unmount but the position of the carousel does need
-        // to be reset.
-        if (prevProps.itemIds !== this.props.itemIds) {
+        if (
+            prevProps.itemIds !== this.props.itemIds && 
+            !isEqual(prevProps.itemIds, this.props.itemIds)
+        ) {
             this.contentContainerRef.current.style.transform = 'translateX(0px)';
         }
     }
@@ -240,6 +251,7 @@ export class Carousel extends Component {
                 adjustedStartX: null
             });
             const velocity = this.velocityTracker.getVelocity();
+            this.velocityTracker.resetCoords();
             requestAnimationFrame(timestamp => {
                 this.createPostSwipeFrame(timestamp, velocity);
             });

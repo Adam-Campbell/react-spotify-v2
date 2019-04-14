@@ -12,11 +12,13 @@ class VelocityTracker {
         this.coords = [ ...this.coords.slice(1), newCoord ];
     }
 
+    resetCoords = () => {
+        this.coords = [ null, null ];
+    }
+
     getVelocity = () => {
-        for (let coord of this.coords) {
-            if (coord === null) {
-                return 0;
-            }
+        if (this.coords.includes(null)) {
+            return 0;
         }
         return this.coords[1] - this.coords[0];
     }
