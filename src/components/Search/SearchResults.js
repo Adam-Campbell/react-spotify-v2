@@ -6,7 +6,7 @@ import { collectionTypes } from '../../constants';
 
 const getCardsArray = ({ resultsFilter, artists, albums, playlists }) => {
     switch (resultsFilter) {
-        case 'ARTISTS':
+        case collectionTypes.artists:
             return artists.map((artist, index) => (
                 <div key={`${artist.id}--${index}`}className="card-collection__card-holder">
                     <Card 
@@ -18,7 +18,7 @@ const getCardsArray = ({ resultsFilter, artists, albums, playlists }) => {
                     />
                 </div>
             ));
-        case 'ALBUMS':
+        case collectionTypes.albums:
             return albums.map((album, index) => (
                 <div key={`${album.id}--${index}`}className="card-collection__card-holder">
                     <Card 
@@ -31,7 +31,7 @@ const getCardsArray = ({ resultsFilter, artists, albums, playlists }) => {
                     />
                 </div>
             ));
-        case 'PLAYLISTS':
+        case collectionTypes.playlists:
             return playlists.map((playlist, index) => (
                 <div key={`${playlist.id}--${index}`}className="card-collection__card-holder">
                     <Card 
@@ -48,10 +48,23 @@ const getCardsArray = ({ resultsFilter, artists, albums, playlists }) => {
     }
 };
 
+const getTitle = (resultsFilter) => {
+    switch (resultsFilter) {
+        case collectionTypes.artists:
+            return 'Artists';
+        case collectionTypes.albums:
+            return 'Albums';
+        case collectionTypes.playlists:
+            return 'Playlists';
+        default:
+            return 'Artists';
+    }
+};
+
 const SearchResults = props => {
     const cards = getCardsArray(props);
     return (
-        <Section title="Artists" >
+        <Section title={getTitle(props.resultsFilter)} >
             <div className="card-collection">
                 {
                     (props.searchTerm.length && !cards.length) ?
@@ -61,7 +74,6 @@ const SearchResults = props => {
             </div>
         </Section>
     );
-
 }
 
 SearchResults.propTypes = {

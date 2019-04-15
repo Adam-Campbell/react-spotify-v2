@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { AddToPlaylistModal } from './AddToPlaylistModal';
-import CDIcon from '../../cd-icon.jpg';
+import CDIcon from '../../images/cd-icon.jpg';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
 
