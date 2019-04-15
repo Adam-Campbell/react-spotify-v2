@@ -20,7 +20,6 @@ const mapStateToProps = (state, ownProps) => {
             artistName: ''
         }
     }
-    // this could be memoized
     const track = getTrack(state, state.player.trackId);
     const album = getAlbum(state, track.album);
     const artist = getArtist(state, track.artists[0]);

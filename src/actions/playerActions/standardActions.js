@@ -1,5 +1,6 @@
 import * as actionTypes from '../../actionTypes';
 
+
 const standardSelectTrackPlainAction = (trackId, contextURI, contextTrackIds, shuffledContextTrackIds) => ({
     type: actionTypes.STANDARD_SELECT_TRACK,
     payload: {
@@ -53,6 +54,16 @@ const getContextTrackIds = (contextURI, contextId, state) => {
     }
 }
 
+/**
+ * This function, along with the other functions it calls, are responsible for updating the context to the new
+ * context specified, and beginning playback with the track specified. Additionally, if shuffle is turned on 
+ * when the new context is selected, the context is automatically shuffled and the shuffled order is used rather
+ * than the regular order.
+ * @param {String} contextURI - the URI of the context to switch to.
+ * @param {String} contextId - the Id of the context to switch to. 
+ * @param {String} trackURI - the URI of the track to begin playback with.
+ * @param {String} trackId - the Id of the track to begin playback with. 
+ */
 export const standardSelectTrack = ({ contextURI, contextId, trackURI, trackId }) => (dispatch, getState) => {
     const state = getState();
     const contextTrackIds = getContextTrackIds(contextURI, contextId, state);

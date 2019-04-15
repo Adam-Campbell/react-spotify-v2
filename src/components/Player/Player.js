@@ -7,7 +7,7 @@ import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import PlayerTrackInfo from './PlayerTrackInfo';
 import PlayerControls from './PlayerControls';
 import PlayerVolumeControl from './PlayerVolumeControl';
-import { getPlayerInfo, getCurrentTrackPreviewURL } from '../../selectors';
+import { getPlayerInfo, getCurrentTrackPreviewURL, getUserProfile } from '../../selectors';
 
 class Player extends Component {
 
@@ -26,9 +26,9 @@ class Player extends Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        // if SDKAvailable is true then the SDK player is active so the audio element shouldn't be doing
-        // anything.
-        if (this.props.SDKAvailable) {
+        // if SDKAvailable is true and the user has a premium account then the SDK player will handle audio,
+        // so the audio element shouldn't do anything. 
+        if (this.props.SDKAvailable && this.props.isPremium) {
             return;
         }
 
@@ -142,6 +142,7 @@ class Player extends Component {
 
 const mapStateToProps = (state) => {
     const player = getPlayerInfo(state);
+    const isPremium = getUserProfile(state).product === 'premium';
     return {
         isActive: player.isActive,
         SDKAvailable: player.SDKAvailable,
@@ -152,7 +153,8 @@ const mapStateToProps = (state) => {
         contextURI: player.contextURI,
         contextTrackIds: player.contextTrackIds,
         shuffledContextTrackIds: player.shuffledContextTrackIds,
-        trackPreviewURL: getCurrentTrackPreviewURL(state)
+        trackPreviewURL: getCurrentTrackPreviewURL(state),
+        isPremium
     };
 };
 

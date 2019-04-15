@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import SearchResults from './SearchResults';
 import { collectionTypes } from '../../constants';
 import Section from '../Section';
-import Card from '../Card';
+import { Card } from '../Cards';
 
 const artists = [
     {
@@ -22,12 +22,14 @@ const albums = [
     {
         id: 'c3',
         name: 'Album 1',
-        images: []
+        images: [],
+        artists: [{ name: 'Artist 1' }]
     },
     {
         id: 'df',
         name: 'Album 2',
-        images: [{ url: 'https://cdn.com/image4' }]
+        images: [{ url: 'https://cdn.com/image4' }],
+        artists: [{ name: 'Artist 2' }]
     }
 ];
 
@@ -38,6 +40,7 @@ const withArtistsWrapper = shallow(
         artists={artists}
         albums={albums}
         playlists={[]}
+        searchTerm="A search"
     />
 );
 
@@ -47,9 +50,9 @@ const withAlbumsWrapper = shallow(
         artists={artists}
         albums={albums}
         playlists={[]}
+        searchTerm="A search"
     />
 );
-
 
 
 test('renders the relevant collection of results corresponding to the value of the resultsFilter prop', () => {

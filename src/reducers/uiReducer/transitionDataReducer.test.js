@@ -1,5 +1,5 @@
 import * as actionTypes from '../../actionTypes';
-import reducer from './transitionsReducer';
+import reducer from './transitionDataReducer';
 
 test('returns the default state', () => {
     expect(reducer(undefined, {})).toEqual({

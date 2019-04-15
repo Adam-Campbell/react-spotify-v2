@@ -19,11 +19,9 @@ export const SDK_UPDATE_PLAYER_STATE = 'SDK_UPDATE_PLAYER_STATE';
 // updates for the SDK player are driven by the SDK_UPDATE_PLAYER_STATE action. The below actions can still
 // be useful for debugging however.
 
-export const SDK_SET_SHUFFLE_REQUEST = 'SDK_SET_SHUFFLE_REQUEST';
 export const SDK_SET_SHUFFLE_SUCCESS = 'SDK_SET_SHUFFLE_SUCCESS';
 export const SDK_SET_SHUFFLE_FAILED = 'SDK_SET_SHUFFLE_FAILED';
 
-export const SDK_SET_REPEAT_REQUEST = 'SDK_SET_REPEAT_REQUEST';
 export const SDK_SET_REPEAT_SUCCESS = 'SDK_SET_REPEAT_SUCCESS';
 export const SDK_SET_REPEAT_FAILED = 'SDK_SET_REPEAT_FAILED';
 

@@ -106,10 +106,7 @@ export class DataPreFetcher extends Component {
         this.setState({
             isFetching: true
         });
-        const { width, height, top, left, y } = this.imageRef.current.getBoundingClientRect();
-        // Provides an alternative way of calculating top offset that helps mitigate some inconsistencies
-        // in certain older browsers
-        //const adjustedTop = y ? y : top - window.pageYOffset;
+        const { width, height, top, left } = this.imageRef.current.getBoundingClientRect();
         this.props.storeTransitionImageRect(width, height, left, top);
         const fetchingFunction = this.getFetchingFunction(this.props.collectionType);
         await Promise.all([

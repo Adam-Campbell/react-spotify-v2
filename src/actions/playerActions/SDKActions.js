@@ -25,10 +25,22 @@ const SDKSelectTrackFailed = (error) => ({
     }
 });
 
+/**
+ * Grabs a list of all track URIs for the current context and makes a request to the player to update to that
+ * context. This is used for switching to artists top tracks and current user top tracks contexts - the player
+ * does not recognize these as proper contexts and so the context must be simulated by manually grabbing the
+ * URIs for all of the tracks and supplying them to the player. 
+ * @param {String} token - the current users auth token.
+ * @param {String} deviceId - the current device id.
+ * @param {String} contextId - the id of the context to switch to.
+ * @param {String} contextType - the type of context.
+ * @param {String} trackURI - the specific URI of the track that playback should start at.
+ * @param {Object} state - a full copy of the state so that the function can look through state and find
+ * the specified context. 
+ */
 const makeReqWithURIList = (token, deviceId, contextId, contextType, trackURI, state) => {
     let allTrackURIs;
     if (contextType === 'artist') {
-        //allTrackURIs = state.artists.artistData[contextId].topTrackIds.map(id => state.tracks[id].uri);
         allTrackURIs = state.artists.topTrackIds[contextId].map(id => state.tracks[id].uri);
     } else if (contextType === 'user') {
         allTrackURIs = state.user.recentTrackIds.map(id => state.tracks[id].uri);
@@ -36,8 +48,15 @@ const makeReqWithURIList = (token, deviceId, contextId, contextType, trackURI, s
     return API.selectTrackWithURIList(token, deviceId, trackURI, allTrackURIs);
 }
 
+/**
+ * Switches the player over to a new track and context. Depending on the type of context being created, it can
+ * either interface directly with the API, or will potentially have to delegate to another function to perform
+ * some additional work. 
+ * @param {String} contextURI - the URI of the context to switch to.
+ * @param {String} contextId - the ID of the context to swotch to.
+ * @param {String} trackURI - the URI of the track to begin playback with.
+ */
 export const SDKSelectTrack = (contextURI, contextId, trackURI) => async (dispatch, getState) => {
-    console.log(contextURI, trackURI);
     try {
         const state = getState();
         const token = state.accessToken.token;
@@ -140,18 +159,10 @@ export const SDKSkipBackwards = () => async (dispatch) => {
         await window._REACTIFY_GLOBAL_PLAYER_INSTANCE_.previousTrack();
         dispatch(SDKSkipBackwardsSuccess())
     } catch (err) {
-        dispatch(SDKSkipForwardsFailed(err));
+        dispatch(SDKSkipBackwardsFailed(err));
     }
 }
 
-
-
-const SDKSetShuffleRequest = (shuffleValue) => ({
-    type: actionTypes.SDK_SET_SHUFFLE_REQUEST,
-    payload: {
-        shuffleValue
-    }
-});
 
 const SDKSetShuffleSuccess = (shuffleValue) => ({
     type: actionTypes.SDK_SET_SHUFFLE_SUCCESS,
@@ -179,14 +190,6 @@ export const SDKSetShuffle = (shuffleValue) => async (dispatch, getState) => {
         dispatch(SDKSetShuffleFailed(err, shuffleValue));
     }
 }
-
-
-const SDKSetRepeatRequest = (newRepeatValue) => ({
-    type: actionTypes.SDK_SET_REPEAT_REQUEST,
-    payload: {
-        newRepeatValue
-    }
-});
 
 const SDKSetRepeatSuccess = (newRepeatValue) => ({
     type: actionTypes.SDK_SET_REPEAT_SUCCESS,

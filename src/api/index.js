@@ -56,7 +56,7 @@ const getUserPlaylists = (token) => get('me/playlists', token);
 const getUserFollowedArtists = (token) => get('me/following?type=artist', token);
 
 
-// Playlist actions
+// Playlist fetching actions
 
 const getUserFollowingPlaylistStatus = (token, playlistId, currentUserId) =>
     get(`playlists/${playlistId}/followers/contains?ids=${currentUserId}`, token);
@@ -69,6 +69,7 @@ const getPlaylistTracks = (token, playlistId, market, offset) =>
 
 
 
+// Follow / unfollow actions
 
 const followArtist = (token, artistId) => {
     return a.request('me/following?type=artist', {
@@ -113,6 +114,8 @@ const unfollowPlaylist = (token, playlistId) => {
         } 
     });
 };
+
+// Playlist editing actions
 
 const updatePlaylistName = (token, playlistId, newPlaylistName) => {
     return a.request(`playlists/${playlistId}`, {
@@ -176,6 +179,9 @@ const createPlaylist = (token, currentUserId, playlistName) => {
         }
     });
 };
+
+
+// Player actions
 
 const selectTrackWithContext = (token, deviceId, trackURI, contextURI) => {
     return a.request(`me/player/play?device_id=${deviceId}`, {

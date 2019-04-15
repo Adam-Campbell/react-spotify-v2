@@ -1,13 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import API from '../api';
 
-const followArtistRequest = (artistId) => ({
-    type: actionTypes.FOLLOW_ARTIST_REQUEST,
-    payload: {
-        artistId
-    }
-});
-
 const followArtistSuccess = (artistId) => ({
     type: actionTypes.FOLLOW_ARTIST_SUCCESS,
     payload: {
@@ -34,14 +27,6 @@ export const followArtist = (artistId) => async (dispatch, getState) => {
         dispatch(followArtistFailed(err, artistId));
     }
 }
-
-
-const unfollowArtistRequest = (artistId) => ({
-    type: actionTypes.UNFOLLOW_ARTIST_REQUEST,
-    payload: {
-        artistId
-    }
-});
 
 const unfollowArtistSuccess = (artistId) => ({
     type: actionTypes.UNFOLLOW_ARTIST_SUCCESS,
@@ -71,14 +56,6 @@ export const unfollowArtist = (artistId) => async (dispatch, getState) => {
 }
 
 
-
-const followPlaylistRequest = (playlistId) => ({
-    type: actionTypes.FOLLOW_PLAYLIST_REQUEST,
-    payload: {
-        playlistId
-    }
-});
-
 const followPlaylistSuccess = (playlistId) => ({
     type: actionTypes.FOLLOW_PLAYLIST_SUCCESS,
     payload: {
@@ -105,14 +82,6 @@ export const followPlaylist = (playlistId) => async (dispatch, getState) => {
         dispatch(followPlaylistFailed(err, playlistId));
     }
 }
-
-
-const unfollowPlaylistRequest = (playlistId) => ({
-    type: actionTypes.UNFOLLOW_PLAYLIST_REQUEST,
-    payload: {
-        playlistId
-    }
-});
 
 const unfollowPlaylistSuccess = (playlistId) => ({
     type: actionTypes.UNFOLLOW_PLAYLIST_SUCCESS,

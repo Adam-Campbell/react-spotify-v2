@@ -16,16 +16,27 @@ class PlayerVolumeControl extends Component {
     knobRef = React.createRef();
     knobInnerRef = React.createRef();
 
+    /**
+     * Add event listeners to the window, this allows the 'interaction' with the volume control to continue
+     * even if the mouse moves away from the control.
+     */
     componentDidMount() {
         window.addEventListener('mousemove', this.handleMouseMove);
         window.addEventListener('mouseup', this.handleInteractionEnd);
     }
 
+    /**
+     * When component unmounts, remove the event listeners that were added to the window.
+     */
     componentWillUnmount() {
         window.removeEventListener('mousemove', this.handleMouseMove);
         window.removeEventListener('mouseup', this.handleInteractionEnd);
     }
 
+    /**
+     * Contains the logic needed to start an interaction with the volume control, whether by mouse or
+     * by touch.
+     */
     handleInteractionStart = (e) => {
         e.stopPropagation();
         this.setState({
@@ -33,6 +44,10 @@ class PlayerVolumeControl extends Component {
         });
     }
 
+    /**
+     * Contains the logic required to end an interaction with the volume control, whether by mouse or 
+     * by touch.
+     */
     handleInteractionEnd = () => {
         if (this.state.volumeControlActive) {
             this.setState({
@@ -41,6 +56,9 @@ class PlayerVolumeControl extends Component {
         } 
     }
 
+    /**
+     * Contains the logic for updating an ongoing mouse interaction with the volume control.
+     */
     handleMouseMove = (e) => {
         const { clientY } = e;
         if (this.state.volumeControlActive) {
@@ -48,6 +66,9 @@ class PlayerVolumeControl extends Component {
         }
     }
 
+    /**
+     * Contains the logic for updating an ongoing touch interaction with the volume control.
+     */
     handleTouchMove = (e) => {
         e.preventDefault();
         const { clientY } = e.targetTouches[0];
@@ -56,6 +77,9 @@ class PlayerVolumeControl extends Component {
         }
     }
 
+    /**
+     * Contains the logic for handling clicks interactions with the volume control.
+     */
     handleClick = (e) => {
         const { clientY, target } = e;
         if (target !== this.knobRef.current && target !== this.knobInnerRef.current) {
@@ -63,6 +87,9 @@ class PlayerVolumeControl extends Component {
         }
     }
 
+    /**
+     * Updates the volume of the player based on a given clientY value. 
+     */
     updateVolume = (clientY) => {
         const { top, height } = this.volumeControlRef.current.getBoundingClientRect();
         const volumeDecimal = 1 - ((clientY - top) / height);
@@ -74,6 +101,10 @@ class PlayerVolumeControl extends Component {
         });
     }
 
+    /**
+     * Contains the logic for interacting with the volume control via the keyboard, allowing the volume
+     * to be increased or decreased in steps via arrow keys. 
+     */
     handleKeyDown = (e) => {
         const { key } = e;
         const { volumeDecimal } = this.state;

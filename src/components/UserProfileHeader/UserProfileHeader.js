@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import UserIcon from '../../user-icon.jpg';
+import UserIcon from '../../images/user-icon.jpg';
 import Followers from '../Followers';
 import { getUserProfile } from '../../selectors';
 

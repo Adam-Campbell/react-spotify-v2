@@ -2,6 +2,7 @@ import * as actionTypes from '../actionTypes';
 import { storeArtists, storeAlbums, storePlaylists, storeTracks } from './entityActions';
 import { handleNormalize, entryPoints } from '../utils';
 import API from '../api';
+import { uniq } from 'lodash';
 
 const fetchUserRequest = () => ({
     type: actionTypes.FETCH_USER_REQUEST
@@ -56,7 +57,6 @@ const fetchUsersRecentTracks = async (token) => {
         const strippedData = response.data.items.map(item => item.track);
         return handleNormalize(strippedData, entryPoints.tracks);
     } catch (err) {
-        console.log(err);
         throw new Error(err);
     }
 };
@@ -66,7 +66,6 @@ const fetchUsersPlaylists = async (token) => {
         const response = await API.getUserPlaylists(token);
         return handleNormalize(response.data.items, entryPoints.playlistStripTracks);
     } catch (err) {
-        console.log(err);
         throw new Error(err);
     }
 }
@@ -76,11 +75,17 @@ const fetchUsersFollowedArtists = async (token) => {
         const response = await API.getUserFollowedArtists(token);
         return handleNormalize(response.data.artists.items, entryPoints.artists);
     } catch (err) {
-        console.log(err);
         throw new Error(err);
     }
 };
 
+/**
+ * Takes the array of resolved promises containing the normalized results of the various API requests, and 
+ * destructures the data to seperate out all of the entity types from the various requests, then groups them
+ * back together such that all of the same entity type are together, and returns the result.
+ * @param {Array} resolvedPromiseArr - an array containing the results of the various API calls. 
+ * @returns {Object} - the rearranged data, now grouped by entity type.
+*/
 const destructureData = (resolvedPromiseArr) => {
     const [
         userProfileInfo,
@@ -113,7 +118,7 @@ const destructureData = (resolvedPromiseArr) => {
         userProfile: {
             ...userProfileInfo,
             topArtistIds,
-            recentTrackIds,
+            recentTrackIds: uniq(recentTrackIds),
             playlistIds,
             followedArtistIds 
         },
