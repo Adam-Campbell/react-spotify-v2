@@ -54,7 +54,6 @@ export const fetchAlbum = (albumId, isPrefetched=false) => async (dispatch, getS
     try {
         const response = await API.getAlbum(token, albumId, market);
         const normalizedData = handleNormalize(response.data, entryPoints.complexAlbum);
-        console.log(normalizedData);
         const albumObject = normalizedData.entities.albums[albumId];
         const albumTrackIds = albumObject.tracks;
         delete albumObject.tracks;

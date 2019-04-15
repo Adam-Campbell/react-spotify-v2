@@ -1,13 +1,6 @@
 import * as actionTypes from '../actionTypes';
 import API from '../api'; 
 
-const updatePlaylistNameRequest = (playlistId) => ({
-    type: actionTypes.UPDATE_PLAYLIST_NAME_REQUEST,
-    payload: {
-        playlistId
-    }
-});
-
 const updatePlaylistNameSuccess = (newPlaylistName, playlistId) => ({
     type: actionTypes.UPDATE_PLAYLIST_NAME_SUCCESS,
     payload: {
@@ -38,14 +31,6 @@ export const updatePlaylistName = (newPlaylistName, playlistId) => async (dispat
         dispatch (updatePlaylistNameFailed(err, playlistId));
     }
 }
-
-
-const updatePlaylistImageRequest = (playlistId) => ({
-    type: actionTypes.UPDATE_PLAYLIST_IMAGE_REQUEST,
-    payload: {
-        playlistId
-    }
-});
 
 const updatePlaylistImageSuccess = (imageURI, playlistId) => ({
     type: actionTypes.UPDATE_PLAYLIST_IMAGE_SUCCESS,
@@ -81,15 +66,6 @@ export const updatePlaylistImage = (imageData, playlistId) => async (dispatch, g
         ));
     }
 }
-
-
-const addTrackToPlaylistRequest = (trackId, playlistId) => ({
-    type: actionTypes.ADD_TRACK_TO_PLAYLIST_REQUEST,
-    payload: {
-        trackId,
-        playlistId
-    }
-});
 
 const addTrackToPlaylistSuccess = (trackId, playlistId) => ({
     type: actionTypes.ADD_TRACK_TO_PLAYLIST_SUCCESS,
@@ -127,11 +103,6 @@ export const addTrackToPlaylist = (trackURI, trackId, playlistId) => async (disp
     }
 }
 
-
-const removeTrackFromPlaylistRequest = (trackId, playlistId) => ({
-    type: actionTypes.REMOVE_TRACK_FROM_PLAYLIST_REQUEST
-});
-
 const removeTrackFromPlaylistSuccess = (trackId, playlistId) => ({
     type: actionTypes.REMOVE_TRACK_FROM_PLAYLIST_SUCCESS,
     payload: {
@@ -160,11 +131,6 @@ export const removeTrackFromPlaylist = (trackURI, trackId, playlistId) => async 
     }
 }
 
-
-
-const createPlaylistRequest = () => ({
-    type: actionTypes.CREATE_PLAYLIST_REQUEST
-});
 
 const createPlaylistSuccess = (playlistObject, playlistId) => ({
     type: actionTypes.CREATE_PLAYLIST_SUCCESS,

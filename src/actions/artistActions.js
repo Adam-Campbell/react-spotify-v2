@@ -94,6 +94,14 @@ const fetchArtistsAlbums = async (token, artistId, market) => {
     }
 }
 
+/**
+ * Takes the array of resolved promises containing the normalized results of the various API requests, and 
+ * destructures the data to seperate out all of the entity types from the various requests, then groups them
+ * back together such that all of the same entity type are together, and returns the result.
+ * @param {Array} resolvedPromiseArr - array containing the results of the API calls.
+ * @param {String} artistId - the Id of the artist being fetched.
+ * @returns {Object} - the rearranged data, now grouped by entity type.
+ */
 const destructureData = (resolvedPromiseArr, artistId) => {
     const [
         profileData, 

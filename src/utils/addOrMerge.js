@@ -18,10 +18,10 @@ export const addOrMerge = (prevState, data, optional_id) => {
         { ...newState[optional_id], ...data } : 
         { ...data };
     } else {
-        for (const user in data) {
-            newState[user] = newState[user] ? 
-            { ...newState[user], ...data[user] } :
-            { ...data[user] };
+        for (const key in data) {
+            newState[key] = newState[key] ? 
+            { ...newState[key], ...data[key] } :
+            { ...data[key] };
         }
     }
     return newState;

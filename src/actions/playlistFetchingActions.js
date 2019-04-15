@@ -51,7 +51,6 @@ const storePlaylistTrackIds = (playlistTrackIds, ownerId) => ({
 });
 
 const checkIfFollowing = async (token, playlistId, currentUserId) => {
-    console.log('checkIfFollowing was called');
     try {
         const response = await API.getUserFollowingPlaylistStatus(token, playlistId, currentUserId);
         return response.data[0];
@@ -71,24 +70,21 @@ const checkIfFollowing = async (token, playlistId, currentUserId) => {
  * @param {*} market 
  */
 const makePlaylistDataRequests = async (token, playlistId, market) => {
-    console.log('makePlaylistDataRequests was called');
     const promiseArray = [];
-    let escapeHatch = 1;
     try {
         const response = await API.getPlaylistInfo(token, playlistId, market);
         promiseArray.push(response);
-        // set a limit so we don't make an insane amount of requests.
+        // set a limit so we don't make an unreasonable amount of requests.
         const totalTracks = Math.min(response.data.tracks.total, 2500);
         // return early if there aren't any additional tracks to fetch. 
         if (totalTracks <= 100) {
             return promiseArray;
         }
-        let offset = 100;
-        while (offset < totalTracks && escapeHatch < 50) {
+        let offset = 100;  
+        while (offset < totalTracks) {
             const response = API.getPlaylistTracks(token, playlistId, market, offset);
             promiseArray.push(response);
             offset += 100;
-            escapeHatch++;
         }
         return Promise.all(promiseArray);
     } catch (err) {
@@ -96,6 +92,14 @@ const makePlaylistDataRequests = async (token, playlistId, market) => {
     }
 }
 
+/**
+ * Takes the array of resolved promises containing the results of the various API requests, which are not yet 
+ * in a normalized state. It then performs the necessary transformations on the data in order to normalize it, 
+ * and groups the data by entity type before returning it.
+ * @param {Array} resolvedPromiseArr - an array containing the results of the various API calls. 
+ * @param {String} playlistId - the id of the playlist being fetched.
+ * @returns {Object} - the rearranged data, now grouped by entity type.
+*/
 const formatData = (resolvedPromiseArr, playlistId) => {
     const [ isFollowing, [ playlistInfoResponse, ...additionalTrackResponses ] ] = resolvedPromiseArr;
     const normalizedPlaylistData = handleNormalize(playlistInfoResponse.data, entryPoints.complexPlaylist);

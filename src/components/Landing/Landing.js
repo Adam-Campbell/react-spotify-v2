@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpotify, faGithub } from '@fortawesome/free-brands-svg-icons';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
-import HighlightsGraphic from '../../highlights-graphic.png';
-import PlayerGraphic from '../../player-graphic.png';
-import ProfileGraphic from '../../profile-graphic.png';
+import HighlightsGraphic from '../../images/highlights-graphic.png';
+import PlayerGraphic from '../../images/player-graphic.png';
+import ProfileGraphic from '../../images/profile-graphic.png';
 
 const Landing = ({ handleLoginRedirect }) => (
     <main className="landing">

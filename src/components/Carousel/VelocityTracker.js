@@ -6,16 +6,27 @@ two coords in the coords array.
 */
 class VelocityTracker {
 
+    // Internal store of coords
     coords = [ null, null ];
 
+    /**
+     * Add a new coord as the last coord in the coord store, and additionally remove the first coord.
+     * @param {Number} newCoord - the new coord to add to the coord store.
+     */
     addCoord = (newCoord) => {
         this.coords = [ ...this.coords.slice(1), newCoord ];
     }
 
+    /**
+     * Resets the coord store back to its original state of only null values.
+     */
     resetCoords = () => {
         this.coords = [ null, null ];
     }
 
+    /**
+     * Calculate a velocity based on the coords in the coord store.
+     */
     getVelocity = () => {
         if (this.coords.includes(null)) {
             return 0;

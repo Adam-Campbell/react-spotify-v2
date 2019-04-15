@@ -1,5 +1,4 @@
 import * as actionTypes from '../../actionTypes';
-
 import {
     SDKSelectTrack, 
     SDKResumePlayer, 
@@ -24,7 +23,8 @@ export { SDKUpdatePlayerState } from './SDKActions';
 export const selectTrack = ({ contextURI, contextId, trackURI, trackId }) => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
-    if (SDKAvailable) {
+    const isPremium = state.user.product === 'premium';
+    if (SDKAvailable && isPremium) {
         // dispatch the related SDK action
         return dispatch(SDKSelectTrack(
             contextURI,
@@ -40,7 +40,8 @@ export const selectTrack = ({ contextURI, contextId, trackURI, trackId }) => asy
 export const resumePlayer = () => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
-    if (SDKAvailable) {
+    const isPremium = state.user.product === 'premium';
+    if (SDKAvailable && isPremium) {
         // dispatch the related SDK action
         return dispatch(SDKResumePlayer());
     } else {
@@ -52,7 +53,8 @@ export const resumePlayer = () => async (dispatch, getState) => {
 export const pausePlayer = () => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
-    if (SDKAvailable) {
+    const isPremium = state.user.product === 'premium';
+    if (SDKAvailable && isPremium) {
         return dispatch(SDKPausePlayer());
     } else {
         return dispatch(standardPausePlayer());
@@ -62,7 +64,8 @@ export const pausePlayer = () => async (dispatch, getState) => {
 export const skipForwards = () => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
-    if (SDKAvailable) {
+    const isPremium = state.user.product === 'premium';
+    if (SDKAvailable && isPremium) {
         return dispatch(SDKSkipForwards());
     } else {
         return dispatch(standardSkipForwards());
@@ -72,7 +75,8 @@ export const skipForwards = () => async (dispatch, getState) => {
 export const skipBackwards = () => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
-    if (SDKAvailable) {
+    const isPremium = state.user.product === 'premium';
+    if (SDKAvailable && isPremium) {
         return dispatch(SDKSkipBackwards());
     } else {
         return dispatch(standardSkipBackwards());
@@ -82,7 +86,8 @@ export const skipBackwards = () => async (dispatch, getState) => {
 export const setRepeat = (newRepeatValue) => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
-    if (SDKAvailable) {
+    const isPremium = state.user.product === 'premium';
+    if (SDKAvailable && isPremium) {
         return dispatch(SDKSetRepeat(newRepeatValue));
     } else {
         return dispatch(standardSetRepeat(newRepeatValue));
@@ -92,7 +97,8 @@ export const setRepeat = (newRepeatValue) => async (dispatch, getState) => {
 export const setShuffle = (shuffleValue) => async (dispatch, getState) => {
     const state = getState();
     const SDKAvailable = state.player.SDKAvailable;
-    if (SDKAvailable) {
+    const isPremium = state.user.product === 'premium';
+    if (SDKAvailable && isPremium) {
         return dispatch(SDKSetShuffle(shuffleValue));
     } else {
         return dispatch(standardSetShuffle(shuffleValue));

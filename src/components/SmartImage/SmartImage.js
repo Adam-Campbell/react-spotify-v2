@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import CDIcon from '../../cd-icon.jpg';
-import GroupIcon from '../../group-icon.jpg';
+import CDIcon from '../../images/cd-icon.jpg';
+import GroupIcon from '../../images/group-icon.jpg';
 
 export class SmartImage extends Component {
 

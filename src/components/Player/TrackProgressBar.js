@@ -19,18 +19,33 @@ class TrackProgressBar extends Component {
     knobInnerRef = React.createRef();
     progBarInterval = null;
 
+    /**
+     * Add event listeners to the window, this allows the 'interaction' with the progress control to continue
+     * even if the mouse moves away from the control.
+     */
     componentDidMount() {
         this.progBarInterval = setInterval(this.updateProgBar, 50);
         window.addEventListener('mouseup', this.handleInteractionEnd);
         window.addEventListener('mousemove', this.handleMouseMove);
     }
 
+    /**
+     * When component unmounts, remove the event listeners that were added to the window.
+     */
     componentWillUnmount() {
         clearInterval(this.progBarInterval);
         window.removeEventListener('mouseup', this.handleInteractionEnd);
         window.removeEventListener('mousemove', this.handleMouseMove);
     }
 
+    /**
+     * Gets the current track progress from a callback function passed down as a prop, and then updates
+     * local component state to match the track progress. This is called on an interval, and doesn't 
+     * update state whilst the progress bar is active - this allows the progress bar to scrubbed 
+     * back and forth during an interaction without updating the actual track progress (and without the
+     * actual track progress interfering with the position of the thumb of the progress bar), instead the
+     * actual track progress is only updated at the end of the interaction.
+     */
     updateProgBar = async () => {
         if (this.progBarInnerRef.current && this.knobRef.current) {
             const { trackProgressDecimal, progressBarActive } = this.state;

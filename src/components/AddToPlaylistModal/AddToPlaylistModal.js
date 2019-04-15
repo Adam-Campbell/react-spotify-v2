@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { addTrackToPlaylist, closeModal } from '../../actions';
 import Button from '../Button';
 import { buttonThemes } from '../../constants';
-import CDIcon from '../../cd-icon.jpg';
+import CDIcon from '../../images/cd-icon.jpg';
 import { getUserPlaylists } from '../../selectors';
 
 export const AddToPlaylistModal = props => (
