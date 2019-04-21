@@ -10,7 +10,7 @@ class SearchContainer extends Component {
 
     constructor(props) {
         super(props);
-        this.debouncedFetchSearchResults = debounce(this.fetchSearchResults, 100).bind(this);
+        this.debouncedFetchSearchResults = debounce(this.fetchSearchResults, 200).bind(this);
         this.underlineRef = React.createRef();
         this.timeline = null;
         this.state = {
@@ -58,11 +58,21 @@ class SearchContainer extends Component {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            this.setState({
-                artists: response.data.artists.items,
-                albums: response.data.albums.items,
-                playlists: response.data.playlists.items
-            });
+            /*
+                Grab the most up to date search term out of local state and ensure that it matches the search
+                term that these results belong to, and only update state with the new results if they match. 
+                This ensures that if one of the requests takes longer and returns after a different request that
+                was actually made afterwards, the results from the older request will not overwrite the results
+                from the newer request. 
+            */
+            const currentSearchTerm = this.state.searchTerm;
+            if (searchTerm === currentSearchTerm) {
+                this.setState({
+                    artists: response.data.artists.items,
+                    albums: response.data.albums.items,
+                    playlists: response.data.playlists.items
+                });
+            }
         }
     }
 

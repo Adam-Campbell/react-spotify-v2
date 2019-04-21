@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { followArtist, unfollowArtist } from '../../actions';
 import Followers from '../Followers';
-import SmartImage from '../SmartImage';
 import { getArtist, getUserFollowingArtist } from '../../selectors';
+import HeaderImage from '../HeaderImage';
+
 
 export const ArtistProfileHeader = props => (
-    <header className="artist-profile-header">         
-        <SmartImage 
+    <header className="artist-profile-header">           
+        <HeaderImage 
             imageURL={props.imageURL}
+            imageAlt={props.name}
+            imageRef={props.imageRef}
             isArtist={true}
-            isFixedSize={true}
-            containerRef={props.imageRef}
         />
         <div className="artist-profile-header__text-container">
             <div>

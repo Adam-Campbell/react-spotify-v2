@@ -1,22 +1,8 @@
-.smart-image {
+.card-image {
     position: relative;
     margin: 0;
-    &--fluid {
-        width: 100%;
-        padding-bottom: 100%;
-    }
-    &--fixed {
-        width: 100%;
-        padding-bottom: 100%;
-        @media(min-width: 450px) {
-            width: 350px;
-            min-width: 350px;
-            height: 350px;
-            min-height: 350px;
-            padding-bottom: 0;
-        }
-        
-    }
+    width: 100%;
+    padding-bottom: 100%;
     &__fallback {
         position: absolute;
         top: 0;

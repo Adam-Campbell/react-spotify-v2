@@ -6,6 +6,7 @@
     padding-top: 32px;
     font-family: sans-serif;
     color: $black;
+    align-items: flex-start;
     @media (min-width: 768px) {
         flex-direction: row;
         align-items: center;
@@ -14,12 +15,6 @@
         flex-direction: column;
         align-items: flex-start;
         width: 350px;
-    }
-    &__image {
-        width: 250px;
-        height: 250px;
-        object-fit: cover;
-        object-position: 50% 50%;
     }
     &__text-container {
         margin-top: 20px;
@@ -56,5 +51,8 @@
         border-bottom: solid 4px $black;
         padding: 8px 0;
         vertical-align: middle;
+    }
+    &__own-playlist-inner-container {
+        max-width: 100%;
     }
 }

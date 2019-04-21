@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import SmartImage from '../SmartImage';
 import { getCategory } from '../../selectors';
+import HeaderImage from '../HeaderImage';
 
 export const CategoryHeader = props => (
     <header className="category-header" >
-        <SmartImage 
+        <HeaderImage 
             imageURL={props.imageURL}
+            imageAlt={`Artwork for the ${props.name} category`}
+            imageRef={props.imageRef}
             isArtist={false}
-            isFixedSize={true}
-            containerRef={props.imageRef}
         />
         <div className="category-header__title-container">
             <h1 

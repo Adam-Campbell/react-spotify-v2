@@ -6,15 +6,31 @@ import Nav from '../Nav';
 import NavToggle from '../NavToggle';
 import { Loader } from '../Loaders';
 
+import UserProfile from '../UserProfile';
+import ArtistProfile from '../ArtistProfile';
+import Album from '../Album';
+import Playlist from '../Playlist';
+import Highlights from '../Highlights';
+import Category from '../Category';
+import Search from '../Search';
+
+
+/*
+
+Dynamic importing temporarily removed while I investigate why it is not being awaited properly in a 
+production environment. 
+
+*/
+
 // Routes are imported within calls to lazy to allow for code splitting at the route level. Each route has its
 // own JS bundle that isn't loaded until needed.
-const UserProfile = lazy(() => import('../UserProfile'));
-const ArtistProfile = lazy(() => import('../ArtistProfile'));
-const Album = lazy(() => import('../Album'));
-const Playlist = lazy(() => import('../Playlist'));
-const Highlights = lazy(() => import('../Highlights'));
-const Category = lazy(() => import('../Category'));
-const Search = lazy(() => import('../Search'));
+// const UserProfile = lazy(() => import('../UserProfile'));
+// const ArtistProfile = lazy(() => import('../ArtistProfile'));
+// const Album = lazy(() => import('../Album'));
+// const Playlist = lazy(() => import('../Playlist'));
+// const Highlights = lazy(() => import('../Highlights'));
+// const Category = lazy(() => import('../Category'));
+// const Search = lazy(() => import('../Search'));
 
 export const RouteManager = (props) => (
     <React.Fragment>
@@ -26,7 +42,7 @@ export const RouteManager = (props) => (
             toggleNav={props.toggleNav}
         />
         <div className={`main-container ${props.navIsOpen ? 'nav-open' : ''}`}>
-            <Suspense fallback={<Loader/>}>
+            <Suspense fallback={<Loader />}>
                 <Switch>
 
                     <Route path="/me" render={() => <UserProfile/>} />

@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'; 
-import SmartImage from '../SmartImage';
 import { getArtist, getAlbum } from '../../selectors';
+import HeaderImage from '../HeaderImage';
 
 export const AlbumHeader = props => (
     <header className="album-header">
-        <SmartImage 
+        <HeaderImage 
             imageURL={props.imageURL}
+            imageAlt={`The cover art for ${props.albumName} by ${props.artistName}`}
+            imageRef={props.imageRef}
             isArtist={false}
-            isFixedSize={true}
-            containerRef={props.imageRef}
         />
         <div className="album-header__text-container">
             <h1 className="heading heading--large" ref={props.titleRef} >{props.albumName}</h1>

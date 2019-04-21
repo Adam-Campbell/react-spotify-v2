@@ -1,0 +1,9 @@
+.header-image {
+    width: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+    @media (min-width: 450px) {
+        width: 350px;
+        height: 350px;
+    }
+}

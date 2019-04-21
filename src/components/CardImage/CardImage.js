@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import CDIcon from '../../images/cd-icon.jpg';
 import GroupIcon from '../../images/group-icon.jpg';
 
-export class SmartImage extends Component {
+export class CardImage extends Component {
 
     static propTypes = {
         imageURL: PropTypes.string.isRequired,
         isArtist: PropTypes.bool.isRequired,
-        isFixedSize: PropTypes.bool.isRequired,
         containerRef: PropTypes.object,
     }
 
@@ -36,10 +35,10 @@ export class SmartImage extends Component {
 
     render() {
         const { imageLoaded } = this.state;
-        const { imageURL, isArtist, isFixedSize, containerRef } = this.props;
+        const { imageURL, isArtist, containerRef } = this.props;
         return (
             <figure 
-                className={`smart-image ${isFixedSize ? 'smart-image--fixed' : 'smart-image--fluid'}`}
+                className="card-image"
                 ref={containerRef}
             >
                 <img 
@@ -48,12 +47,12 @@ export class SmartImage extends Component {
                         isArtist ? 'An icon representing a musician' :
                         'An icon representing an album or playlist'
                     }
-                    className="smart-image__fallback"
+                    className="card-image__fallback"
                 />
                 <img 
                     src={imageURL}
                     alt=""
-                    className={`smart-image__main ${!imageLoaded ? 'hide-image' : ''}`}
+                    className={`card-image__main ${!imageLoaded ? 'hide-image' : ''}`}
                 />
             </figure>
         );

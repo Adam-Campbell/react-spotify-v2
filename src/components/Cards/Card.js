@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DataPreFetcher from './DataPreFetcher';
-import SmartImage from '../SmartImage';
+import CardImage from '../CardImage';
 import { collectionTypes } from '../../constants';
 import './card.scss';
 import { CardLoader } from '../Loaders';
@@ -25,10 +25,9 @@ export const Card = ({ linkDestination, label, additionalLabel, imageURL, itemId
                     handleInteractionEnd();
                 }}
             >
-                <SmartImage 
+                <CardImage 
                     imageURL={imageURL}
                     isArtist={collectionType === collectionTypes.artists}
-                    isFixedSize={false}
                     containerRef={imageRef}
                 />
                 <p className="card__label">{label}</p>
