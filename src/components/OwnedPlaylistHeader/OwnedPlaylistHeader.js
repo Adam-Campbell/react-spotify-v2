@@ -7,9 +7,9 @@ import PlaylistNameInput from './PlaylistNameInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import { modalTypes } from '../../constants';
-import SmartImage from '../SmartImage';
 import Button from '../Button';
 import { getPlaylist, getPlaylistUserFollowingStatus } from '../../selectors';
+import HeaderImage from '../HeaderImage';
 
 class OwnedPlaylistHeader extends Component {
 
@@ -72,15 +72,32 @@ class OwnedPlaylistHeader extends Component {
     }
 
     render() {
-        const { imageURL, playlistName, ownerName, playlistFollowerCount } = this.props;
+        const { 
+            imageURL, 
+            playlistName, 
+            ownerName, 
+            playlistFollowerCount,
+            imageRef,
+            titleRef,
+            underlineRef,
+            followersContainerRef,
+            playlistId,
+            isFollowing,
+            followPlaylist, 
+            unfollowPlaylist
+        } = this.props;
+        const {
+            isEditingName,
+            currentTitleWidth
+        } = this.state;
         return (
             <header className="playlist-header" onClick={this.handleClick}>
-                <div>
-                    <SmartImage 
+                <div className="playlist-header__own-playlist-inner-container">
+                    <HeaderImage 
                         imageURL={imageURL}
+                        imageAlt={`Artwork for the ${playlistName} playlist`}
+                        imageRef={imageRef}
                         isArtist={false}
-                        isFixedSize={true}
-                        containerRef={this.props.imageRef}
                     />
                     <Button 
                         handleClick={this.openUploadImageModal}
@@ -90,35 +107,35 @@ class OwnedPlaylistHeader extends Component {
                 </div>
                 <div className="playlist-header__text-container">
                     {
-                        this.state.isEditingName ?
+                        isEditingName ?
                         <PlaylistNameInput 
                             playlistName={playlistName} 
                             exitNameEditingState={this.exitNameEditingState} 
-                            playlistId={this.props.playlistId}
-                            renderWidth={this.state.currentTitleWidth}
+                            playlistId={playlistId}
+                            renderWidth={currentTitleWidth}
                         /> :
                         <React.Fragment>
                         <h1 
                             className="playlist-header__name heading heading--large" 
-                            ref={this.props.titleRef}
+                            ref={titleRef}
                             onClick={this.enterNameEditingState}
                         >
                             {playlistName}
                             <FontAwesomeIcon icon={faPencilAlt} />
                         </h1>
-                        <span className="playlist-header__underline" ref={this.props.underlineRef}></span>
+                        <span className="playlist-header__underline" ref={underlineRef}></span>
                         </React.Fragment>
                     }
                 
-                    <div ref={this.props.followersContainerRef}>
+                    <div ref={followersContainerRef}>
                         <p className="playlist__owner">A playlist by {ownerName}</p>
                         <Followers 
                             followerCount={playlistFollowerCount}
-                            isFollowing={this.props.isFollowing}
+                            isFollowing={isFollowing}
                             showButton={true} 
-                            handleClick={this.props.isFollowing ? 
-                                () => this.props.unfollowPlaylist(this.props.playlistId) :
-                                () => this.props.followPlaylist(this.props.playlistId)
+                            handleClick={isFollowing ? 
+                                () => unfollowPlaylist(playlistId) :
+                                () => followPlaylist(playlistId)
                             }
                         />
                     </div>

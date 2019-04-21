@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Followers from '../Followers';
 import { followPlaylist, unfollowPlaylist } from '../../actions';
-import SmartImage from '../SmartImage';
 import { getPlaylist, getPlaylistUserFollowingStatus } from '../../selectors';
+import HeaderImage from '../HeaderImage';
 
 export const PlaylistHeader = props => (
     <header className="playlist-header">
-        <SmartImage 
+        <HeaderImage 
             imageURL={props.imageURL}
+            imageAlt={`Artwork for the ${props.playlistName} playlist`}
+            imageRef={props.imageRef}
             isArtist={false}
-            isFixedSize={true}
-            containerRef={props.imageRef}
         />
         <div className="playlist-header__text-container">
             <h1 className="heading heading--large" ref={props.titleRef}>{props.playlistName}</h1>

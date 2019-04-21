@@ -11,6 +11,15 @@ import {
     fetchCategory
 } from '../../actions';
 
+
+/*
+
+Dynamic importing temporarily removed while I investigate why it is not being awaited properly 
+in a production environment. 
+
+*/
+
+
 /**
  * Handles the prefetching of both the data and the JS bundle associated with a particular collectionType,
  * as well as managing loading status via component state. Passed both the prefetching function and the
@@ -109,10 +118,11 @@ export class DataPreFetcher extends Component {
         const { width, height, top, left } = this.imageRef.current.getBoundingClientRect();
         this.props.storeTransitionImageRect(width, height, left, top);
         const fetchingFunction = this.getFetchingFunction(this.props.collectionType);
-        await Promise.all([
-            fetchingFunction(this.props.itemId, true),
-            this.getBundle(this.props.collectionType)
-        ]);
+        await fetchingFunction(this.props.itemId, true);
+        // const promiseArr = await Promise.all([
+        //     fetchingFunction(this.props.itemId, true),
+        //     this.getBundle(this.props.collectionType)
+        // ]); 
         this.setState({
             isFetching: false
         });

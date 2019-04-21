@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import InteractionValidator from './InteractionValidator';
 import DataPreFetcher from './DataPreFetcher';
-import SmartImage from '../SmartImage';
+import CardImage from '../CardImage';
 import { collectionTypes } from '../../constants';
 import './carouselCard.scss';
 import { CardLoader } from '../Loaders';
@@ -45,10 +45,9 @@ export const CarouselCard = ({ linkDestination, label, additionalLabel, imageURL
                         onTouchEnd={dpProps.handleInteractionEnd}
                         onClick={e => e.preventDefault()}
                     >
-                        <SmartImage 
+                        <CardImage 
                             imageURL={imageURL}
                             isArtist={collectionType === collectionTypes.artists}
-                            isFixedSize={false}
                             containerRef={dpProps.imageRef}
                         />
                         <p className="carousel-card__label">{label}</p>
